@@ -13,14 +13,37 @@
       >
         <span class="navbar-toggler-icon" ></span>
       </button>
-      <div class="collapse navbar-collapse justify-content-end" id="navbarSupportedContent" >
+      <div class="collapse navbar-collapse" id="navbarSupportedContent" >
         <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-          <li class="nav-item">
+
+          <!--Motores-->
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDarkDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+             Motores
+            </a>
+          <ul class="dropdown-menu dropdown-menu-light" aria-labelledby="navbarDarkDropdownMenuLink">
+            <li><router-link to="" class="nav-link">Novo</router-link></li>
+            <li><router-link to="/motores" class="nav-link">Buscar</router-link></li>
+          </ul>
+        </li>
+
+        <!--Usuario-->
+        <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDarkDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+             Usuários
+            </a>
+          <ul class="dropdown-menu dropdown-menu-light" aria-labelledby="navbarDarkDropdownMenuLink">
+            <li><router-link to="" class="nav-link">Novo</router-link></li>
+            <router-link to="/usuarios" class="nav-link" v-if="rendered()">Buscar</router-link>
+          </ul>
+        </li>
+
+          <!-- <li class="nav-item">
             <router-link to="/motores" class="nav-link" v-if="rendered()">Motores</router-link>
           </li>
           <li class="nav-item">
             <router-link to="/usuarios" class="nav-link" v-if="rendered()">Usuarios</router-link>
-          </li>
+          </li> -->
           <li class="nav-item">
             <button @click="onLogout" class="btn btn-outline-danger" v-if="rendered()">Logout</button>
           </li>
