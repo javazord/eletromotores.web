@@ -1,6 +1,7 @@
 <template>
-  <table class="table table table-striped table-hover m-4">
-    <thead class="text-center">
+  <div class="container ">
+    <table class="table table table-striped table-hover mt-5">
+    <thead class="table-dark text-center">
       <tr>
         <th>Login</th>
         <th>Condição</th>
@@ -23,7 +24,13 @@
         </td>
       </tr>
     </tbody>
+    <tfoot>
+        
+    </tfoot>
   </table>
+  </div>
+  
+
 </template>
 
 <script>
@@ -36,7 +43,7 @@ export default {
   mounted() {
     this.getAll();
   },
-};
+}
 </script>
 
 <style>

@@ -1,7 +1,8 @@
 <template>
-  <nav class="navbar navbar-expand-lg navbar-light bg-light">
+
+  <nav class="navbar navbar-expand-lg navbar-light bg-light" v-if="rendered()" >
     <div class="container-fluid">
-      <a class="navbar-brand" href="#">ELETROMOTORES</a>
+      <a class="navbar-brand">ELETROMOTORES</a>
       <button
         class="navbar-toggler"
         type="button"
@@ -9,49 +10,45 @@
         data-bs-target="#navbarSupportedContent"
         aria-controls="navbarSupportedContent"
         aria-expanded="false"
-        aria-label="Toggle navigation" v-if="rendered()" 
+        aria-label="Toggle navigation"  
       >
         <span class="navbar-toggler-icon" ></span>
       </button>
       <div class="collapse navbar-collapse" id="navbarSupportedContent" >
-        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
 
+        <ul class="navbar-nav text-right">
           <!--Motores-->
           <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" href="#" id="navbarDarkDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            <a class="nav-link dropdown-toggle" href="#" id="Motores" role="button" data-bs-toggle="dropdown" aria-expanded="false">
              Motores
             </a>
-          <ul class="dropdown-menu dropdown-menu-light" aria-labelledby="navbarDarkDropdownMenuLink">
-            <li><router-link to="" class="nav-link">Novo</router-link></li>
+          <ul class="dropdown-menu dropdown-menu-light" aria-labelledby="Motores">
+            <li><router-link to="/motores/novo" class="nav-link">Novo</router-link></li>
             <li><router-link to="/motores" class="nav-link">Buscar</router-link></li>
           </ul>
         </li>
 
         <!--Usuario-->
-        <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" href="#" id="navbarDarkDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+        <li class="nav-item dropdown" >
+            <a class="nav-link dropdown-toggle" href="#" id="Usuario" role="button" data-bs-toggle="dropdown" aria-expanded="false">
              Usuários
             </a>
-          <ul class="dropdown-menu dropdown-menu-light" aria-labelledby="navbarDarkDropdownMenuLink">
-            <li><router-link to="" class="nav-link">Novo</router-link></li>
-            <router-link to="/usuarios" class="nav-link" v-if="rendered()">Buscar</router-link>
+          <ul class="dropdown-menu dropdown-menu-light" aria-labelledby="Usuario">
+            <li><router-link to="/usuarios/novo" class="nav-link">Novo</router-link></li>
+            <li><router-link to="/usuarios" class="nav-link">Buscar</router-link></li>
           </ul>
         </li>
-
-          <!-- <li class="nav-item">
-            <router-link to="/motores" class="nav-link" v-if="rendered()">Motores</router-link>
-          </li>
-          <li class="nav-item">
-            <router-link to="/usuarios" class="nav-link" v-if="rendered()">Usuarios</router-link>
-          </li> -->
-          <li class="nav-item">
-            <button @click="onLogout" class="btn btn-outline-danger" v-if="rendered()">Logout</button>
-          </li>
           
         </ul>
         
-        
+        <ul class="navbar-nav ">
+          <div class="nav-item text-right">
+            <button @click="onLogout" class="btn btn-outline-danger" >Logout</button>
+        </div>
+        </ul>
+          
       </div>
+      
     </div>
   </nav>
 </template>
@@ -62,13 +59,13 @@ export default {
     onLogout() {
       localStorage.removeItem('elms_token')
       this.$router.push('/login')
-      location.reload()
+      this.$forceUpdate();
     },
     rendered(){
       const token = localStorage.getItem('elms_token')
       if (token) {
         return true
-      }else{
+      } else {
         return false
       }
     }

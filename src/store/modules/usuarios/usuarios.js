@@ -3,8 +3,8 @@ import UsuarioService from '../../../services/usuarios/usuarioService'
 const state = {
     usuarios: [ ],
     usuario: {
-        email: '',
-        senha: ''
+        login: "",
+        password: ""
     }
 }
 
@@ -22,31 +22,19 @@ const actions = {
         console.log(id);
         commit('setUserById', id)
     },
-    async resetarSenha({ commit }, usuario) {
-        
-        const bodyData = new FormData();
-        bodyData.append('senhaNova', usuario.senha)
-
-        const res = UsuarioService.resetarSenha(usuario.email, bodyData)
-
-        console.log( res, commit, usuario)
-    },
-    novoUsuario({ commit }) {
+    newUser({ commit }) {
         console.log('novo');
         commit('setUser', {})
     },
     async create({ commit }, usuario) {
-        const bodyData = new FormData();
-        bodyData.append('email', usuario.email)
-        bodyData.append('senha', usuario.senha)
 
-        const res = await UsuarioService.create(bodyData)
+        const res = await UsuarioService.create(usuario)
         commit('addUser', res.data)
     },
 }
 
 const mutations = {
-   setUsers: (state, value) => state.usuarios = value,
+    setUsers: (state, value) => state.usuarios = value,
     setUserById: (state, id) => {
         console.log(id);
         state.usuario = state.usuarios.filter(u => u.id === id)[0]

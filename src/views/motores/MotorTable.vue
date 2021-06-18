@@ -1,13 +1,14 @@
 <template>
-    <table class="table table table-striped table-hover m-3">
-      <thead class="text-center">
+  <div class="container">
+    <table class="table table table-striped table-hover mt-5">
+      <thead class="table-dark text-center">
         <tr>
           <th>Marca</th>
           <th>Modelo</th>
           <th>Potencia</th>
           <th>Rotacao</th>
-          <th>MedidaInterna</th>
-          <th>MedidaExterna</th>
+          <th>Medida Interna</th>
+          <th>Medida Externa</th>
           <th>Ação</th>
         </tr>
       </thead>
@@ -24,7 +25,13 @@
           </td>
         </tr>
       </tbody>
+      <tfoot>
+
+      </tfoot>
     </table>
+  </div>
+    
+
 </template>
 
 <script>

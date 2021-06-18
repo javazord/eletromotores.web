@@ -16,7 +16,7 @@ class UsuarioService {
 
     create(bodyData) {
         const http = createHttp()
-        const res = http.post('/usuario/', bodyData)
+        const res = http.post('/usuario', bodyData)
         return res
     }
 
