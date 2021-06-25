@@ -3,8 +3,6 @@ import MotorService from '../../../services/motores/motorService'
 const state = {
     motores: [ ],
     motor: {
-        email: '',
-        senha: ''
     }
 }
 
@@ -18,20 +16,23 @@ const actions = {
         const res = await MotorService.getAll()
         commit('setMotors', res.data)
     },
-    selecionaUsuario({ commit }, id) {
+    selectUser({ commit }, id) {
         console.log(id);
         commit('setMotorById', id)
+    },
+    async create({ commit }, motor, voltagens, amperagens, user) {
+        const res = await MotorService.create(motor, voltagens, amperagens, user)
+        commit('addMotor', res.data)
     }
 }
 
 const mutations = {
     setMotors: (state, value) => state.motores = value,
     setMotorById: (state, id) => {
-        console.log(id);
         state.motor = state.motores.filter(u => u.id === id)[0]
     },
     setUser: (state, usuario) => state.usuario = usuario,
-    addUser: (state, usuario) => state.usuarios.push(usuario)
+    addMotor: (state, motor) => state.motores.push(motor)
 }
 
 export default {

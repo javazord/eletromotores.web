@@ -56,10 +56,10 @@
 <script>
 export default {
   methods: {
-    onLogout() {
+    onLogout: async function() {
       localStorage.removeItem('elms_token')
       this.$router.push('/login')
-      this.$forceUpdate();
+      await this.$forceUpdate();
     },
     rendered(){
       const token = localStorage.getItem('elms_token')

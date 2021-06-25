@@ -1,6 +1,7 @@
 import { createStore } from 'vuex'
 import usuarios from './modules/usuarios/usuarios'
 import motores from './modules/motores/motores'
+import fios from './modules/fios/fios'
 
 export default createStore({
   state: {
@@ -10,6 +11,6 @@ export default createStore({
   actions: {
   },
   modules: {
-    usuarios, motores
+    usuarios, motores, fios
   }
 })

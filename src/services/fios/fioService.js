@@ -1,19 +1,19 @@
 import createHttp from "../axiosConfig";
 
-class MotorService {
+class FioService {
 
     getAll() {
         const http = createHttp()
-        const res = http.get('/motor')
+        const res = http.get('/fio')
         return res
     }
 
     create(bodyData) {
         const http = createHttp()
-        const res = http.post('/motor', bodyData)
+        const res = http.post('/fio', bodyData)
         return res
     }
 
 }
 
-export default new MotorService();
+export default new FioService();

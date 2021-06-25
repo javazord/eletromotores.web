@@ -30,7 +30,7 @@ const actions = {
 
         const res = await UsuarioService.create(usuario)
         commit('addUser', res.data)
-    },
+    }
 }
 
 const mutations = {

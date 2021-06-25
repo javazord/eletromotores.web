@@ -68,10 +68,7 @@ export default {
             username: "elms-web",
             password: "esp12345",
           },
-        });
-        //console.log(res);
-        //console.log(res.data.access_token);
-        //console.log(JSON.parse(atob(res.data.access_token.split(".")[1])));
+        })
         
         if (res.status === 200) {
           localStorage.setItem("elms_token", res.data.access_token)
