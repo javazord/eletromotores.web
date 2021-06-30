@@ -2,7 +2,10 @@ import MotorService from '../../../services/motores/motorService'
 
 const state = {
     motores: [ ],
-    motor: {
+    motor: { 
+        voltagens: [],
+        amperagens: [ ],
+        usuario: sessionStorage.getItem('login')
     }
 }
 
@@ -16,12 +19,12 @@ const actions = {
         const res = await MotorService.getAll()
         commit('setMotors', res.data)
     },
-    selectUser({ commit }, id) {
+    selectMotor({ commit }, id) {
         console.log(id);
         commit('setMotorById', id)
     },
-    async create({ commit }, motor, voltagens, amperagens, user) {
-        const res = await MotorService.create(motor, voltagens, amperagens, user)
+    async createMotor({ commit }, motor) {
+        const res = await MotorService.create(motor)
         commit('addMotor', res.data)
     }
 }
@@ -31,7 +34,7 @@ const mutations = {
     setMotorById: (state, id) => {
         state.motor = state.motores.filter(u => u.id === id)[0]
     },
-    setUser: (state, usuario) => state.usuario = usuario,
+    setUser: (state, motor) => state.motor = motor,
     addMotor: (state, motor) => state.motores.push(motor)
 }
 

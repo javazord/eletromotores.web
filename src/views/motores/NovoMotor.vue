@@ -134,46 +134,51 @@
         <div class="col-md-2"  >
           <label for="Amperagem1" class="form-label">Amperagem</label>
           <input
-            v-model="amperagens.amp1"
+            v-model="amperagens"
             type="number"
             class="form-control"
             id="amperagem"
+            step="0.01"
           />
         </div>
         <div class="col-md-2">
           <label for="Amperagem2" class="form-label">Amperagem</label>
           <input
-            v-model="amperagens.amp2"
+            v-model="amperagens"
             type="number"
             class="form-control"
             id="amperagem"
+            step="0.01"
           />
         </div>
         <div class="col-md-2">
           <label for="Amperagem3" class="form-label">Amperagem</label>
           <input
-            v-model="amperagens.amp3"
+            v-model="amperagens"
             type="number"
             class="form-control"
             id="amperagem"
+            step="0.01"
           />
         </div>
         <div class="col-md-2">
           <label for="Amperagem4" class="form-label">Amperagem</label>
           <input
-            v-model="amperagens.amp4"
+            v-model="amperagens"
             type="number"
             class="form-control"
             id="amperagem"
+            step="0.01"
           />
         </div>
         <div class="col-md-2">
           <label for="Amperagem5" class="form-label">Amperagem</label>
           <input
-            v-model="amperagens.amp5"
+            v-model="amperagens"
             type="number"
             class="form-control"
             id="amperagem"
+            step="0.01"
           />
         </div>
         <div class="col-md-4">
@@ -324,23 +329,17 @@
 import { mapGetters, mapActions } from "vuex";
 export default {
   data(){
-    return {
-      voltagens: [],
-      amperagens: [
-        {amp1: 0.0},
-        {amp2: 0.0},
-        {amp3: 0.0},
-        {amp4: 0.0},
-        {amp5: 0.0}
-      ]
-      }
+    return{
+      voltagens: [ ],
+      amperagens: [ ]
+    }
   },
   computed: mapGetters(["motor"]),
   methods: {
-    ...mapActions(["create"]),
+    ...mapActions(["createMotor"]),
     onSubmit() {
-      const user = sessionStorage.getItem('login')
-      this.create(this.motor, this.voltagens, parseFloat(this.amperagens), user)
+      console.log(this.motor)
+      this.createMotor(this.motor)
       this.$router.push("/motores")
     }
   },
