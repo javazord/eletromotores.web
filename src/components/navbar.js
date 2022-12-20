@@ -1,4 +1,5 @@
 import React from "react";
+import NavbarItem from "./navbar-item";
 
 export default function Navbar() {
 
@@ -12,28 +13,29 @@ export default function Navbar() {
                 </button>
                 <div className="collapse navbar-collapse" id="navbarColor01">
                     <ul className="navbar-nav me-auto">
+
                         <li className="nav-item">
-                            <a className="nav-link active" href="#">Home
+                            <a className="nav-link active" href="/">Home
                                 <span className="visually-hidden">(current)</span>
                             </a>
                         </li>
-                        <li className="nav-item">
-                            <a className="nav-link" href="#">Registrar Motor</a>
-                        </li>
-                        <li className="nav-item">
-                            <a className="nav-link" href="#">Pesquisar Motor</a>
-                        </li>
-                        <li className="nav-item">
-                            <a className="nav-link" href="#">Colaboradores</a>
-                        </li>
+
+                        <NavbarItem href="/#" label="Registrar" />
+
+                        <NavbarItem href="/login" label="Logar" />
+
+                        <NavbarItem href="/#" label="Pesquisar" />
+
+                        <NavbarItem href="/cadastro-colaboradores" label="Colaboradores" />
+
                     </ul>
-                    
-                    
+
+
                 </div>
             </div>
         </nav>
 
-        
+
 
     )
 

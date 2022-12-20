@@ -1,15 +1,27 @@
 import React from "react";
 import Card from '../components/card'
 import FormGroupLogin from "../components/form-group-login";
+import axios from "axios";
 
 class Login extends React.Component {
 
     state = {
         login: '',
-        password: ''
+        password: '',
+        role: '',
+        alert: null
     }
 
-    enter = () => {
+    enter = async () => {
+        const response = await axios.post('http://localhost:9000/eletromotores/api/usuarios/autenticar', {
+            login: this.state.login,
+            password: this.state.password,
+            role: this.state.role
+        }).then( response => {
+            this.props.history.push('/')
+        }).catch(erro => {
+            this.setState({ alert: erro.response.data })
+        })
     }
 
     render() {
@@ -32,19 +44,28 @@ class Login extends React.Component {
                                                 <input type="password" value={this.state.password} onChange={e => this.setState({ password: e.target.value })} className="form-control" id="floatingPassword" placeholder="Password" />
                                             </FormGroupLogin>
 
-                                            <button onClick={this.enter()} type="button" className="btn btn-primary">Entrar</button>
+                                            <FormGroupLogin>
+                                                <button onClick={this.enter} type="button" className="btn btn-primary">Entrar</button>
+                                            </FormGroupLogin>
+
+
+
                                         </div>
                                     </div>
                                 </div>
                             </Card>
+
+                            <span>{this.state.alert}</span>
+
                         </div>
                     </div>
                 </div>
+                
             </div>
         )
 
+
+
     }
-
 }
-
-export default Login
+export default Login;
