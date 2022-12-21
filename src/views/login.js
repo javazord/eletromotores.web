@@ -1,9 +1,10 @@
-import React from "react";
+import React, { Component } from "react";
 import Card from '../components/card'
 import FormGroupLogin from "../components/form-group-login";
-import axios from "axios";
+import UserService from "../app/service/userService";
+import { Navigate, useNavigate } from "react-router-dom";
 
-class Login extends React.Component {
+class Login extends Component {
 
     state = {
         login: '',
@@ -12,16 +13,30 @@ class Login extends React.Component {
         alert: null
     }
 
-    enter = async () => {
-        const response = await axios.post('http://localhost:9000/eletromotores/api/usuarios/autenticar', {
+    constructor() {
+        super();
+        this.service = new UserService();
+        
+    }
+
+    enter = () => {
+        this.navigate = useNavigate();
+
+        this.service.authenticate({
             login: this.state.login,
             password: this.state.password,
             role: this.state.role
-        }).then( response => {
-            this.props.history.push('/')
+
+        }).then(response => {
+            localStorage.setItem('_usuario_logado', JSON.stringify(response.data))
+            this.props.navigate("/")
+
+
         }).catch(erro => {
             this.setState({ alert: erro.response.data })
         })
+
+
     }
 
     render() {
@@ -60,7 +75,7 @@ class Login extends React.Component {
                         </div>
                     </div>
                 </div>
-                
+
             </div>
         )
 
