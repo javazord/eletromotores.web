@@ -18,7 +18,7 @@ export default function Navbar() {
 
                         <NavbarItem href="/#" label="Motores" />
 
-                        <NavbarItem href="/cadastro-colaboradores" label="Colaboradores" />                        
+                        <NavbarItem href="/buscar-colaborador" label="Colaboradores" />                        
 
                         <NavbarItem href="/login" label="Logar" />
 

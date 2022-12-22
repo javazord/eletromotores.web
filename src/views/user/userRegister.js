@@ -1,7 +1,7 @@
 import React from "react";
-import Card from "../components/card";
-import UserService from "../app/service/userService";
-import { showMessageSuccess, showMessageError } from "../components/toastr";
+import Card from "../../components/card";
+import UserService from "../../app/service/userService";
+import { showMessageSuccess, showMessageError } from "../../components/toastr";
 
 
 class UserRegister extends React.Component {
@@ -55,14 +55,12 @@ class UserRegister extends React.Component {
                                 <input onChange={e => this.setState({ login: e.target.value })} type="email" className="form-control" id="exampleInputEmail1" placeholder="Login" />
                             </div>
 
-                            <div className="col ">
-                                <div className="form-group">
-                                    <select value={this.state.role} onChange={e => this.setState({ role: e.target.value })} className="form-select" id="exampleSelect1">
+                                <div className="form-group mb-2">
+                                    <select value={this.state.role} onChange={e => this.setState({ role: e.target.value })} className="form-control" id="exampleSelect1">
                                         <option value="ROLE_USER">Usuario</option>
                                         <option value="ROLE_ADMIN">Administrador</option>
                                     </select>
                                 </div>
-                            </div>
                         </div>
                         <div className="col">
                             <div className="form-group mb-2">
