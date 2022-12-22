@@ -45,7 +45,6 @@ class Login extends Component {
                             <Card title="Login" >
                                 <div className="row mb-1">
                                     <div className="col-lg-12">
-                                        <div className="bs-component">
 
                                             <FormGroupLogin label="Login" htmlFor="floatingInput">
                                                 <input type="email" value={this.state.login} onChange={e => this.setState({ login: e.target.value })} className="form-control" id="floatingInput" placeholder="name@example.com" />
@@ -60,8 +59,6 @@ class Login extends Component {
                                             </FormGroupLogin>
 
 
-
-                                        </div>
                                     </div>
                                 </div>
                             </Card>

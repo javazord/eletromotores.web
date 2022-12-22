@@ -3,6 +3,7 @@ import Card from "../components/card";
 import UserService from "../app/service/userService";
 import { showMessageSuccess, showMessageError } from "../components/toastr";
 
+
 class UserRegister extends React.Component {
 
     state = {
@@ -12,7 +13,7 @@ class UserRegister extends React.Component {
         role: 'ROLE_USER'
     }
 
-    constructor(){
+    constructor() {
         super();
         this.service = new UserService();
     }
@@ -23,15 +24,23 @@ class UserRegister extends React.Component {
             password: this.state.password,
             role: this.state.role
         }
-        console.log(usuario.login)
-        console.log(usuario.password)
-        console.log(usuario.role)
-        this.service.save({ usuario })
-        .then( response => {
-            showMessageSuccess('Usuário cadastrado com sucesso!')
-        }).catch(erro => {
-            showMessageError(erro.response.data)
-        })
+        this.service.save(usuario)
+            .then(response => {
+                showMessageSuccess('Usuário cadastrado com sucesso!')
+                this.handleReset()
+            }).catch(erro => {
+                showMessageError(erro.response.data)
+            })
+    }
+
+    handleReset = () => {
+        Array.from(document.querySelectorAll("input")).forEach(
+            input => (input.value = "")
+        );
+
+        this.setState({
+            itemvalues: [{}]
+        });
     }
 
 
@@ -79,5 +88,7 @@ class UserRegister extends React.Component {
         )
     }
 }
+
+
 
 export default UserRegister
