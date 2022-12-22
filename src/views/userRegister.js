@@ -46,7 +46,6 @@ class UserRegister extends React.Component {
 
     render() {
         return (
-            <div className="bs-docs-section">
                 <Card title="Cadastrar Colaborador">
 
                     <div className="row ">
@@ -83,7 +82,6 @@ class UserRegister extends React.Component {
 
 
                 </Card>
-            </div>
 
         )
     }
