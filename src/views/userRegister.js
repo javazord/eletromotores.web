@@ -1,5 +1,6 @@
 import React from "react";
 import Card from "../components/card";
+import { withRouter } from "react-router-dom";
 
 class UserRegister extends React.Component {
 
@@ -59,4 +60,4 @@ class UserRegister extends React.Component {
     }
 }
 
-export default UserRegister
+export default withRouter(UserRegister)

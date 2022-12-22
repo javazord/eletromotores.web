@@ -1,6 +1,6 @@
 import React from "react";
 
-function FormGroupLogin(props) {
+export default function FormGroupLogin(props) {
     return (
         <div className="form-group">
             <div className="form-floating mb-2">
@@ -10,5 +10,3 @@ function FormGroupLogin(props) {
         </div>
     )
 }
-
-export default FormGroupLogin

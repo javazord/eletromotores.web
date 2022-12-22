@@ -1,10 +1,10 @@
-import React, { Component } from "react";
+import React from "react";
 import Card from '../components/card'
 import FormGroupLogin from "../components/form-group-login";
 import UserService from "../app/service/userService";
-import { Navigate, useNavigate } from "react-router-dom";
+import { withRouter } from "react-router-dom";
 
-class Login extends Component {
+class Login extends React.Component {
 
     state = {
         login: '',
@@ -20,7 +20,6 @@ class Login extends Component {
     }
 
     enter = () => {
-        this.navigate = useNavigate();
 
         this.service.authenticate({
             login: this.state.login,
@@ -29,10 +28,10 @@ class Login extends Component {
 
         }).then(response => {
             localStorage.setItem('_usuario_logado', JSON.stringify(response.data))
-            this.props.navigate("/")
-
+            this.props.history.push('/')
 
         }).catch(erro => {
+            console.log(erro)
             this.setState({ alert: erro.response.data })
         })
 
@@ -83,4 +82,5 @@ class Login extends Component {
 
     }
 }
-export default Login;
+
+export default withRouter(Login) 
