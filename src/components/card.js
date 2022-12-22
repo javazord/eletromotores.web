@@ -1,6 +1,6 @@
 import React from "react";
 
-export default class Card extends React.Component {
+class Card extends React.Component {
     render() {
         return (
             <div className="card md-3">
@@ -16,3 +16,4 @@ export default class Card extends React.Component {
     }
 }
 
+export default Card

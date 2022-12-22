@@ -14,15 +14,19 @@ export default function Navbar() {
                 <div className="collapse navbar-collapse" id="navbarColor01">
                     <ul className="navbar-nav me-auto">
 
-                        <NavbarItem href="#" label="Home" />
+                        <li className="nav-item">
+                            <a className="nav-link active" href="/">Home
+                                <span className="visually-hidden">(current)</span>
+                            </a>
+                        </li>
 
-                        <NavbarItem href="#" label="Registrar" />
+                        <NavbarItem href="/#" label="Registrar" />
 
-                        <NavbarItem href="#/login" label="Logar" />
+                        <NavbarItem href="/login" label="Logar" />
 
-                        <NavbarItem href="#/" label="Pesquisar" />
+                        <NavbarItem href="/#" label="Pesquisar" />
 
-                        <NavbarItem href="#/cadastro-colaboradores" label="Colaboradores" />
+                        <NavbarItem href="/cadastro-colaboradores" label="Colaboradores" />
 
                     </ul>
 

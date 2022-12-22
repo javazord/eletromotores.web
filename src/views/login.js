@@ -1,38 +1,35 @@
-import React from "react";
+import React, { Component } from "react";
 import Card from '../components/card'
 import FormGroupLogin from "../components/form-group-login";
-import UserService from "../app/service/userService";
-import { withRouter } from "react-router-dom";
+import UserService from '../app/service/userService';
+import { useNavigate } from "react-router-dom";
+import LocalStorageService from "../app/localStorage";
+import { showMessageError } from "../components/toastr";
 
-class Login extends React.Component {
+
+class Login extends Component {
 
     state = {
         login: '',
         password: '',
-        role: '',
-        alert: null
+        role: ''
     }
 
-    constructor() {
+    constructor(){
         super();
         this.service = new UserService();
-        
     }
 
     enter = () => {
-
         this.service.authenticate({
             login: this.state.login,
             password: this.state.password,
             role: this.state.role
-
-        }).then(response => {
-            localStorage.setItem('_usuario_logado', JSON.stringify(response.data))
-            this.props.history.push('/')
-
+        }).then( response => {
+            LocalStorageService.setItem('_usuario_logado', response.data)
+            this.props.navHook('/')
         }).catch(erro => {
-            console.log(erro)
-            this.setState({ alert: erro.response.data })
+            showMessageError(erro.response.data)
         })
 
 
@@ -69,8 +66,6 @@ class Login extends React.Component {
                                 </div>
                             </Card>
 
-                            <span>{this.state.alert}</span>
-
                         </div>
                     </div>
                 </div>
@@ -78,9 +73,11 @@ class Login extends React.Component {
             </div>
         )
 
-
-
     }
 }
 
-export default withRouter(Login) 
+function myParams(Component) {
+    return props => <Component navHook={useNavigate()} />;
+}
+
+export default myParams(Login)

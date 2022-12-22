@@ -1,6 +1,7 @@
 import React from "react";
 import Card from "../components/card";
-import { withRouter } from "react-router-dom";
+import UserService from "../app/service/userService";
+import { showMessageSuccess, showMessageError } from "../components/toastr";
 
 class UserRegister extends React.Component {
 
@@ -8,12 +9,31 @@ class UserRegister extends React.Component {
         login: '',
         password: '',
         repeatPassword: '',
-        role: 'Usuario'
+        role: 'ROLE_USER'
+    }
+
+    constructor(){
+        super();
+        this.service = new UserService();
     }
 
     create = () => {
-        console.log(this.state)
+        const usuario = {
+            login: this.state.login,
+            password: this.state.password,
+            role: this.state.role
+        }
+        console.log(usuario.login)
+        console.log(usuario.password)
+        console.log(usuario.role)
+        this.service.save({ usuario })
+        .then( response => {
+            showMessageSuccess('Usuário cadastrado com sucesso!')
+        }).catch(erro => {
+            showMessageError(erro.response.data)
+        })
     }
+
 
     render() {
         return (
@@ -30,8 +50,8 @@ class UserRegister extends React.Component {
                             <div className="col ">
                                 <div className="form-group">
                                     <select value={this.state.role} onChange={e => this.setState({ role: e.target.value })} className="form-select" id="exampleSelect1">
-                                        <option value="Usuario">Usuario</option>
-                                        <option value="Administrador">Administrador</option>
+                                        <option value="ROLE_USER">Usuario</option>
+                                        <option value="ROLE_ADMIN">Administrador</option>
                                     </select>
                                 </div>
                             </div>
@@ -60,4 +80,4 @@ class UserRegister extends React.Component {
     }
 }
 
-export default withRouter(UserRegister)
+export default UserRegister

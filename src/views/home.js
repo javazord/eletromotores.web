@@ -1,33 +1,26 @@
 import { render } from "@testing-library/react";
 import React from "react";
-import axios from "axios";
+import LocalStorageService from "../app/localStorage";
 
-export default class Home extends React.Component {
-    
+class Home extends React.Component {
+
     state = {
-        usuario: null
+        usuarioLogado: null
     }
 
-    componentDidMount(){
-        /*axios.get('http://localhost:9000/eletromotores/api/usuarios')
-        .then(response =>{
-            this.setState({usuario: response.data})
-        }).catch(erro =>{
-            console.log("falha na busca");
-        })*/
+    componentDidMount() {
+        const usuarioLogado = LocalStorageService.getItem('_usuario_logado')
+    }
+
+    render() {
+        return (
+            <div>
+                <h3>Bem Vindo {this.state.login}</h3>
+            </div>
+        )
     }
 
 
-render(){
-    return(
-        <div>
-            <h3>HOME</h3>
-        </div>
-    )
 }
 
-
-
-
-    
-}
+export default Home
