@@ -16,16 +16,14 @@ export default function Navbar() {
 
                         <NavbarItem href="/" label="Home" />
 
-                        <NavbarItem href="/#" label="Registrar" />
+                        <NavbarItem href="/#" label="Motores" />
+
+                        <NavbarItem href="/cadastro-colaboradores" label="Colaboradores" />                        
 
                         <NavbarItem href="/login" label="Logar" />
 
-                        <NavbarItem href="/cadastro-colaboradores" label="Colaboradores" />
-
-                        <NavbarItem href="/#" label="Pesquisar" />
-
                     </ul>
-
+                    
 
                 </div>
             </div>

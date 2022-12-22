@@ -11,8 +11,17 @@ export default class UserService extends ApiService{
     }
 
     save(usuario){
-        console.log(usuario.login)
         return this.post('', usuario)
         
     }
+
+    put(usuario){
+        return this.put('/atualizar', usuario)
+    }
+
+    get(){
+        return this.get()
+    }
+
+
 }
