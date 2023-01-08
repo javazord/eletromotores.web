@@ -5,17 +5,13 @@ import LocalStorageService from "../app/localStorage";
 class Home extends React.Component {
 
     state = {
-        usuarioLogado: null
+        usuarioLogado: LocalStorageService.getItem('_usuario_logado')
     }
-
-    componentDidMount() {
-        const usuarioLogado = LocalStorageService.getItem('_usuario_logado')
-    }
-
+    
     render() {
         return (
             <div>
-                <h3>Bem Vindo {this.state.login}</h3>
+                <h3>Bem Vindo {this.state.usuarioLogado.login}</h3>
             </div>
         )
     }

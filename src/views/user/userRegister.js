@@ -1,7 +1,12 @@
 import React from "react";
 import Card from "../../components/card";
-import UserService from "../../app/service/userService";
+import UserService from "../../app/service/user/userService";
 import { showMessageSuccess, showMessageError } from "../../components/toastr";
+import HandleInputResetValues from "../../components/events/handleInputResetValues";
+import Row from '../../components/row';
+import Col from '../../components/col';
+import FormGroup from "../../components/form-group";
+import HandleInputChange from "../../components/events/handleInputChange";
 
 
 class UserRegister extends React.Component {
@@ -19,72 +24,52 @@ class UserRegister extends React.Component {
     }
 
     create = () => {
-        const usuario = {
-            login: this.state.login,
-            password: this.state.password,
-            role: this.state.role
-        }
+        const { login, password, role } = this.state;
+        const usuario = { login, password, role }
+
         this.service.save(usuario)
             .then(response => {
                 showMessageSuccess('Usuário cadastrado com sucesso!')
-                this.handleReset()
+                HandleInputResetValues()
             }).catch(erro => {
                 showMessageError(erro.response.data)
             })
     }
 
-    handleReset = () => {
-        Array.from(document.querySelectorAll("input")).forEach(
-            input => (input.value = "")
-        );
-
-        this.setState({
-            itemvalues: [{}]
-        });
-    }
-
-
     render() {
         return (
-                <Card title="Cadastrar Colaborador">
+            <Card title="Cadastrar Colaborador">
 
-                    <div className="row ">
-                        <div className="col">
+                <Row>
+                    <Col>
+                        <FormGroup>
+                            <input onChange={HandleInputChange} type="email" className="form-control" id="exampleInputEmail1" placeholder="Login" />
+                        </FormGroup>
 
-                            <div className="form-group mb-2">
-                                <input onChange={e => this.setState({ login: e.target.value })} type="email" className="form-control" id="exampleInputEmail1" placeholder="Login" />
-                            </div>
+                        <FormGroup>
+                            <select value={this.state.role} onChange={HandleInputChange} className="form-control" id="exampleSelect1">
+                                <option value="ROLE_USER">Usuario</option>
+                                <option value="ROLE_ADMIN">Administrador</option>
+                            </select>
+                        </FormGroup>
+                    </Col>
+                    
+                    <Col>
+                        <FormGroup>
+                            <input onChange={HandleInputChange} type="password" className="form-control" placeholder="Senha" />
+                        </FormGroup>
+                        <FormGroup>
+                            <input onChange={HandleInputChange} type="password" className="form-control" placeholder="Repetir senha" />
+                        </FormGroup>
 
-                                <div className="form-group mb-2">
-                                    <select value={this.state.role} onChange={e => this.setState({ role: e.target.value })} className="form-control" id="exampleSelect1">
-                                        <option value="ROLE_USER">Usuario</option>
-                                        <option value="ROLE_ADMIN">Administrador</option>
-                                    </select>
-                                </div>
-                        </div>
-                        <div className="col">
-                            <div className="form-group mb-2">
-                                <input onChange={e => this.setState({ password: e.target.value })} type="password" className="form-control" placeholder="Senha" />
-                            </div>
-                            <div className="form-group mb-2">
-                                <input onChange={e => this.setState({ repeatPassword: e.target.value })} type="password" className="form-control" placeholder="Repetir senha" />
-                            </div>
+                    </Col>
+                </Row>
 
-                        </div>
+                <button onClick={this.create} type="button" className="btn btn-success">Cadastrar</button>
 
-
-
-                    </div>
-
-                    <button onClick={this.create} type="button" className="btn btn-success">Cadastrar</button>
-
-
-                </Card>
+            </Card>
 
         )
     }
 }
-
-
-
 export default UserRegister

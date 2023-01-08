@@ -16,9 +16,9 @@ export default function Navbar() {
 
                         <NavbarItem href="/" label="Home" />
 
-                        <NavbarItem href="/#" label="Motores" />
+                        <NavbarItem href="/buscar-motores" label="Motores" />
 
-                        <NavbarItem href="/buscar-colaborador" label="Colaboradores" />                        
+                        <NavbarItem href="/buscar-colaboradores" label="Colaboradores" />                        
 
                         <NavbarItem href="/login" label="Logar" />
 

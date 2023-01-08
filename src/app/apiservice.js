@@ -28,7 +28,7 @@ class ApiService {
 
     get(url) {
         const request = `${this.apiUrl}${url}`
-        return httpCliente.post(request)
+        return httpCliente.get(request)
     }
 
 

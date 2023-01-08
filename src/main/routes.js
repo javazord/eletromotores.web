@@ -5,6 +5,8 @@ import Login from "../views/login";
 import UserRegister from "../views/user/userRegister";
 import UserSearch from "../views/user/userSearch";
 import UserTable from "../views/user/userTable";
+import MotorSearch from "../views/motor/motorSearch"
+import MotorRegister from "../views/motor/motorRegister";
 
  function Rotas() {
     return (
@@ -12,8 +14,10 @@ import UserTable from "../views/user/userTable";
             <Routes>
                 <Route path='/login' element={<Login />} />
                 <Route path='/' element={<Home />} />
-                <Route path="/buscar-colaborador" element={<UserSearch/>}/>
+                <Route path="/buscar-colaboradores" element={<UserSearch/>}/>
                 <Route path='/cadastro-colaboradores' element={<UserRegister />} />
+                <Route path='/buscar-motores' element={<MotorSearch />} />
+                <Route path='/cadastro-motores' element={<MotorRegister />} />
             </Routes>
         </Router>
 
