@@ -1,4 +1,5 @@
 import React from "react";
+import { NavLink } from "react-router-dom";
 import NavbarItem from "./navbar-item";
 
 export default function Navbar() {
@@ -23,40 +24,39 @@ export default function Navbar() {
 
                 <div className="nav-menu">
                     <ul>
+
+                        <NavbarItem href="/" label="Home"><span className="pi pi-home mr-3"></span></NavbarItem>
+
                         <li className="accordion">
                             <a href="#" data-toggle="collapse" data-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne" className="collapsible">
-                                <span className="icon-home mr-3"></span>Feed
+                                <span className="pi pi-user mr-3"></span>Usuários
                             </a>
                             <div id="collapseOne" className="collapse" aria-labelledby="headingOne">
                                 <div>
                                     <ul>
-                                        <li><a href="#">News</a></li>
-                                        <li><a href="#">Sport</a></li>
-                                        <li><a href="#">Health</a></li>
+                                        <NavbarItem href="/cadastro-colaboradores" label="Registrar"><span className="pi pi-user-plus mr-3 m-2"></span></NavbarItem>
+                                        <NavbarItem href="/buscar-colaboradores" label="Pesquisar"><span className="pi pi-search mr-3 m-2"></span></NavbarItem>
                                     </ul>
                                 </div>
                             </div>
                         </li>
+
                         <li className="accordion">
                             <a href="#" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo" className="collapsible">
-                                <span className="icon-search2 mr-3"></span>Explore
+                                <a rel="icon" href="motor.png" src="icon/motor.png"/>Motores
                             </a>
 
                             <div id="collapseTwo" className="collapse" aria-labelledby="headingOne">
                                 <div>
                                     <ul>
-                                        <li><a href="#">Interior</a></li>
-                                        <li><a href="#">Food</a></li>
-                                        <li><a href="#">Travel</a></li>
+                                        <NavbarItem href="/cadastro-motores" label="Registrar" ><span className="pi pi-save mr-3 m-2"></span></NavbarItem>
+                                        <NavbarItem href="/buscar-motores" label="Pesquisar"><span className="pi pi-search mr-3 m-2"></span></NavbarItem>
                                     </ul>
                                 </div>
                             </div>
 
                         </li>
-                        <li><a href="#"><span className="icon-notifications mr-3"></span>Notifications</a></li>
-                        <li><a href="#"><span className="icon-location-arrow mr-3"></span>Direct</a></li>
-                        <li><a href="#"><span className="icon-pie-chart mr-3"></span>Stats</a></li>
-                        <li><a href="#"><span className="icon-sign-out mr-3"></span>Sign out</a></li>
+                        <li><a href="#"><span className="pi pi-sign-out mr-3"></span>Sign out</a></li>
                     </ul>
                 </div>
             </div>
