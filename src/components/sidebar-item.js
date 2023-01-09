@@ -1,7 +1,7 @@
 import { render } from "@testing-library/react";
 import React from "react";
 
-export default function NavbarItem(props) {
+export default function SidebarItem(props) {
 
     return (
         <li className="nav-item">

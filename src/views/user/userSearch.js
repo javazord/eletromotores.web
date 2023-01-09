@@ -108,13 +108,6 @@ class UserSearch extends React.Component {
 
         return (
             <>
-                <div className="row justify-content-end m-auto p-md-1">
-                    <Link to={'/cadastro-colaboradores'}>
-                        <button className="btn btn-primary" href="/cadastro-colaboradores">Novo</button>
-                    </Link>
-
-                </div>
-
 
                 <Card title="Pesquisar">
                     <Row>

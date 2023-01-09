@@ -50,14 +50,6 @@ class MotorSearch extends React.Component {
     render() {
         return (
             <>
-                <div className="row justify-content-end m-auto p-md-1">
-                    <Link to={'/cadastro-motores'}>
-                        <button className="btn btn-primary" href="#">Novo</button>
-                    </Link>
-
-                </div>
-
-
                 <Card title="Pesquisar">
 
                     <Row className=" mt-auto">
@@ -76,7 +68,7 @@ class MotorSearch extends React.Component {
                                 <input value={this.state.ranhuras} onChange={HandleInputChange} type="number" className="form-control" id="inputLogin" />
                             </FormGroup>
                         </Col>
-                        
+
                         <Col>
                             <FormGroup label="Medida Interna">
                                 <input value={this.state.medidaInterna} onChange={HandleInputChange} type="number" className="form-control" id="inputLogin" />
@@ -96,7 +88,7 @@ class MotorSearch extends React.Component {
                             <FormGroup>
                                 <button onClick={this.buttonSearch} className="btn btn-primary" type="submit">Buscar</button>
                             </FormGroup>
-                            
+
                         </Col>
                     </Row>
 
