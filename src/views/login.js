@@ -1,13 +1,13 @@
 import React, { Component } from "react";
 import Card from '../components/card'
-import FormGroupLogin from "../components/form-group-login";
+import FormGroupLogin from "../components/grid/form-group-login";
 import UserService from '../app/service/user/userService';
 import { useNavigate } from "react-router-dom";
 import LocalStorageService from "../app/localStorage";
 import { showMessageError } from "../components/toastr";
 import HandleInputChange from '../components/events/handleInputChange'
-import Row from '../components/row';
-import Col from '../components/col';
+import Row from '../components/grid/row';
+import Col from '../components/grid/col';
 
 
 class Login extends Component {

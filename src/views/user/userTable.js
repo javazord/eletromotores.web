@@ -1,8 +1,8 @@
 import React from "react";
 import { Role } from "./userAttributes";
 import { Condition } from "./userAttributes";
-import Row from '../../components/row';
-import Col from '../../components/col';
+import Row from '../../components/grid/row';
+import Col from '../../components/grid/col';
 
 export default props => {
 

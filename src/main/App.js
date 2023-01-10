@@ -1,5 +1,5 @@
 import React from 'react';
-import Sidebar from '../components/sidebar';
+import Sidebar from '../components/sidebar/sidebar';
 import Rotas from './routes';
 import Body from './body';
 

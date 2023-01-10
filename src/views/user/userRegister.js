@@ -3,9 +3,9 @@ import Card from "../../components/card";
 import UserService from "../../app/service/user/userService";
 import { showMessageSuccess, showMessageError } from "../../components/toastr";
 import HandleInputResetValues from "../../components/events/handleInputResetValues";
-import Row from '../../components/row';
-import Col from '../../components/col';
-import FormGroup from "../../components/form-group";
+import Row from '../../components/grid/row';
+import Col from '../../components/grid/col';
+import FormGroup from "../../components/grid/form-group";
 import HandleInputChange from "../../components/events/handleInputChange";
 
 

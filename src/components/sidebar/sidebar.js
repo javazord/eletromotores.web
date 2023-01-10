@@ -1,14 +1,13 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
-import LocalStorageService from "../app/localStorage";
+import LocalStorageService from "../../app/localStorage";
 import SidebarItem from "./sidebar-item";
-import { Role } from "../views/user/userAttributes";
+import { Role } from "../../views/user/userAttributes";
 
 
 export default function Sidebar() {
     const usuarioLogado = LocalStorageService.getItem('_usuario_logado');
     return (
-        
 
         <aside className="sidebar">
             <div className="toggle">
@@ -24,10 +23,8 @@ export default function Sidebar() {
                     <span className="country">{Role(usuarioLogado)}</span>
                 </div>
 
-
                 <div className="nav-menu">
                     <ul>
-
                         <SidebarItem href="/" label="Home"><span className="iconHome mr-3"></span></SidebarItem>
 
                         <li className="accordion">
@@ -46,7 +43,7 @@ export default function Sidebar() {
 
                         <li className="accordion justify-content-center">
                             <a href="#" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo" className="collapsible">
-                            <span className="iconMotor mr-3" ></span>Motores
+                                <span className="iconMotor mr-3" ></span>Motores
                             </a>
 
                             <div id="collapseTwo" className="collapse" aria-labelledby="headingOne">
@@ -65,9 +62,6 @@ export default function Sidebar() {
             </div>
 
         </aside>
-
-
-
     )
 
 }

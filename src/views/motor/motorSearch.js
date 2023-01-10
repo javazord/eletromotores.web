@@ -2,12 +2,12 @@ import React from "react";
 import { Link } from "react-router-dom";
 import MotorService from "../../app/service/motor/motorService";
 import Card from '../../components/card'
-import FormGroup from '../../components/form-group-login'
-import Row from "../../components/row";
+import FormGroup from '../../components/grid/form-group-login'
+import Row from "../../components/grid/row";
 import { showMessageAlert, showMessageSuccess } from "../../components/toastr";
 import { showMessageError } from "../../components/toastr";
 import MotorTable from "./motorTable";
-import Col from "../../components/col";
+import Col from "../../components/grid/col";
 import HandleInputChange from '../../components/events/handleInputChange';
 
 

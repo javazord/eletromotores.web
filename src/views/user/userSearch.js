@@ -2,7 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import UserService from "../../app/service/user/userService";
 import Card from '../../components/card'
-import FormGroup from '../../components/form-group'
+import FormGroup from '../../components/grid/form-group'
 import { showMessageAlert, showMessageSuccess } from "../../components/toastr";
 import { showMessageError } from "../../components/toastr";
 import UserTable from "./userTable";
@@ -10,8 +10,8 @@ import { Dialog } from 'primereact/dialog';
 import { Button } from 'primereact/button'
 import { Condition, Role } from "./userAttributes";
 import HandleInputChange from '../../components/events/handleInputChange'
-import Row from "../../components/row";
-import Col from "../../components/col";
+import Row from "../../components/grid/row";
+import Col from "../../components/grid/col";
 
 
 

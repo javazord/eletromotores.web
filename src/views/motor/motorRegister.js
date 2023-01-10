@@ -3,9 +3,9 @@ import MotorService from '../../app/service/motor/motorService'
 import Card from "../../components/card";
 import { showMessageSuccess } from "../../components/toastr";
 import { showMessageError } from "../../components/toastr";
-import FormGroup from '../../components/form-group-login'
-import Col from "../../components/col";
-import Row from '../../components/row'
+import FormGroup from '../../components/grid/form-group-login'
+import Col from "../../components/grid/col";
+import Row from '../../components/grid/row'
 import { Button } from 'primereact/button'
 import HandleInputChange from '../../components/events/handleInputChange'
 
@@ -37,21 +37,31 @@ class MotorRegister extends React.Component {
         this.service = new MotorService();
     }
 
-    addInputAWG = (e) => {
+    addAWG = (e) => {
         e.preventDefault();
 
-        this.setState({ awgs: [...this.state.fio.awgs, ""] });
-        console.log(this.state.fio.awgs)
-    }
+        // Mapeia cada nome para a posição (índice) do array:
+        const nameToIndexMap = {
+            'awg1': 0,
+            'awg2': 1,
+            'awg3': 1,
+            'awg4': 1,
+            'awg5': 1
+        };
 
-    addAWG = (e, index) => {
-        e.preventDefault();
-        this.setState((prevState) => {
-            this.state.fio.awgs[index] = parseInt(e.target.value);
-            const copy = [...prevState.fio.awgs];
-            return { ...prevState, copy };
+        const name = e.target.name;
+        const val = parseInt(e.target.value);
+
+        this.setState((obj) => {
+            // Copiamos o array:
+            const copy = [...obj.fio.awgs];
+            // Modificamos o índice de acordo com o nosso mapa:
+            copy[nameToIndexMap[name]] = val;
+            this.state.fio.awgs.push(copy)
+            
         });
-    }
+        console.log(this.state.fio.awgs)
+    };
 
     render() {
         return (
@@ -104,21 +114,21 @@ class MotorRegister extends React.Component {
                 </Row>
 
                 <Row >
-                    {
-                        this.state.fio.awgs.map((awg, index) => (
-                            <Col key={index}>
-                                <FormGroup label={`AWG ${index + 1}`}>
-                                    <input value={awg} type="number" id="awg" onChange={(e) => this.addAWG(e, index)} className="form-control" />
-                                </FormGroup>
-                            </Col>
-                        ))
-                    }
-                    <pre>{this.state.fio.awgs}</pre>
-                    <Col className="mb-2 ">
-                        <Button className="p-button-rounded p-button-icon-only" icon="p-button-icon p-c pi pi-plus" onClick={this.addInputAWG}></Button>
+                    <Col >
+                        <FormGroup label={"AWG 1"}>
+                            <input type="number" name="awg1" onChange={this.addAWG} className="form-control" />
+                        </FormGroup>
+                    </Col>
+                    <Col >
+                        <FormGroup label={"AWG 2"}>
+                            <input type="number" name="awg2" onChange={this.addAWG} className="form-control" />
+                        </FormGroup>
                     </Col>
 
+
+
                 </Row>
+                <pre></pre>
                 <button onClick={this.create} type="button" className="btn btn-success">Cadastrar</button>
 
 
