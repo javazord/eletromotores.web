@@ -1,9 +1,9 @@
-import React from "react";
+import React, { Fragment } from "react";
 import MotorService from '../../app/service/motor/motorService'
 import Card from "../../components/card";
 import { showMessageSuccess } from "../../components/toastr";
 import { showMessageError } from "../../components/toastr";
-import FormGroup from '../../components/grid/form-group-login'
+import FormGroup from '../../components/grid/form-group'
 import Col from "../../components/grid/col";
 import Row from '../../components/grid/row'
 import { Button } from 'primereact/button'
@@ -23,8 +23,8 @@ class MotorRegister extends React.Component {
         tensao: "TRIFASICO",
         fio: {
             awgs: [],
-            espiras: [],
             quantidades: [],
+            espiras: [],
             peso: 0
         },
         voltagens: [],
@@ -40,28 +40,47 @@ class MotorRegister extends React.Component {
     addAWG = (e) => {
         e.preventDefault();
 
-        // Mapeia cada nome para a posição (índice) do array:
-        const nameToIndexMap = {
-            'awg1': 0,
-            'awg2': 1,
-            'awg3': 1,
-            'awg4': 1,
-            'awg5': 1
-        };
-
-        const name = e.target.name;
-        const val = parseInt(e.target.value);
-
-        this.setState((obj) => {
-            // Copiamos o array:
-            const copy = [...obj.fio.awgs];
-            // Modificamos o índice de acordo com o nosso mapa:
-            copy[nameToIndexMap[name]] = val;
-            this.state.fio.awgs.push(copy)
-            
-        });
-        console.log(this.state.fio.awgs)
+        this.state.fio.awgs.push("")
+        this.state.fio.quantidades.push("")
+        const awgs = [...this.state.fio.awgs, ""]
+        const quantidades = [...this.state.fio.quantidades, ""]
+        this.setState({ awgs: awgs, quantidades: quantidades });
     };
+
+    //pega o valor do input
+    handleChangeAWG = (e, index) => {
+        e.preventDefault();
+
+        this.setState((prevState) => {
+            this.state.fio.awgs[index] = parseInt(e.target.value);
+            this.state.fio.quantidades[index] = parseInt(e.target.value)
+            const copy = [...prevState.fio.awgs, ...prevState.fio.quantidades];
+            return { ...prevState, copy };
+        });
+    }
+    //pega o valor do input
+    handleChangeQTD = (e, index) => {
+        e.preventDefault();
+
+        this.setState((prevState) => {
+            this.state.fio.quantidades[index] = parseInt(e.target.value);
+            const copy = [...prevState.fio.quantidades];
+            return { ...prevState, copy };
+        });
+    }
+
+    renderInputAWG = () => {
+
+        this.state.fio.awgs.map((valor, index) => (
+
+            <div className='col' key={valor}>
+                <label>Awg {index + 1}</label>
+                <input type="number" value={valor} id='valores' onChange={(e) => this.handleChangeNota(e, index)} />
+            </div>
+
+        ))
+
+    }
 
     render() {
         return (
@@ -70,22 +89,22 @@ class MotorRegister extends React.Component {
                 <Row>
                     <Col>
                         <FormGroup label="Marca">
-                            <input value={this.state.marca} onChange={HandleInputChange} type="text" className="form-control" />
+                            <input name="marca" onChange={HandleInputChange} type="text" className="form-control" />
                         </FormGroup>
                     </Col>
                     <Col>
                         <FormGroup label="Modelo">
-                            <input value={this.state.modelo} onChange={HandleInputChange} type="text" className="form-control" />
+                            <input name="modelo" onChange={HandleInputChange} type="text" className="form-control" />
                         </FormGroup>
                     </Col>
                     <Col>
                         <FormGroup label="Ranhuras">
-                            <input value={this.state.ranhuras} onChange={HandleInputChange} type="number" className="form-control" />
+                            <input name="ranhuras" onChange={HandleInputChange} type="number" className="form-control" />
                         </FormGroup>
                     </Col>
                     <Col>
                         <FormGroup label="Rotação">
-                            <input value={this.state.rotacao} onChange={HandleInputChange} type="number" className="form-control" />
+                            <input name="rotacao" onChange={HandleInputChange} type="number" className="form-control" />
                         </FormGroup>
                     </Col>
                 </Row>
@@ -93,42 +112,68 @@ class MotorRegister extends React.Component {
                 <Row>
                     <Col>
                         <FormGroup label="Ligação">
-                            <input value={this.state.ligacao} onChange={HandleInputChange} type="text" className="form-control" />
+                            <input name="ligacao" onChange={HandleInputChange} type="text" className="form-control" />
                         </FormGroup>
                     </Col>
                     <Col>
                         <FormGroup label="Potência">
-                            <input value={this.state.potencia} onChange={HandleInputChange} type="number" className="form-control" />
+                            <input name="potencia" onChange={HandleInputChange} type="number" className="form-control" />
                         </FormGroup>
                     </Col>
                     <Col>
-                        <FormGroup label="Medida Interna">
-                            <input value={this.state.medidaInterna} onChange={HandleInputChange} type="number" className="form-control" />
+                        <FormGroup label="Comprimento">
+                            <input name="medidaInterna" onChange={HandleInputChange} type="number" className="form-control" />
                         </FormGroup>
                     </Col>
                     <Col>
                         <FormGroup label="Medida Externa">
-                            <input value={this.state.medidaExterna} onChange={HandleInputChange} type="number" className="form-control" />
+                            <input name="medidaExterna" onChange={HandleInputChange} type="number" className="form-control" />
                         </FormGroup>
                     </Col>
                 </Row>
 
-                <Row >
-                    <Col >
-                        <FormGroup label={"AWG 1"}>
-                            <input type="number" name="awg1" onChange={this.addAWG} className="form-control" />
-                        </FormGroup>
-                    </Col>
-                    <Col >
-                        <FormGroup label={"AWG 2"}>
-                            <input type="number" name="awg2" onChange={this.addAWG} className="form-control" />
-                        </FormGroup>
-                    </Col>
+                <Row>
+                    {
+                        this.state.fio.awgs.map((valor, index) => (
+
+                            <Col className="col-md-2" key={index}>
+                                <label>Awg {index + 1}</label>
+                                <input className="form-control" type="number" value={valor} onChange={(e) => this.handleChangeAWG(e, index)} />
+                            </Col>
 
 
+                        ))
+
+                    }
+
+                    <div className="col-md-2 mt-2 d-flex align-items-end">
+                        <button className="p-button p-component p-button-rounded p-button-icon-only" type='button' onClick={this.addAWG}>
+                            <span className="p-button-icon p-c pi pi-plus"></span>
+                        </button>
+                    </div>
 
                 </Row>
-                <pre></pre>
+                <Row>
+                    {
+
+                        this.state.fio.quantidades.map((qtd, index) => (
+
+                            <Col className="col-md-2" key={qtd}>
+                                <label>Quantidade {index + 1}</label>
+                                <input className="form-control" type="number" value={qtd} onChange={(e) => this.handleChangeQTD(e, index)} />
+                            </Col>
+
+                        ))
+
+                    }
+
+                </Row>
+
+
+
+
+
+
                 <button onClick={this.create} type="button" className="btn btn-success">Cadastrar</button>
 
 

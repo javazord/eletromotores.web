@@ -2,7 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import MotorService from "../../app/service/motor/motorService";
 import Card from '../../components/card'
-import FormGroup from '../../components/grid/form-group-login'
+import FormGroup from '../../components/grid/form-group'
 import Row from "../../components/grid/row";
 import { showMessageAlert, showMessageSuccess } from "../../components/toastr";
 import { showMessageError } from "../../components/toastr";
@@ -55,33 +55,33 @@ class MotorSearch extends React.Component {
                     <Row className=" mt-auto">
                         <Col>
                             <FormGroup label="Marca">
-                                <input value={this.state.marca} onChange={HandleInputChange} type="text" className="form-control" id="inputLogin" />
+                                <input name="marca" onChange={HandleInputChange} type="text" className="form-control" id="inputLogin" />
                             </FormGroup>
                         </Col>
                         <Col>
                             <FormGroup label="Modelo">
-                                <input value={this.state.modelo} onChange={HandleInputChange} type="text" className="form-control" id="inputLogin" />
+                                <input name="modelo" onChange={HandleInputChange} type="text" className="form-control" id="inputLogin" />
                             </FormGroup>
                         </Col>
                         <Col>
                             <FormGroup label="Ranhuras">
-                                <input value={this.state.ranhuras} onChange={HandleInputChange} type="number" className="form-control" id="inputLogin" />
+                                <input name="ranhuras" onChange={HandleInputChange} type="number" className="form-control" id="inputLogin" />
                             </FormGroup>
                         </Col>
 
                         <Col>
-                            <FormGroup label="Medida Interna">
-                                <input value={this.state.medidaInterna} onChange={HandleInputChange} type="number" className="form-control" id="inputLogin" />
+                            <FormGroup label="Comprimento">
+                                <input name="medidaInterna" onChange={HandleInputChange} type="number" className="form-control" id="inputLogin" />
                             </FormGroup>
                         </Col>
                         <Col >
                             <FormGroup label="Medida Externa">
-                                <input value={this.state.medidaExterna} onChange={HandleInputChange} type="number" className="form-control" id="inputLogin" />
+                                <input name="medidaExterna" onChange={HandleInputChange} type="number" className="form-control" id="inputLogin" />
                             </FormGroup>
                         </Col>
                         <Col>
                             <FormGroup label="Potência">
-                                <input value={this.state.potencia} onChange={HandleInputChange} type="number" className="form-control" id="inputLogin" />
+                                <input name="potencia" onChange={HandleInputChange} type="number" className="form-control" id="inputLogin" />
                             </FormGroup>
                         </Col>
                         <Col className=" mt-auto">

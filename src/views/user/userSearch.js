@@ -112,10 +112,10 @@ class UserSearch extends React.Component {
                 <Card title="Pesquisar">
                     <Row>
                         <Col>
-                            <input value={this.state.login} onChange={HandleInputChange} type="text" className="form-control" placeholder="Informe o login" id="inputLogin" />
+                            <input name="login" onChange={HandleInputChange} type="text" className="form-control" placeholder="Informe o login" id="inputLogin" />
                         </Col>
                         <Col>
-                            <select value={this.state.condition} onChange={HandleInputChange} className="form-control" id="exampleSelect1">
+                            <select name="condition" onChange={HandleInputChange} className="form-control" id="exampleSelect1">
                                 <option value="1">Ativado</option>
                                 <option value="0">Desativado</option>
                             </select>
