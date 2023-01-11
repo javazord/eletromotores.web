@@ -8,6 +8,7 @@ import Col from "../../components/grid/col";
 import Row from '../../components/grid/row'
 import { Button } from 'primereact/button'
 import HandleInputChange from '../../components/events/handleInputChange'
+import { popper } from "@popperjs/core";
 
 class MotorRegister extends React.Component {
 
@@ -30,9 +31,10 @@ class MotorRegister extends React.Component {
             peso: 0
         },
         voltagens: [],
-        amperagens: [],
+        amperagens: ["", "", "", ""],
         usuario: {},
-        index: 1
+        indexAWG: 1,
+        indexESP: 1
     }
 
     constructor() {
@@ -40,19 +42,36 @@ class MotorRegister extends React.Component {
         this.service = new MotorService();
     }
 
+    addInputsESP = (e) => {
+        if (this.state.indexESP <= 5) {
+            e.preventDefault();
+
+            this.state.fio.espiras.push("")
+            const espiras = [...this.state.fio.espiras, ""]
+            this.setState({ espiras: espiras, indexESP: this.state.indexESP + 1 });
+
+        }
+    }
+
     addInputs = (e) => {
-        if (this.state.index <= 5) {
+        if (this.state.indexAWG <= 5) {
             e.preventDefault();
 
             this.state.fio.awgs.push("")
             this.state.fio.quantidades.push("")
             const awgs = [...this.state.fio.awgs, ""]
             const quantidades = [...this.state.fio.quantidades, ""]
-            this.setState({ awgs: awgs, quantidades: quantidades,index: this.state.index + 1 });
+            this.setState({ awgs: awgs, quantidades: quantidades, indexAWG: this.state.indexAWG + 1 });
 
         }
 
     };
+
+    removeInputsESP = () => {
+        this.state.fio.espiras.pop()
+        const espiras = [...this.state.fio.espiras, ""]
+        this.setState({ espiras: espiras, indexESP: this.state.indexESP - 1 })
+    }
 
     removeInputs = () => {
         //this.setState([...this.state.fio.awgs.filter((_, index) => index != posicao)])
@@ -60,7 +79,7 @@ class MotorRegister extends React.Component {
         this.state.fio.quantidades.pop()
         const awgs = [...this.state.fio.awgs, ""]
         const quantidades = [...this.state.fio.quantidades, ""]
-        this.setState({ awgs: awgs, quantidades: quantidades, index: this.state.index - 1 })
+        this.setState({ awgs: awgs, quantidades: quantidades, indexAWG: this.state.indexAWG - 1 })
     };
 
     //pega o valor do input
@@ -84,7 +103,26 @@ class MotorRegister extends React.Component {
         }
 
     }
+    handleChangeAMP(e, index) {
+        this.state.amperagens[index] = e.target.value;
+        this.setState([...this.state.amperagens]);
+    }
 
+    inputAmp() {
+        for (var index = 3; index => this.state.amperagens.length; index--) {
+            return (
+                this.state.amperagens.forEach(
+                    <Col className="col-md-2" key={index}>
+                        <label>Amperagem {index + 1}</label>
+                        <input className="form-control" type="number" value={this.state.amperagens[index]} name={this.state.amperagens[index]} id={`amp${index + 1}`} onChange={this.handleChangeAMP.bind(this, index)} />
+                    </Col>
+                )
+            )
+
+
+
+        }
+    }
     render() {
         return (
 
@@ -114,8 +152,8 @@ class MotorRegister extends React.Component {
 
                 <Row>
                     <Col>
-                        <FormGroup label="Ligação">
-                            <input name="ligacao" onChange={HandleInputChange} type="text" className="form-control" />
+                        <FormGroup label="Peso">
+                            <input name="peso" onChange={HandleInputChange} type="number" className="form-control" />
                         </FormGroup>
                     </Col>
                     <Col>
@@ -149,7 +187,7 @@ class MotorRegister extends React.Component {
                     }
 
                     <div className="col-md-2 mt-2 d-flex align-items-end">
-                        <button className="p-button p-component p-button-rounded p-button-icon-only" type='button' onClick={this.addInputs}>
+                        <button className="p-button p-component p-button-rounded p-button-icon-only" title="Adicionar AWG/Quantidade" type='button' onClick={this.addInputs}>
                             <span className="p-button-icon p-c pi pi-plus"></span>
                         </button>
                     </div>
@@ -170,18 +208,73 @@ class MotorRegister extends React.Component {
                     }
 
                     <div className="col-md-2 mt-2 d-flex align-items-end">
-                        <button className="p-button p-component p-button-rounded p-button-danger p-button-icon-only" type='button' onClick={this.removeInputs}>
+                        <button className="p-button p-component p-button-rounded p-button-danger p-button-icon-only" title="Remover AWG/Quantidade" type='button' onClick={this.removeInputs}>
                             <span className="p-button-icon p-c pi pi-minus"></span>
                         </button>
                     </div>
 
                 </Row>
+                <Row>
+                    {
 
-                <button onClick={this.create} type="button" className="mt-2 btn btn-success">Cadastrar</button>
+                        this.state.fio.espiras.map((esp, index) => (
+
+                            <Col className="col-md-2" key={index}>
+                                <label>Espiras {index + 1}</label>
+                                <input className="form-control" type="number" value={esp} id={`esp${index + 1}`} onChange={(e) => this.handleChangeESP(e, index)} />
+                            </Col>
+
+                        ))
+
+                    }
+
+                    <div className="col-md-2 mt-2 d-flex align-items-end">
+                        <button className="m-1 p-button p-component p-button-rounded p-button-icon-only" title="Adicionar Espiras" type='button' onClick={this.addInputsESP}>
+                            <span className="p-button-icon p-c pi pi-plus"></span>
+                        </button>
+                        <button className="m-1 p-button p-component p-button-rounded p-button-danger p-button-icon-only" title="Remover Espiras" type='button' onClick={this.removeInputsESP}>
+                            <span className="p-button-icon p-c pi pi-minus"></span>
+                        </button>
+                    </div>
+
+                </Row>
+                <Row>
+                    <Col>
+                        <FormGroup label="Ligação">
+                            <input name="ligacao" onChange={HandleInputChange} type="text" className="form-control" />
+                        </FormGroup>
+                    </Col>
+
+                    {
+                        this.state.amperagens.map((amp, index) => (
+
+                            <Col className="col-md-2" key={index}>
+                                <label>Amperagens {index + 1}</label>
+                                <input className="form-control" type="number" value={amp} id={`amp${index + 1}`} onChange={(e) => this.handleChangeAMP(e, index)} />
+                            </Col>
+
+                        ))
+                    }
+                </Row>
+                <Row>
+                    <Col>
+                        <FormGroup label="Tensão">
+                            <select value={this.state.role} onChange={HandleInputChange} className="form-select" id="exampleSelect1">
+                                <option value="TRIFASICO">Trifásico</option>
+                                <option value="MONOFASICO">Monofásico</option>
+                            </select>
+                        </FormGroup>
+                    </Col>
+
+
+
+
+                </Row>
+
+                <button onClick={this.create} type="button" className="mt-2 btn btn-success"><span className="pi pi-check"></span> Cadastrar</button>
 
 
             </Card>
-
 
         )
     }

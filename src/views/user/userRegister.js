@@ -47,7 +47,7 @@ class UserRegister extends React.Component {
                         </FormGroup>
 
                         <FormGroup>
-                            <select value={this.state.role} onChange={HandleInputChange} className="form-control" id="exampleSelect1">
+                            <select value={this.state.role} onChange={HandleInputChange} className="form-select" id="exampleSelect1">
                                 <option value="ROLE_USER">Usuario</option>
                                 <option value="ROLE_ADMIN">Administrador</option>
                             </select>
@@ -65,7 +65,7 @@ class UserRegister extends React.Component {
                     </Col>
                 </Row>
 
-                <button onClick={this.create} type="button" className="btn btn-success">Cadastrar</button>
+                <button onClick={this.create} type="button" className="mt-2 btn btn-success"><span className="pi pi-check"></span> Cadastrar</button>
 
             </Card>
 
