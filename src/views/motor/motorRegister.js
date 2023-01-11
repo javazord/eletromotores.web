@@ -11,6 +11,8 @@ import HandleInputChange from '../../components/events/handleInputChange'
 
 class MotorRegister extends React.Component {
 
+
+
     state = {
         marca: "",
         modelo: "",
@@ -29,7 +31,8 @@ class MotorRegister extends React.Component {
         },
         voltagens: [],
         amperagens: [],
-        usuario: {}
+        usuario: {},
+        index: 1
     }
 
     constructor() {
@@ -37,48 +40,48 @@ class MotorRegister extends React.Component {
         this.service = new MotorService();
     }
 
-    addAWG = (e) => {
-        e.preventDefault();
+    addInputs = (e) => {
+        if (this.state.index <= 5) {
+            e.preventDefault();
 
-        this.state.fio.awgs.push("")
-        this.state.fio.quantidades.push("")
+            this.state.fio.awgs.push("")
+            this.state.fio.quantidades.push("")
+            const awgs = [...this.state.fio.awgs, ""]
+            const quantidades = [...this.state.fio.quantidades, ""]
+            this.setState({ awgs: awgs, quantidades: quantidades,index: this.state.index + 1 });
+
+        }
+
+    };
+
+    removeInputs = () => {
+        //this.setState([...this.state.fio.awgs.filter((_, index) => index != posicao)])
+        this.state.fio.awgs.pop()
+        this.state.fio.quantidades.pop()
         const awgs = [...this.state.fio.awgs, ""]
         const quantidades = [...this.state.fio.quantidades, ""]
-        this.setState({ awgs: awgs, quantidades: quantidades });
+        this.setState({ awgs: awgs, quantidades: quantidades, index: this.state.index - 1 })
     };
 
     //pega o valor do input
     handleChangeAWG = (e, index) => {
-        e.preventDefault();
+        //numero max estipulado é 5
+        if (index <= 5) {
+            e.preventDefault();
 
-        this.setState((prevState) => {
-            this.state.fio.awgs[index] = parseInt(e.target.value);
-            this.state.fio.quantidades[index] = parseInt(e.target.value)
-            const copy = [...prevState.fio.awgs, ...prevState.fio.quantidades];
-            return { ...prevState, copy };
-        });
+            this.state.fio.awgs[index] = e.target.value;
+            this.setState([...this.state.fio.awgs])
+        }
     }
     //pega o valor do input
     handleChangeQTD = (e, index) => {
-        e.preventDefault();
+        //numero max estipulado é 5
+        if (index <= 5) {
+            e.preventDefault();
 
-        this.setState((prevState) => {
-            this.state.fio.quantidades[index] = parseInt(e.target.value);
-            const copy = [...prevState.fio.quantidades];
-            return { ...prevState, copy };
-        });
-    }
-
-    renderInputAWG = () => {
-
-        this.state.fio.awgs.map((valor, index) => (
-
-            <div className='col' key={valor}>
-                <label>Awg {index + 1}</label>
-                <input type="number" value={valor} id='valores' onChange={(e) => this.handleChangeNota(e, index)} />
-            </div>
-
-        ))
+            this.state.fio.quantidades[index] = e.target.value;
+            this.setState([...this.state.fio.quantidades])
+        }
 
     }
 
@@ -135,10 +138,9 @@ class MotorRegister extends React.Component {
                 <Row>
                     {
                         this.state.fio.awgs.map((valor, index) => (
-
                             <Col className="col-md-2" key={index}>
                                 <label>Awg {index + 1}</label>
-                                <input className="form-control" type="number" value={valor} onChange={(e) => this.handleChangeAWG(e, index)} />
+                                <input className="form-control" type="number" value={valor} id={`awg${index + 1}`} onChange={(e) => this.handleChangeAWG(e, index)} />
                             </Col>
 
 
@@ -147,7 +149,7 @@ class MotorRegister extends React.Component {
                     }
 
                     <div className="col-md-2 mt-2 d-flex align-items-end">
-                        <button className="p-button p-component p-button-rounded p-button-icon-only" type='button' onClick={this.addAWG}>
+                        <button className="p-button p-component p-button-rounded p-button-icon-only" type='button' onClick={this.addInputs}>
                             <span className="p-button-icon p-c pi pi-plus"></span>
                         </button>
                     </div>
@@ -158,23 +160,24 @@ class MotorRegister extends React.Component {
 
                         this.state.fio.quantidades.map((qtd, index) => (
 
-                            <Col className="col-md-2" key={qtd}>
+                            <Col className="col-md-2" key={index}>
                                 <label>Quantidade {index + 1}</label>
-                                <input className="form-control" type="number" value={qtd} onChange={(e) => this.handleChangeQTD(e, index)} />
+                                <input className="form-control" type="number" value={qtd} id={`qtd${index + 1}`} onChange={(e) => this.handleChangeQTD(e, index)} />
                             </Col>
 
                         ))
 
                     }
 
+                    <div className="col-md-2 mt-2 d-flex align-items-end">
+                        <button className="p-button p-component p-button-rounded p-button-danger p-button-icon-only" type='button' onClick={this.removeInputs}>
+                            <span className="p-button-icon p-c pi pi-minus"></span>
+                        </button>
+                    </div>
+
                 </Row>
 
-
-
-
-
-
-                <button onClick={this.create} type="button" className="btn btn-success">Cadastrar</button>
+                <button onClick={this.create} type="button" className="mt-2 btn btn-success">Cadastrar</button>
 
 
             </Card>
