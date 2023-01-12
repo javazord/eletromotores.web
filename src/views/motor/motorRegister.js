@@ -8,7 +8,7 @@ import Col from "../../components/grid/col";
 import Row from '../../components/grid/row'
 import { Button } from 'primereact/button'
 import HandleInputChange from '../../components/events/handleInputChange'
-import { popper } from "@popperjs/core";
+import Checkbox from "../../components/grid/checkbox";
 
 class MotorRegister extends React.Component {
 
@@ -33,6 +33,7 @@ class MotorRegister extends React.Component {
         voltagens: [],
         amperagens: ["", "", "", ""],
         usuario: {},
+        checkboxValue: ["100v", "220v", "380v", "440v", "760"],
         indexAWG: 1,
         indexESP: 1
     }
@@ -106,6 +107,11 @@ class MotorRegister extends React.Component {
     handleChangeAMP(e, index) {
         this.state.amperagens[index] = e.target.value;
         this.setState([...this.state.amperagens]);
+    }
+
+    handleCheckbox(e, index) {
+        this.state.checkboxValue[index] = e.target.value;
+        this.setState([...this.state.checkboxValue]);
     }
 
     inputAmp() {
@@ -257,12 +263,18 @@ class MotorRegister extends React.Component {
                     }
                 </Row>
                 <Row>
+                    {
+                        this.state.checkboxValue.map((valor, index) => {
+                            <Col className="col-md-2" >
+                                <Checkbox value={valor} id={`checkboxValue${index + 1}`} onChange={(e) => this.handleCheckbox(e, index)}>{this.state.checkboxValue[0]}</Checkbox>
+                            </Col>
+                        })
+
+                    }
+
                     <Col>
                         <FormGroup label="Tensão">
-                            <select value={this.state.role} onChange={HandleInputChange} className="form-select" id="exampleSelect1">
-                                <option value="TRIFASICO">Trifásico</option>
-                                <option value="MONOFASICO">Monofásico</option>
-                            </select>
+                            <input className="form-control" disabled />
                         </FormGroup>
                     </Col>
 
