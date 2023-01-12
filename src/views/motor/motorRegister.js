@@ -33,7 +33,7 @@ class MotorRegister extends React.Component {
         voltagens: [],
         amperagens: ["", "", "", ""],
         usuario: {},
-        checkboxValue: ["100v", "220v", "380v", "440v", "760"],
+        checkboxValue: ["100v", "220v", "380v", "440v", "760v"],
         indexAWG: 1,
         indexESP: 1
     }
@@ -110,25 +110,11 @@ class MotorRegister extends React.Component {
     }
 
     handleCheckbox(e, index) {
-        this.state.checkboxValue[index] = e.target.value;
+        this.state.checkboxValue = e.target.value;
         this.setState([...this.state.checkboxValue]);
     }
 
-    inputAmp() {
-        for (var index = 3; index => this.state.amperagens.length; index--) {
-            return (
-                this.state.amperagens.forEach(
-                    <Col className="col-md-2" key={index}>
-                        <label>Amperagem {index + 1}</label>
-                        <input className="form-control" type="number" value={this.state.amperagens[index]} name={this.state.amperagens[index]} id={`amp${index + 1}`} onChange={this.handleChangeAMP.bind(this, index)} />
-                    </Col>
-                )
-            )
-
-
-
-        }
-    }
+    
     render() {
         return (
 
@@ -245,11 +231,6 @@ class MotorRegister extends React.Component {
 
                 </Row>
                 <Row>
-                    <Col>
-                        <FormGroup label="Ligação">
-                            <input name="ligacao" onChange={HandleInputChange} type="text" className="form-control" />
-                        </FormGroup>
-                    </Col>
 
                     {
                         this.state.amperagens.map((amp, index) => (
@@ -261,26 +242,31 @@ class MotorRegister extends React.Component {
 
                         ))
                     }
+                    <Col>
+                        <FormGroup label="Ligação">
+                            <input name="ligacao" onChange={HandleInputChange} type="text" className="form-control" />
+                        </FormGroup>
+                    </Col>
+
                 </Row>
                 <Row>
                     {
-                        this.state.checkboxValue.map((valor, index) => {
-                            <Col className="col-md-2" >
-                                <Checkbox value={valor} id={`checkboxValue${index + 1}`} onChange={(e) => this.handleCheckbox(e, index)}>{this.state.checkboxValue[0]}</Checkbox>
+                        this.state.voltagens.map((valor, index) => {
+                            <Col className="col-md-2" key={index}>
+                                <div className="form-check">
+                                    <input className="form-check-input" type="checkbox" value={this.state.checkboxValue[index]} onChange={(e) => this.handleCheckbox(e, index)} />
+                                    <label className="form-check-label" htmlFor="flexCheckChecked">{valor}</label>
+                                </div>
                             </Col>
                         })
-
                     }
+                    {console.log(this.state.checkboxValue[0])}
 
                     <Col>
                         <FormGroup label="Tensão">
                             <input className="form-control" disabled />
                         </FormGroup>
                     </Col>
-
-
-
-
                 </Row>
 
                 <button onClick={this.create} type="button" className="mt-2 btn btn-success"><span className="pi pi-check"></span> Cadastrar</button>
