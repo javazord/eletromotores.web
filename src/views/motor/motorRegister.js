@@ -110,11 +110,11 @@ class MotorRegister extends React.Component {
     }
 
     handleCheckbox(e, index) {
-        this.state.checkboxValue = e.target.value;
-        this.setState([...this.state.checkboxValue]);
+        this.state.voltagens[index] = e.target.value;
+        this.setState([...this.state.voltagens]);
     }
 
-    
+
     render() {
         return (
 
@@ -251,14 +251,11 @@ class MotorRegister extends React.Component {
                 </Row>
                 <Row>
                     {
-                        this.state.voltagens.map((valor, index) => {
-                            <Col className="col-md-2" key={index}>
-                                <div className="form-check">
-                                    <input className="form-check-input" type="checkbox" value={this.state.checkboxValue[index]} onChange={(e) => this.handleCheckbox(e, index)} />
-                                    <label className="form-check-label" htmlFor="flexCheckChecked">{valor}</label>
-                                </div>
-                            </Col>
-                        })
+                            this.state.voltagens.map((valor, index) => {
+                                <Col className="col-md-2" key={valor}>
+                                    <p></p>
+                                </Col>
+                            })
                     }
                     {console.log(this.state.checkboxValue[0])}
 
