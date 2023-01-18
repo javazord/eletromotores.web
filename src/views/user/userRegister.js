@@ -26,7 +26,7 @@ class UserRegister extends React.Component {
     create = () => {
         const { login, password, role } = this.state;
         const usuario = { login, password, role }
-
+        console.log(usuario)
         this.service.save(usuario)
             .then(response => {
                 showMessageSuccess('Usuário cadastrado com sucesso!')
@@ -36,6 +36,11 @@ class UserRegister extends React.Component {
             })
     }
 
+    handleInputChange = (event) => {
+        this.setState({ [event.target.name]: event.target.value })
+    }
+
+
     render() {
         return (
             <Card title="Cadastrar Colaborador">
@@ -43,23 +48,23 @@ class UserRegister extends React.Component {
                 <Row>
                     <Col>
                         <FormGroup>
-                            <input onChange={HandleInputChange} type="email" className="form-control" id="exampleInputEmail1" placeholder="Login" />
+                            <input name="login" value={this.state.login} onChange={this.handleInputChange} type="email" className="form-control" id="exampleInputEmail1" placeholder="Login" />
                         </FormGroup>
 
                         <FormGroup>
-                            <select value={this.state.role} onChange={HandleInputChange} className="form-select" id="exampleSelect1">
+                            <select name="role" value={this.state.role} onChange={this.handleInputChange} className="form-select" id="exampleSelect1">
                                 <option value="ROLE_USER">Usuario</option>
                                 <option value="ROLE_ADMIN">Administrador</option>
                             </select>
                         </FormGroup>
                     </Col>
-                    
+
                     <Col>
                         <FormGroup>
-                            <input onChange={HandleInputChange} type="password" className="form-control" placeholder="Senha" />
+                            <input name="password" value={this.state.password} onChange={this.handleInputChange} type="password" className="form-control" placeholder="Senha" />
                         </FormGroup>
                         <FormGroup>
-                            <input onChange={HandleInputChange} type="password" className="form-control" placeholder="Repetir senha" />
+                            <input onChange={this.handleInputChange} type="password" className="form-control" placeholder="Repetir senha" />
                         </FormGroup>
 
                     </Col>

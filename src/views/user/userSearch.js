@@ -96,6 +96,9 @@ class UserSearch extends React.Component {
         this.clearLogin()
     }
 
+    handleInputChange = (event) => {
+        this.setState({ [event.target.name]: event.target.value })
+    }
 
     render() {
 
@@ -112,10 +115,10 @@ class UserSearch extends React.Component {
                 <Card title="Pesquisar">
                     <Row>
                         <Col>
-                            <input name="login" onChange={HandleInputChange} type="text" className="form-control" placeholder="Informe o login" id="inputLogin" />
+                            <input name="login" value={this.state.login} onChange={this.handleInputChange} type="text" className="form-control" placeholder="Informe o login" id="inputLogin" />
                         </Col>
                         <Col>
-                            <select name="condition" onChange={HandleInputChange} className="form-control" id="exampleSelect1">
+                            <select name="condition" value={this.state.condition} onChange={this.handleInputChange} className="form-control" id="exampleSelect1">
                                 <option value="1">Ativado</option>
                                 <option value="0">Desativado</option>
                             </select>
@@ -140,12 +143,12 @@ class UserSearch extends React.Component {
                             <Row>
                                 <Col>
                                     <FormGroup>
-                                        <input type="text" className="form-control" value={Role(this.state.user)} readOnly />
+                                        <input type="text" className="form-control" name="role" value={Role(this.state.user)} readOnly />
                                     </FormGroup>
                                 </Col>
                                 <Col>
                                     <FormGroup>
-                                        <input type="text" className="form-control" value={Condition(this.state.user)} readOnly />
+                                        <input type="text" className="form-control" name="condition" value={Condition(this.state.user)} readOnly />
                                     </FormGroup>
                                 </Col>
                             </Row>

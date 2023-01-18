@@ -47,6 +47,10 @@ class MotorSearch extends React.Component {
 
     }
 
+    handleInputChange = (event) => {
+        this.setState({ [event.target.name]: event.target.value })
+    }
+
     render() {
         return (
             <>
@@ -55,33 +59,33 @@ class MotorSearch extends React.Component {
                     <Row className=" mt-auto">
                         <Col>
                             <FormGroup label="Marca">
-                                <input name="marca" onChange={HandleInputChange} type="text" className="form-control" id="inputLogin" />
+                                <input name="marca" value={this.state.marca} onChange={this.handleInputChange} type="text" className="form-control" id="inputLogin" />
                             </FormGroup>
                         </Col>
                         <Col>
                             <FormGroup label="Modelo">
-                                <input name="modelo" onChange={HandleInputChange} type="text" className="form-control" id="inputLogin" />
+                                <input name="modelo" value={this.state.modelo} onChange={this.handleInputChange} type="text" className="form-control" id="inputLogin" />
                             </FormGroup>
                         </Col>
                         <Col>
                             <FormGroup label="Ranhuras">
-                                <input name="ranhuras" onChange={HandleInputChange} type="number" className="form-control" id="inputLogin" />
+                                <input name="ranhuras" value={this.state.ranhuras} onChange={this.handleInputChange} type="number" className="form-control" id="inputLogin" />
                             </FormGroup>
                         </Col>
 
                         <Col>
                             <FormGroup label="Comprimento">
-                                <input name="medidaInterna" onChange={HandleInputChange} type="number" className="form-control" id="inputLogin" />
+                                <input name="medidaInterna" value={this.state.medidaInterna} onChange={this.handleInputChange} type="number" className="form-control" id="inputLogin" />
                             </FormGroup>
                         </Col>
                         <Col >
                             <FormGroup label="Medida Externa">
-                                <input name="medidaExterna" onChange={HandleInputChange} type="number" className="form-control" id="inputLogin" />
+                                <input name="medidaExterna" value={this.state.medidaExterna} onChange={this.handleInputChange} type="number" className="form-control" id="inputLogin" />
                             </FormGroup>
                         </Col>
                         <Col>
                             <FormGroup label="Potência">
-                                <input name="potencia" onChange={HandleInputChange} type="number" className="form-control" id="inputLogin" />
+                                <input name="potencia" value={this.state.potencia} onChange={this.handleInputChange} type="number" className="form-control" id="inputLogin" />
                             </FormGroup>
                         </Col>
                         <Col className=" mt-auto">

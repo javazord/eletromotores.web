@@ -7,8 +7,9 @@ import FormGroup from '../../components/grid/form-group'
 import Col from "../../components/grid/col";
 import Row from '../../components/grid/row'
 import { Button } from 'primereact/button'
-import HandleInputChange from '../../components/events/handleInputChange'
+import HandleInputResetValues from '../../components/events/handleInputResetValues'
 import Checkbox from "../../components/grid/checkbox";
+import LocalStorageService from "../../app/localStorage";
 
 class MotorRegister extends React.Component {
 
@@ -23,7 +24,7 @@ class MotorRegister extends React.Component {
         potencia: 0,
         medidaInterna: 0,
         medidaExterna: 0,
-        tensao: "TRIFASICO",
+        tensao: "",
         fio: {
             awgs: [],
             quantidades: [],
@@ -32,8 +33,8 @@ class MotorRegister extends React.Component {
         },
         voltagens: [],
         amperagens: ["", "", "", ""],
-        usuario: {},
-        checkboxValue: ["100v", "220v", "380v", "440v", "760v"],
+        checkboxVolts: [127, 220, 380, 440, 760],
+        usuario: LocalStorageService.getItem('_usuario_logado'),
         indexAWG: 1,
         indexESP: 1
     }
@@ -41,6 +42,10 @@ class MotorRegister extends React.Component {
     constructor() {
         super();
         this.service = new MotorService();
+    }
+
+    handleInputChange = (event) => {
+        this.setState({ [event.target.name]: event.target.value })
     }
 
     addInputsESP = (e) => {
@@ -60,9 +65,7 @@ class MotorRegister extends React.Component {
 
             this.state.fio.awgs.push("")
             this.state.fio.quantidades.push("")
-            const awgs = [...this.state.fio.awgs, ""]
-            const quantidades = [...this.state.fio.quantidades, ""]
-            this.setState({ awgs: awgs, quantidades: quantidades, indexAWG: this.state.indexAWG + 1 });
+            this.setState({ awgs: [...this.state.fio.awgs, ""], quantidades: [...this.state.fio.quantidades, ""], indexAWG: this.state.indexAWG + 1 });
 
         }
 
@@ -104,16 +107,76 @@ class MotorRegister extends React.Component {
         }
 
     }
-    handleChangeAMP(e, index) {
+
+    handleChangeAMP = (e, index) => {
         this.state.amperagens[index] = e.target.value;
         this.setState([...this.state.amperagens]);
     }
 
-    handleCheckbox(e, index) {
-        this.state.voltagens[index] = e.target.value;
-        this.setState([...this.state.voltagens]);
+    handleChangeESP = (e, index) => {
+        this.state.fio.espiras[index] = e.target.value;
+        this.setState([...this.state.fio.espiras]);
     }
 
+    handleCheckbox = (e) => {
+        var updatedList = [...this.state.voltagens].map(str => { return parseInt(str, 10) });
+        
+        if (e.target.checked) {
+            updatedList = [...this.state.voltagens, e.target.value];
+            this.validateCheckbox(updatedList.map(str => { return parseInt(str, 10) }))
+        } else {
+            updatedList.splice(this.state.voltagens.indexOf(e.target.value), 1);
+            this.validateCheckbox(updatedList)
+        }
+        this.setState({ voltagens: updatedList});
+    }
+
+    validateCheckbox = (updatedList) => {
+        
+        if (updatedList.includes(220) && updatedList.includes(380) && updatedList.includes(440) && updatedList.includes(760)) {
+            updatedList.includes(127) ? this.setState({ tensao: "" }) : this.setState({ tensao: "TRIFASICO" })
+
+        } else if (updatedList.includes(127) && updatedList.includes(220)) {
+            updatedList.includes(380) || updatedList.includes(440) || updatedList.includes(760) ? this.setState({ tensao: "" }) : this.setState({ tensao: "MONOFASICO" })
+
+        } else {
+            this.setState({ tensao: "" })
+        }
+    }
+
+    create = () => {
+
+        const { marca, modelo, ranhuras, rotacao, ligacao, potencia, medidaInterna, medidaExterna, tensao, fio, voltagens, amperagens, usuario } = this.state
+
+        const motor = {
+            marca, 
+            modelo, 
+            ranhuras: parseInt(ranhuras), 
+            rotacao: parseInt(rotacao), 
+            ligacao, 
+            potencia: parseInt(potencia), 
+            medidaInterna: parseInt(medidaInterna), 
+            medidaExterna: parseInt(medidaExterna), 
+            tensao, 
+            fio: {
+                awgs: parseInt(fio.awgs),
+                quantidades: parseInt(fio.quantidades),
+                espiras: parseInt(fio.espiras),
+                peso: parseInt(fio.peso),
+            }, 
+            voltagens: voltagens.map(str => { return parseInt(str, 10) }),
+            amperagens: amperagens.map(str => { return parseInt(str, 10) }), 
+            usuario
+        }
+
+        this.service.save(motor)
+            .then(response => {
+                showMessageSuccess('Motor cadastrado com sucesso!')
+                HandleInputResetValues()
+            }).catch(erro => {
+                showMessageError(erro.response.data)
+            })
+    }
 
     render() {
         return (
@@ -122,22 +185,22 @@ class MotorRegister extends React.Component {
                 <Row>
                     <Col>
                         <FormGroup label="Marca">
-                            <input name="marca" onChange={HandleInputChange} type="text" className="form-control" />
+                            <input name="marca" value={this.state.marca} onChange={this.handleInputChange} type="text" className="form-control" />
                         </FormGroup>
                     </Col>
                     <Col>
                         <FormGroup label="Modelo">
-                            <input name="modelo" onChange={HandleInputChange} type="text" className="form-control" />
+                            <input name="modelo" value={this.state.modelo} onChange={this.handleInputChange} type="text" className="form-control" />
                         </FormGroup>
                     </Col>
                     <Col>
                         <FormGroup label="Ranhuras">
-                            <input name="ranhuras" onChange={HandleInputChange} type="number" className="form-control" />
+                            <input name="ranhuras" value={this.state.ranhuras} onChange={this.handleInputChange} type="number" className="form-control" />
                         </FormGroup>
                     </Col>
                     <Col>
                         <FormGroup label="Rotação">
-                            <input name="rotacao" onChange={HandleInputChange} type="number" className="form-control" />
+                            <input name="rotacao" value={this.state.rotacao} onChange={this.handleInputChange} type="number" className="form-control" />
                         </FormGroup>
                     </Col>
                 </Row>
@@ -145,22 +208,22 @@ class MotorRegister extends React.Component {
                 <Row>
                     <Col>
                         <FormGroup label="Peso">
-                            <input name="peso" onChange={HandleInputChange} type="number" className="form-control" />
+                            <input name="peso" value={this.state.fio.peso} onChange={this.handleInputChange} type="number" className="form-control" />
                         </FormGroup>
                     </Col>
                     <Col>
                         <FormGroup label="Potência">
-                            <input name="potencia" onChange={HandleInputChange} type="number" className="form-control" />
+                            <input name="potencia" value={this.state.potencia} onChange={this.handleInputChange} type="number" className="form-control" />
                         </FormGroup>
                     </Col>
                     <Col>
                         <FormGroup label="Comprimento">
-                            <input name="medidaInterna" onChange={HandleInputChange} type="number" className="form-control" />
+                            <input name="medidaInterna" value={this.state.medidaInterna} onChange={this.handleInputChange} type="number" className="form-control" />
                         </FormGroup>
                     </Col>
                     <Col>
                         <FormGroup label="Medida Externa">
-                            <input name="medidaExterna" onChange={HandleInputChange} type="number" className="form-control" />
+                            <input name="medidaExterna" value={this.state.medidaExterna} onChange={this.handleInputChange} type="number" className="form-control" />
                         </FormGroup>
                     </Col>
                 </Row>
@@ -172,19 +235,16 @@ class MotorRegister extends React.Component {
                                 <label>Awg {index + 1}</label>
                                 <input className="form-control" type="number" value={valor} id={`awg${index + 1}`} onChange={(e) => this.handleChangeAWG(e, index)} />
                             </Col>
-
-
                         ))
 
                     }
-
                     <div className="col-md-2 mt-2 d-flex align-items-end">
                         <button className="p-button p-component p-button-rounded p-button-icon-only" title="Adicionar AWG/Quantidade" type='button' onClick={this.addInputs}>
                             <span className="p-button-icon p-c pi pi-plus"></span>
                         </button>
                     </div>
-
                 </Row>
+
                 <Row>
                     {
 
@@ -198,6 +258,7 @@ class MotorRegister extends React.Component {
                         ))
 
                     }
+
 
                     <div className="col-md-2 mt-2 d-flex align-items-end">
                         <button className="p-button p-component p-button-rounded p-button-danger p-button-icon-only" title="Remover AWG/Quantidade" type='button' onClick={this.removeInputs}>
@@ -244,35 +305,52 @@ class MotorRegister extends React.Component {
                     }
                     <Col>
                         <FormGroup label="Ligação">
-                            <input name="ligacao" onChange={HandleInputChange} type="text" className="form-control" />
+                            <input name="ligacao" value={this.state.ligacao} onChange={this.handleInputChange} type="text" className="form-control" />
                         </FormGroup>
                     </Col>
 
+                </Row>
+                <Row className="align-items-center">
+                    <Col>
+                        <label >Voltagens</label>
+                        <Row>
+                            {
+                                this.state.checkboxVolts.map((item) => (
+
+                                    <Col key={item}>
+
+                                        <Checkbox label={`${item}v`} name={item} value={item} onChange={(e) => this.handleCheckbox(e)} />
+                                    </Col>
+                                ))
+                            }
+                        </Row>
+                    </Col>
+
+                    <Col className="col-md-6">
+                        <FormGroup label="Tensão">
+                            <input className="form-control" name="tensao" value={this.state.tensao} disabled />
+                        </FormGroup>
+                    </Col>
                 </Row>
                 <Row>
-                    {
-                            this.state.voltagens.map((valor, index) => {
-                                <Col className="col-md-2" key={valor}>
-                                    <p></p>
-                                </Col>
-                            })
-                    }
-                    {console.log(this.state.checkboxValue[0])}
-
-                    <Col>
-                        <FormGroup label="Tensão">
-                            <input className="form-control" disabled />
-                        </FormGroup>
+                    <Col className="mt-2 text-right">
+                        <button onClick={this.create} type="button" className="btn btn-success"><span className="pi pi-check"></span> Cadastrar</button>
                     </Col>
+
                 </Row>
 
-                <button onClick={this.create} type="button" className="mt-2 btn btn-success"><span className="pi pi-check"></span> Cadastrar</button>
 
 
             </Card>
 
         )
+
     }
+
+
+
 }
+
+
 
 export default MotorRegister
