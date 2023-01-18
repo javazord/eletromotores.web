@@ -147,7 +147,7 @@ class MotorRegister extends React.Component {
     create = () => {
 
         const { marca, modelo, ranhuras, rotacao, ligacao, potencia, medidaInterna, medidaExterna, tensao, fio, voltagens, amperagens, usuario } = this.state
-
+        
         const motor = {
             marca, 
             modelo, 
@@ -165,10 +165,10 @@ class MotorRegister extends React.Component {
                 peso: parseInt(fio.peso),
             }, 
             voltagens: voltagens.map(str => { return parseInt(str, 10) }),
-            amperagens: amperagens.map(str => { return parseInt(str, 10) }), 
+            amperagens: amperagens.map(str => { return parseFloat(str, 10) }), 
             usuario
         }
-
+        
         this.service.save(motor)
             .then(response => {
                 showMessageSuccess('Motor cadastrado com sucesso!')
