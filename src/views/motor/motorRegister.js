@@ -159,15 +159,16 @@ class MotorRegister extends React.Component {
             medidaExterna: parseInt(medidaExterna), 
             tensao, 
             fio: {
-                awgs: parseInt(fio.awgs),
-                quantidades: parseInt(fio.quantidades),
-                espiras: parseInt(fio.espiras),
+                awgs: fio.awgs.map(str => { return parseInt(str, 10) }),
+                quantidades: fio.quantidades.map(str => { return parseInt(str, 10) }),
+                espiras: fio.espiras.map(str => { return parseInt(str, 10) }),
                 peso: parseInt(fio.peso),
             }, 
             voltagens: voltagens.map(str => { return parseInt(str, 10) }),
             amperagens: amperagens.map(str => { return parseFloat(str, 10) }), 
-            usuario
+            usuario: usuario.id
         }
+        
         
         this.service.save(motor)
             .then(response => {

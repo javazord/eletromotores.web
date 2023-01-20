@@ -9,7 +9,6 @@ export default class MotorService extends ApiService{
     save(motor){
         console.log(motor)
         return this.post('', motor)
-        
     }
 
     put(motor){
