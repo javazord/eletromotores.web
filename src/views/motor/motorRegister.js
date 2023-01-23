@@ -32,7 +32,7 @@ class MotorRegister extends React.Component {
             peso: 0
         },
         voltagens: [],
-        amperagens: ["", "", "", ""],
+        amperagens: [0, 0, 0, 0],
         checkboxVolts: [127, 220, 380, 440, 760],
         usuario: LocalStorageService.getItem('_usuario_logado'),
         indexAWG: 1,
@@ -46,6 +46,10 @@ class MotorRegister extends React.Component {
 
     handleInputChange = (event) => {
         this.setState({ [event.target.name]: event.target.value })
+    }
+    handleInputChangePeso = (event) => {
+        console.log(this.state.fio.peso)
+        this.setState({...this.state, peso: event.target.value})
     }
 
     addInputsESP = (e) => {
@@ -120,7 +124,7 @@ class MotorRegister extends React.Component {
 
     handleCheckbox = (e) => {
         var updatedList = [...this.state.voltagens].map(str => { return parseInt(str, 10) });
-        
+
         if (e.target.checked) {
             updatedList = [...this.state.voltagens, e.target.value];
             this.validateCheckbox(updatedList.map(str => { return parseInt(str, 10) }))
@@ -128,11 +132,11 @@ class MotorRegister extends React.Component {
             updatedList.splice(this.state.voltagens.indexOf(e.target.value), 1);
             this.validateCheckbox(updatedList)
         }
-        this.setState({ voltagens: updatedList});
+        this.setState({ voltagens: updatedList });
     }
 
     validateCheckbox = (updatedList) => {
-        
+
         if (updatedList.includes(220) && updatedList.includes(380) && updatedList.includes(440) && updatedList.includes(760)) {
             updatedList.includes(127) ? this.setState({ tensao: "" }) : this.setState({ tensao: "TRIFASICO" })
 
@@ -147,29 +151,28 @@ class MotorRegister extends React.Component {
     create = () => {
 
         const { marca, modelo, ranhuras, rotacao, ligacao, potencia, medidaInterna, medidaExterna, tensao, fio, voltagens, amperagens, usuario } = this.state
-        
+
         const motor = {
-            marca, 
-            modelo, 
-            ranhuras: parseInt(ranhuras), 
-            rotacao: parseInt(rotacao), 
-            ligacao, 
-            potencia: parseInt(potencia), 
-            medidaInterna: parseInt(medidaInterna), 
-            medidaExterna: parseInt(medidaExterna), 
-            tensao, 
+            marca,
+            modelo,
+            ranhuras: parseInt(ranhuras),
+            rotacao: parseInt(rotacao),
+            ligacao,
+            potencia: parseInt(potencia),
+            medidaInterna: parseInt(medidaInterna),
+            medidaExterna: parseInt(medidaExterna),
+            tensao,
             fio: {
                 awgs: fio.awgs.map(str => { return parseInt(str, 10) }),
                 quantidades: fio.quantidades.map(str => { return parseInt(str, 10) }),
                 espiras: fio.espiras.map(str => { return parseInt(str, 10) }),
                 peso: parseInt(fio.peso),
-            }, 
+            },
             voltagens: voltagens.map(str => { return parseInt(str, 10) }),
-            amperagens: amperagens.map(str => { return parseFloat(str, 10) }), 
+            amperagens: amperagens.map(str => { return parseFloat(str, 10) }),
             usuario: usuario.id
         }
-        
-        
+
         this.service.save(motor)
             .then(response => {
                 showMessageSuccess('Motor cadastrado com sucesso!')
@@ -182,7 +185,7 @@ class MotorRegister extends React.Component {
     render() {
         return (
 
-            <Card title="Cadastrar Motor">
+            <Card title={"Cadastrar Motor"}>
                 <Row>
                     <Col>
                         <FormGroup label="Marca">
@@ -209,7 +212,7 @@ class MotorRegister extends React.Component {
                 <Row>
                     <Col>
                         <FormGroup label="Peso">
-                            <input name="peso" value={this.state.fio.peso} onChange={this.handleInputChange} type="number" className="form-control" />
+                            <input name="peso" onChange={e => this.setState({peso: e.target.value})} type="number" className="form-control" />
                         </FormGroup>
                     </Col>
                     <Col>
@@ -219,7 +222,7 @@ class MotorRegister extends React.Component {
                     </Col>
                     <Col>
                         <FormGroup label="Comprimento">
-                            <input name="medidaInterna" value={this.state.medidaInterna} onChange={this.handleInputChange} type="number" className="form-control" />
+                            <input name="medidaInterna" value={this.state.medidaInterna} onChange={this.handleInputChange} type="number" min="1" max="100" className="form-control" />
                         </FormGroup>
                     </Col>
                     <Col>

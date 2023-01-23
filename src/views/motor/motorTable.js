@@ -20,9 +20,16 @@ export default props => {
 
                 <td>{motor.medidaExterna}</td>
                 <td>
-                    <i className="pi pi-eye m-1" ></i>
-                    <i className="pi pi-file-edit m-1" ></i>
-                    
+                    <div className="col">
+
+                    </div>
+                    <button title="visualizar">
+                        <i className="pi pi-eye p-1" onClick={e => props.view(motor)}></i>
+                    </button>
+                    <button title="editar">
+                        <i className="pi pi-file-edit p-1" ></i>
+                    </button>
+
                 </td>
             </tr>
         )
@@ -40,7 +47,7 @@ export default props => {
                                 <th scope="col">Tensão</th>
                                 <th scope="col">Rotação</th>
                                 <th scope="col">Ranhuras</th>
-                                <th scope="col">M. Interna</th>
+                                <th scope="col">Comprimento</th>
                                 <th scope="col">M. Externa</th>
                                 <th scope="col">Ação</th>
                             </tr>
