@@ -8,6 +8,7 @@ import { showMessageError } from "../components/toastr";
 import HandleInputChange from '../components/events/handleInputChange'
 import Row from '../components/grid/row';
 import Col from '../components/grid/col';
+import { AuthContext} from '../main/authProvider'
 
 
 class Login extends Component {
@@ -27,8 +28,8 @@ class Login extends Component {
             login: this.state.login,
             password: this.state.password
         }).then( response => {
-            LocalStorageService.setItem('_usuario_logado', response.data)
-            this.props.navHook('/')
+            this.context.beginSession(response.data)
+            this.props.navHook('/home')
         }).catch(erro => {
             showMessageError(erro.response.data)
         })
@@ -74,5 +75,5 @@ class Login extends Component {
 function myParams(Component) {
     return props => <Component navHook={useNavigate()} />;
 }
-
+Login.contextType = AuthContext;
 export default myParams(Login)

@@ -1,22 +1,19 @@
 import { render } from "@testing-library/react";
 import React from "react";
-import LocalStorageService from "../app/localStorage";
+import { AuthContext } from "../main/authProvider";
 
 class Home extends React.Component {
-
-    state = {
-        usuarioLogado: LocalStorageService.getItem('_usuario_logado')
-    }
     
     render() {
+        const usuarioLogado = this.context.authUser;
         return (
             <div>
-                <h3>Bem Vindo {this.state.usuarioLogado.login}</h3>
+                <h3>Bem Vindo {usuarioLogado.login}</h3>
             </div>
         )
     }
 
 
 }
-
+Home.contextType = AuthContext;
 export default Home

@@ -3,13 +3,15 @@ import { NavLink } from "react-router-dom";
 import LocalStorageService from "../../app/localStorage";
 import SidebarItem from "./sidebar-item";
 import { Role } from "../../views/user/userAttributes";
+import { AuthConsumer } from "../../main/authProvider";
+import Aside from "./aside";
+import AuthService from "../../app/service/user/authService";
 
-
-export default function Sidebar() {
-    const usuarioLogado = LocalStorageService.getItem('_usuario_logado');
+export function Sidebar(props) {
+    const usuarioLogado = this.context.authUser;
     return (
 
-        <aside className="sidebar">
+        <Aside render={props.authenticated}>
             <div className="toggle">
                 <a href="#" className="burger js-menu-toggle" data-toggle="collapse" data-target="#main-navbar">
                     <span></span>
@@ -25,7 +27,7 @@ export default function Sidebar() {
 
                 <div className="nav-menu">
                     <ul>
-                        <SidebarItem href="/" label="Home"><span className="iconHome mr-3"></span></SidebarItem>
+                        <SidebarItem href="/home" label="Home"><span className="iconHome mr-3"></span></SidebarItem>
 
                         <li className="accordion">
                             <a href="#" data-toggle="collapse" data-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne" className="collapsible">
@@ -56,12 +58,22 @@ export default function Sidebar() {
                             </div>
 
                         </li>
-                        <li><a href="#"><span className="iconLougot mr-3"></span>Sign out</a></li>
+                        <li><a onClick={props.signout} href="/"><span className="iconLougot mr-3"></span>Sair</a></li>
                     </ul>
                 </div>
             </div>
 
-        </aside>
+        </Aside>
     )
 
+}
+
+export default () => {
+    <AuthConsumer>
+        {
+            (context) => (
+                <Sidebar authUser={context.authenticated} signout={context.endSession}/>
+            )
+        }
+    </AuthConsumer>
 }
