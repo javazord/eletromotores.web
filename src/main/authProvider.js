@@ -5,7 +5,7 @@ export const AuthContext = React.createContext()
 export const AuthConsumer = AuthContext.Consumer;
 const AProvider = AuthContext.Provider;
 
-class AuthProvider extends React.Component{
+export default class AuthProvider extends React.Component{
 
     state = {
         authUser: null,
@@ -18,7 +18,7 @@ class AuthProvider extends React.Component{
     }
 
     endSession = () => {
-        AuthService.removeUserAutentication();
+        AuthService.removeUserAutenticated();
         this.setState({authenticated: false, authUser: null})
     }
 
@@ -37,4 +37,3 @@ class AuthProvider extends React.Component{
         )
     }
 }
-export default AuthProvider

@@ -8,10 +8,10 @@ import Aside from "./aside";
 import AuthService from "../../app/service/user/authService";
 
 export function Sidebar(props) {
-    const usuarioLogado = this.context.authUser;
+    const usuarioLogado = AuthService.getAuthenticatedUser();
     return (
 
-        <Aside render={props.authenticated}>
+        <Aside render={props.autenticationUser}>
             <div className="toggle">
                 <a href="#" className="burger js-menu-toggle" data-toggle="collapse" data-target="#main-navbar">
                     <span></span>
@@ -65,14 +65,13 @@ export function Sidebar(props) {
 
         </Aside>
     )
-
 }
 
 export default () => {
     <AuthConsumer>
         {
             (context) => (
-                <Sidebar authUser={context.authenticated} signout={context.endSession}/>
+                <Sidebar autenticationUser={context.authenticated} signout={context.endSession}/>
             )
         }
     </AuthConsumer>

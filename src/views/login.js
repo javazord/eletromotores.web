@@ -72,8 +72,10 @@ class Login extends Component {
     }
 }
 
+Login.contextType = AuthContext;
+
 function myParams(Component) {
     return props => <Component navHook={useNavigate()} />;
 }
-Login.contextType = AuthContext;
+
 export default myParams(Login)

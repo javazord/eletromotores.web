@@ -8,17 +8,17 @@ import MotorSearch from "../views/motor/motorSearch"
 import MotorRegister from "../views/motor/motorRegister";
 import { AuthConsumer } from "./authProvider";
 
-function RotaAutenticada({ component: Component, authUser, ...props }) {
+function RotaAutenticada({ component: Component, autenticationUser, ...props }) {
     return (
         <Route {...props} render={(componentProps) => {
             
-            if (authUser) {
+            if (autenticationUser) {
                 return (
                     <Component {...componentProps} />
                 )
             } else {
                 return (
-                    <Navigate to={{ pathname: '/', state: { from: componentProps.location } }} />
+                    <Navigate to="/" state={ {from: componentProps.location }} />
                 )
             }
         }} />
@@ -31,11 +31,11 @@ function Rotas(props) {
         <Router>
             <Routes>
                 <Route path='/' element={<Login />} />
-                <RotaAutenticada authUser={props.authenticated} path='/home' element={<Home />} />
-                <RotaAutenticada authUser={props.authenticated} path="/buscar-colaboradores" element={<UserSearch />} />
-                <RotaAutenticada authUser={props.authenticated} path='/cadastro-colaboradores' element={<UserRegister />} />
-                <RotaAutenticada authUser={props.authenticated} path='/buscar-motores' element={<MotorSearch />} />
-                <RotaAutenticada authUser={props.authenticated} path='/cadastro-motores' element={<MotorRegister />} />
+                <RotaAutenticada autenticationUser={props.autenticationUser} path='/home' element={<Home />} />
+                <RotaAutenticada autenticationUser={props.autenticationUser} path="/buscar-colaboradores" element={<UserSearch />} />
+                <RotaAutenticada autenticationUser={props.autenticationUser} path='/cadastro-colaboradores' element={<UserRegister />} />
+                <RotaAutenticada autenticationUser={props.autenticationUser} path='/buscar-motores' element={<MotorSearch />} />
+                <RotaAutenticada autenticationUser={props.autenticationUser} path='/cadastro-motores' element={<MotorRegister />} />
             </Routes>
         </Router>
 
@@ -44,7 +44,7 @@ function Rotas(props) {
 export default () => (
     <AuthConsumer>
         {
-            (context) => (<Rotas authUser={context.authenticated}/>)
+            (context) => (<Rotas autenticationUser={context.authenticated}/>)
         }
     </AuthConsumer>
 )

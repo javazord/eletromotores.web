@@ -9,7 +9,7 @@ export default class AuthService {
         return user && user.id;
     }
 
-    static removeUserAutentication(){
+    static removeUserAutenticated(){
         LocalStorageService.removeItem(USUARIO_LOGADO)
     }
 
