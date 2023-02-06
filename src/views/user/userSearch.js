@@ -14,8 +14,7 @@ import Row from "../../components/grid/row";
 import Col from "../../components/grid/col";
 
 
-
-class UserSearch extends React.Component {
+export default class UserSearch extends React.Component {
 
     state = {
         id: null,
@@ -196,5 +195,3 @@ class UserSearch extends React.Component {
     }
 
 }
-
-export default UserSearch

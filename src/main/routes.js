@@ -1,5 +1,5 @@
 import React from "react";
-import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route,  Navigate, BrowserRouter } from "react-router-dom";
 import Home from "../views/home";
 import Login from "../views/login";
 import UserRegister from "../views/user/userRegister";
@@ -8,43 +8,30 @@ import MotorSearch from "../views/motor/motorSearch"
 import MotorRegister from "../views/motor/motorRegister";
 import { AuthConsumer } from "./authProvider";
 
-function RotaAutenticada({ component: Component, autenticationUser, ...props }) {
-    return (
-        <Route {...props} render={(componentProps) => {
-            
-            if (autenticationUser) {
-                return (
-                    <Component {...componentProps} />
-                )
-            } else {
-                return (
-                    <Navigate to="/" state={ {from: componentProps.location }} />
-                )
-            }
-        }} />
-    )
+const RotaAutenticada = ({ children, autenticationUser, redirectTo }) => {
+    console.log(autenticationUser)
+    return autenticationUser ? children : <Navigate to={redirectTo} />
 }
-
 
 function Rotas(props) {
     return (
-        <Router>
+        <BrowserRouter>
             <Routes>
-                <Route path='/' element={<Login />} />
-                <RotaAutenticada autenticationUser={props.autenticationUser} path='/home' element={<Home />} />
-                <RotaAutenticada autenticationUser={props.autenticationUser} path="/buscar-colaboradores" element={<UserSearch />} />
-                <RotaAutenticada autenticationUser={props.autenticationUser} path='/cadastro-colaboradores' element={<UserRegister />} />
-                <RotaAutenticada autenticationUser={props.autenticationUser} path='/buscar-motores' element={<MotorSearch />} />
-                <RotaAutenticada autenticationUser={props.autenticationUser} path='/cadastro-motores' element={<MotorRegister />} />
+                <Route exact path="/" element={ <Login /> } />
+                <Route exact path="/home" element={ <RotaAutenticada autenticationUser={props.autenticationUser} redirectTo={"/"}> <Home /> </RotaAutenticada>} />
+                <Route exact path="/buscar-colaboradores"  element={<RotaAutenticada autenticationUser={props.autenticationUser} redirectTo={"/"}> <UserSearch /> </RotaAutenticada> } />
+                <Route exact path="/cadastro-colaboradores" autenticationUser={props.autenticationUser} element={<RotaAutenticada redirectTo={"/"}> <UserRegister /> </RotaAutenticada>} />
+                <Route exact path="/buscar-motores" autenticationUser={props.autenticationUser} element={<RotaAutenticada redirectTo={"/"}> <MotorSearch /> </RotaAutenticada>} />
+                <Route exact path="/cadastro-motores" autenticationUser={props.autenticationUser} element={<RotaAutenticada redirectTo={"/"}> <MotorRegister /> </RotaAutenticada>} />
             </Routes>
-        </Router>
-
+        </BrowserRouter>
     )
 }
+
 export default () => (
     <AuthConsumer>
         {
-            (context) => (<Rotas autenticationUser={context.authenticated}/>)
+            (context) => (<Rotas autenticationUser={context.authenticated} />)
         }
     </AuthConsumer>
 )

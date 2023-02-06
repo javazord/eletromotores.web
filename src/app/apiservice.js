@@ -1,7 +1,8 @@
 import axios from "axios";
 
 const httpCliente = axios.create({
-    baseURL: 'http://localhost:9000/eletromotores'
+    baseURL: 'http://localhost:9000/eletromotores',
+    withCredentials: true
 })
 
 class ApiService {
@@ -9,6 +10,12 @@ class ApiService {
     constructor(apiUrl) {
         this.apiUrl = apiUrl;
 
+    }
+
+    static tokenRegister(token){
+        if (token) {
+            httpCliente.defaults.headers.common['Authorization'] = `Bearer ${token}`
+        }
     }
 
     post(url, obj) {

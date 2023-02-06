@@ -1,14 +1,11 @@
 import React from "react";
-import { NavLink } from "react-router-dom";
-import LocalStorageService from "../../app/localStorage";
 import SidebarItem from "./sidebar-item";
-import { Role } from "../../views/user/userAttributes";
 import { AuthConsumer } from "../../main/authProvider";
 import Aside from "./aside";
 import AuthService from "../../app/service/user/authService";
 
 export function Sidebar(props) {
-    const usuarioLogado = AuthService.getAuthenticatedUser();
+    const usuarioLogado = this.context.authUser;
     return (
 
         <Aside render={props.autenticationUser}>
@@ -22,7 +19,7 @@ export function Sidebar(props) {
                 <div className="profile">
                     <img src="images/person_profile.jpg" alt="Image" className="img-fluid" />
                     <h3 className="name">{usuarioLogado.login}</h3>
-                    <span className="country">{Role(usuarioLogado)}</span>
+                    <span className="country">{usuarioLogado.role}</span>
                 </div>
 
                 <div className="nav-menu">
@@ -71,7 +68,7 @@ export default () => {
     <AuthConsumer>
         {
             (context) => (
-                <Sidebar autenticationUser={context.authenticated} signout={context.endSession}/>
+                <Sidebar  autenticationUser={context.authenticated} signout={context.endSession}/>
             )
         }
     </AuthConsumer>

@@ -5,7 +5,7 @@ import { AuthContext } from "../main/authProvider";
 export default class Home extends React.Component {
     
     render() {
-        const usuarioLogado = this.context.authUser;
+       const usuarioLogado = this.context.authUser;
         return (
             <div>
                 <h3>Bem Vindo {usuarioLogado.login}</h3>
