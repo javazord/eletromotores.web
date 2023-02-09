@@ -34,14 +34,16 @@ export default class AuthProvider extends React.Component{
 
     async componentDidMount(){
         const isAutenticado = AuthService.autenticationUser()
+        
         if(isAutenticado){
             const usuario = await AuthService.refreshSession()
+            console.log(usuario)
             this.setState({
                 authenticated: true,
                 authUser: usuario,
                 isLoading: false
             })
-        }else{
+        } else {
             this.setState( previousState => {
                 return {
                     ...previousState,

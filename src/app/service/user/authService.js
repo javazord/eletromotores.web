@@ -10,13 +10,13 @@ export default class AuthService {
     static autenticationUser(){
         const obj = LocalStorageService.getItem(TOKEN)
         if(!obj){
-            return false;
+            return null;
         }
         
         const decodedToken = jwt.decode(obj.token)
         const expiration = decodedToken.exp
         const isTokenInvalido = Date.now() >= (expiration * 1000)
-
+        
         return !isTokenInvalido;
     }
 
@@ -31,13 +31,9 @@ export default class AuthService {
         ApiService.tokenRegister(tokenDTO)
     }
 
-    static getAuthenticatedUser(){
-        return LocalStorageService.getItem(USUARIO_LOGADO)
-    }
-
     static refreshSession(){
         const token  = LocalStorageService.getItem(TOKEN)
-        const usuario = AuthService.getAuthenticatedUser()
+        const usuario = LocalStorageService.getItem(USUARIO_LOGADO)
         AuthService.loginto(usuario, token)
         return usuario;
     }

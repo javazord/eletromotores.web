@@ -2,74 +2,69 @@ import React from "react";
 import SidebarItem from "./sidebar-item";
 import { AuthConsumer } from "../../main/authProvider";
 import Aside from "./aside";
-import AuthService from "../../app/service/user/authService";
+import { AuthContext } from '../../main/authProvider'
 
-export function Sidebar(props) {
-    const usuarioLogado = this.context.authUser;
-    return (
+export default class Sidebar extends React.Component {
 
-        <Aside render={props.autenticationUser}>
-            <div className="toggle">
-                <a href="#" className="burger js-menu-toggle" data-toggle="collapse" data-target="#main-navbar">
-                    <span></span>
-                </a>
-            </div>
-            <div className="side-inner">
+    render() {
+        const usuarioLogado = this.context.authUser;
+        return (
 
-                <div className="profile">
-                    <img src="images/person_profile.jpg" alt="Image" className="img-fluid" />
-                    <h3 className="name">{usuarioLogado.login}</h3>
-                    <span className="country">{usuarioLogado.role}</span>
+            <Aside render={this.context.authenticated}>
+                <div className="toggle">
+                    <a href="#" className="burger js-menu-toggle" data-toggle="collapse" data-target="#main-navbar">
+                        <span></span>
+                    </a>
+                </div>
+                <div className="side-inner">
+
+                    <div className="profile">
+                        <img src="images/person_profile.jpg" alt="Image" className="img-fluid" />
+                        <h3 className="name"></h3>
+                        <span className="country"></span>
+                    </div>
+
+                    <div className="nav-menu">
+                        <ul>
+                            <SidebarItem href="/home" label="Home"><span className="iconHome mr-3"></span></SidebarItem>
+
+                            <li className="accordion">
+                                <a href="#" data-toggle="collapse" data-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne" className="collapsible">
+                                    <span className="iconUser mr-3" ></span>Usuários
+                                </a>
+                                <div id="collapseOne" className="collapse" aria-labelledby="headingOne">
+                                    <div>
+                                        <ul>
+                                            <SidebarItem href="/cadastro-colaboradores" label="Registrar"><span className="iconAddUser mr-3 m-2"></span></SidebarItem>
+                                            <SidebarItem href="/buscar-colaboradores" label="Pesquisar"><span className="iconSearchUser mr-3 m-2"></span></SidebarItem>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </li>
+
+                            <li className="accordion justify-content-center">
+                                <a href="#" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo" className="collapsible">
+                                    <span className="iconMotor mr-3" ></span>Motores
+                                </a>
+
+                                <div id="collapseTwo" className="collapse" aria-labelledby="headingOne">
+                                    <div>
+                                        <ul>
+                                            <SidebarItem href="/cadastro-motores" label="Registrar" ><span className="iconMotor mr-3 m-2"></span></SidebarItem>
+                                            <SidebarItem href="/buscar-motores" label="Pesquisar"><span className="iconSearchMotor mr-3 m-2"></span></SidebarItem>
+                                        </ul>
+                                    </div>
+                                </div>
+
+                            </li>
+                            <li><a href="/"><span className="iconLougot mr-3"></span>Sair</a></li>
+                        </ul>
+                    </div>
                 </div>
 
-                <div className="nav-menu">
-                    <ul>
-                        <SidebarItem href="/home" label="Home"><span className="iconHome mr-3"></span></SidebarItem>
-
-                        <li className="accordion">
-                            <a href="#" data-toggle="collapse" data-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne" className="collapsible">
-                                <span className="iconUser mr-3" ></span>Usuários
-                            </a>
-                            <div id="collapseOne" className="collapse" aria-labelledby="headingOne">
-                                <div>
-                                    <ul>
-                                        <SidebarItem href="/cadastro-colaboradores" label="Registrar"><span className="iconAddUser mr-3 m-2"></span></SidebarItem>
-                                        <SidebarItem href="/buscar-colaboradores" label="Pesquisar"><span className="iconSearchUser mr-3 m-2"></span></SidebarItem>
-                                    </ul>
-                                </div>
-                            </div>
-                        </li>
-
-                        <li className="accordion justify-content-center">
-                            <a href="#" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo" className="collapsible">
-                                <span className="iconMotor mr-3" ></span>Motores
-                            </a>
-
-                            <div id="collapseTwo" className="collapse" aria-labelledby="headingOne">
-                                <div>
-                                    <ul>
-                                        <SidebarItem href="/cadastro-motores" label="Registrar" ><span className="iconMotor mr-3 m-2"></span></SidebarItem>
-                                        <SidebarItem href="/buscar-motores" label="Pesquisar"><span className="iconSearchMotor mr-3 m-2"></span></SidebarItem>
-                                    </ul>
-                                </div>
-                            </div>
-
-                        </li>
-                        <li><a onClick={props.signout} href="/"><span className="iconLougot mr-3"></span>Sair</a></li>
-                    </ul>
-                </div>
-            </div>
-
-        </Aside>
-    )
+            </Aside>
+        )
+    }
 }
 
-export default () => {
-    <AuthConsumer>
-        {
-            (context) => (
-                <Sidebar  autenticationUser={context.authenticated} signout={context.endSession}/>
-            )
-        }
-    </AuthConsumer>
-}
+Sidebar.contextType = AuthContext;

@@ -3,15 +3,13 @@ import Card from '../components/card'
 import FormGroupLogin from "../components/grid/form-group-login";
 import UserService from '../app/service/user/userService';
 import { useNavigate } from "react-router-dom";
-import LocalStorageService from "../app/localStorage";
 import { showMessageError } from "../components/toastr";
-import HandleInputChange from '../components/events/handleInputChange'
 import Row from '../components/grid/row';
 import Col from '../components/grid/col';
 import { AuthContext} from '../main/authProvider'
 
 
-class Login extends Component {
+export class Login extends Component {
 
     state = {
         login: '',
