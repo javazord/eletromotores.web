@@ -9,8 +9,9 @@ export default class AuthService {
 
     static autenticationUser(){
         const obj = LocalStorageService.getItem(TOKEN)
+        
         if(!obj){
-            return null;
+            return false;
         }
         
         const decodedToken = jwt.decode(obj.token)
