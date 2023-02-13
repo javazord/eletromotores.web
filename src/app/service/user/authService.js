@@ -10,10 +10,9 @@ export default class AuthService {
     static autenticationUser(){
         const obj = LocalStorageService.getItem(TOKEN)
         
-        if(!obj){
+        if(obj == null || !obj.token){
             return false;
         }
-        
         const decodedToken = jwt.decode(obj.token)
         const expiration = decodedToken.exp
         const isTokenInvalido = Date.now() >= (expiration * 1000)

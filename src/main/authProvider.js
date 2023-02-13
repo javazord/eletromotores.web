@@ -1,4 +1,4 @@
-import React from "react";
+import React, {createContext} from "react";
 import ApiService from "../app/apiservice";
 import AuthService from "../app/service/user/authService";
 import jwt from 'jsonwebtoken'
@@ -34,10 +34,10 @@ export default class AuthProvider extends React.Component{
 
     async componentDidMount(){
         const authenticated = AuthService.autenticationUser()
-        console.log(authenticated)
+        
         if(authenticated){
             const usuario = await AuthService.refreshSession()
-            console.log(usuario)
+            
             this.setState({
                 authenticated: true,
                 authUser: usuario,
@@ -54,6 +54,11 @@ export default class AuthProvider extends React.Component{
     }
 
     render(){
+
+        if(this.state.isLoading){
+            return null;
+        }
+
         const context = {
             authUser: this.state.authUser,
             authenticated: this.state.authenticated,

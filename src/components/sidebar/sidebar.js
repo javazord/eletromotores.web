@@ -4,13 +4,11 @@ import { AuthConsumer } from "../../main/authProvider";
 import Aside from "./aside";
 import { AuthContext } from '../../main/authProvider'
 
-export default class Sidebar extends React.Component {
+function Sidebar(props) {
+    
+        return(
 
-    render() {
-        const usuarioLogado = this.context.authUser;
-        return (
-
-            <Aside render={this.context.authenticated}>
+            <Aside render={props.autenticationUser}>
                 <div className="toggle">
                     <a href="#" className="burger js-menu-toggle" data-toggle="collapse" data-target="#main-navbar">
                         <span></span>
@@ -20,8 +18,8 @@ export default class Sidebar extends React.Component {
 
                     <div className="profile">
                         <img src="images/person_profile.jpg" alt="Image" className="img-fluid" />
-                        <h3 className="name"></h3>
-                        <span className="country"></span>
+                        <h3 className="name">{}</h3>
+                        <span className="country">{}</span>
                     </div>
 
                     <div className="nav-menu">
@@ -64,7 +62,13 @@ export default class Sidebar extends React.Component {
 
             </Aside>
         )
-    }
+    
 }
 
-Sidebar.contextType = AuthContext;
+export default () => (
+    <AuthConsumer>
+      {(context) => (
+          <Sidebar autenticationUser={context.authenticated}  />
+      )}
+    </AuthConsumer>
+)

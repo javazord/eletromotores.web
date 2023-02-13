@@ -9,15 +9,14 @@ import MotorRegister from "../views/motor/motorRegister";
 import { AuthConsumer } from "./authProvider";
 
 const RotaAutenticada = ({ children, autenticationUser, redirectTo }) => {
-    console.log(autenticationUser)
-    return autenticationUser != null ? children : <Navigate to={redirectTo} />
+    return autenticationUser ? children : <Navigate to={redirectTo} />
 }
 
 function Rotas(props) {
     return (
         <BrowserRouter>
             <Routes>
-                <Route exact path="/" element={<Login />} />
+                <Route exact path="/" element={<RotaAutenticada autenticationUser={!props.autenticationUser} redirectTo={"/home"}> <Login /> </RotaAutenticada>} />
 
                 <Route exact path="/home" element={<RotaAutenticada autenticationUser={props.autenticationUser} redirectTo={"/"}> <Home /> </RotaAutenticada>} />
 
