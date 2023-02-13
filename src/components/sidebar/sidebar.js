@@ -2,9 +2,8 @@ import React from "react";
 import SidebarItem from "./sidebar-item";
 import { AuthConsumer } from "../../main/authProvider";
 import Aside from "./aside";
-import { AuthContext } from '../../main/authProvider'
 
-function Sidebar(props) {
+export function Sidebar(props) {
     
         return(
 
@@ -55,7 +54,7 @@ function Sidebar(props) {
                                 </div>
 
                             </li>
-                            <li><a href="/"><span className="iconLougot mr-3"></span>Sair</a></li>
+                            <li><a onClick={props.deslogar}><span className="iconLougot mr-3"></span>Sair</a></li>
                         </ul>
                     </div>
                 </div>
@@ -68,7 +67,7 @@ function Sidebar(props) {
 export default () => (
     <AuthConsumer>
       {(context) => (
-          <Sidebar autenticationUser={context.authenticated}  />
+          <Sidebar autenticationUser={context.authenticated} deslogar={context.endSession} />
       )}
     </AuthConsumer>
 )

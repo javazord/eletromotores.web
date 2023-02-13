@@ -1,7 +1,9 @@
 import axios from "axios";
 
+const baseURL = process.env.REACT_APP_API_URL
+
 const httpCliente = axios.create({
-    baseURL: 'http://localhost:9000/eletromotores',
+    baseURL: baseURL,
     withCredentials: true
 })
 

@@ -38,7 +38,7 @@ export class Login extends Component {
     render() {
         return (
                 <Row>
-                    <Col className="col-md-6" style={{ position: 'relative', left: '300px' }}>
+                    <Col className="col-md-6 offset-md-3" >
                         <div>
 
                             <Card title="Autenticar" >
