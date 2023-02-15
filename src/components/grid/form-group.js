@@ -4,7 +4,7 @@ import React from "react";
 export default function FormGroup(props) {
 
     return (
-        <div className="form-group m-auto">
+        <div className="form-group m-2">
             <label>{props.label}</label>
             {props.children}
         </div>

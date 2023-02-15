@@ -1,12 +1,12 @@
 import React, { Component } from "react";
 import Card from '../components/card'
-import FormGroupLogin from "../components/grid/form-group-login";
 import UserService from '../app/service/user/userService';
-import { useNavigate } from "react-router-dom";
+import { Form, useNavigate } from "react-router-dom";
 import { showMessageError } from "../components/toastr";
 import Row from '../components/grid/row';
 import Col from '../components/grid/col';
-import { AuthContext} from '../main/authProvider'
+import { AuthContext } from '../main/authProvider'
+import FormGroup from "../components/grid/form-group";
 
 
 export class Login extends Component {
@@ -16,7 +16,7 @@ export class Login extends Component {
         password: ''
     }
 
-    constructor(){
+    constructor() {
         super();
         this.service = new UserService();
     }
@@ -25,7 +25,7 @@ export class Login extends Component {
         this.service.authenticate({
             login: this.state.login,
             password: this.state.password
-        }).then( response => {
+        }).then(response => {
             this.context.beginSession(response.data)
             this.props.navHook('/home')
         }).catch(erro => {
@@ -37,34 +37,25 @@ export class Login extends Component {
 
     render() {
         return (
-                <Row>
-                    <Col className="col-md-6 offset-md-3" >
-                        <div>
+            <Row>
+                <Col  >
+                    <Card title="Autenticar" >
 
-                            <Card title="Autenticar" >
-                                <div className="row mb-1">
-                                    <div className="col-lg-12">
+                        <FormGroup label="Login">
+                            <input type="email" value={this.state.login} name="login" onChange={e => this.setState({ login: e.target.value })} className="form-control" />
+                        </FormGroup>
 
-                                            <FormGroupLogin label="Login" htmlFor="floatingInput">
-                                                <input type="email" value={this.state.login} name="login" onChange={e => this.setState({ login: e.target.value})} className="form-control" id="floatingInput" placeholder="name@example.com" />
-                                            </FormGroupLogin>
+                        <FormGroup label="Senha">
+                            <input type="password" value={this.state.password} name="password" onChange={e => this.setState({ password: e.target.value })} className="form-control" />
+                        </FormGroup>
 
-                                            <FormGroupLogin label="Senha" htmlFor="floatingPassword">
-                                                <input type="password" value={this.state.password} name="password" onChange={e => this.setState({ password: e.target.value})} className="form-control" id="floatingPassword" placeholder="Password" />
-                                            </FormGroupLogin>
+                        <FormGroup >
+                            <button onClick={this.enter} type="button" className="btn btn-primary">Entrar</button>
+                        </FormGroup>
 
-                                            <FormGroupLogin>
-                                                <button onClick={this.enter} type="button" className="btn btn-primary">Entrar</button>
-                                            </FormGroupLogin>
-
-
-                                    </div>
-                                </div>
-                            </Card>
-
-                        </div>
-                    </Col>
-                </Row>
+                    </Card>
+                </Col>
+            </Row>
         )
 
     }

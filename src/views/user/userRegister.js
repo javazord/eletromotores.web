@@ -15,7 +15,7 @@ class UserRegister extends React.Component {
         login: '',
         password: '',
         repeatPassword: '',
-        role: 'ROLE_USER'
+        role: 'USER'
     }
 
     constructor() {
@@ -48,13 +48,13 @@ class UserRegister extends React.Component {
                 <Row>
                     <Col>
                         <FormGroup>
-                            <input name="login" value={this.state.login} onChange={this.handleInputChange} type="email" className="form-control" id="exampleInputEmail1" placeholder="Login" />
+                            <input name="login" value={this.state.login} onChange={this.handleInputChange} className="form-control" placeholder="Login" />
                         </FormGroup>
 
                         <FormGroup>
-                            <select name="role" value={this.state.role} onChange={this.handleInputChange} className="form-select" id="exampleSelect1">
-                                <option value="ROLE_USER">Usuario</option>
-                                <option value="ROLE_ADMIN">Administrador</option>
+                            <select name="role" value={this.state.role} onChange={this.handleInputChange} className="form-select" >
+                                <option value="USER">Usuario</option>
+                                <option value="ADMIN">Administrador</option>
                             </select>
                         </FormGroup>
                     </Col>

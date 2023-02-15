@@ -171,8 +171,8 @@ export default class UserSearch extends React.Component {
                                 <Col>
                                     <FormGroup>
                                         <select className="form-control" value={this.state.role} name="role" onChange={HandleInputChange} >
-                                            <option value={"ROLE_ADMIN"}> Administrador </option>
-                                            <option value={"ROLE_USER"}> Usuário </option>
+                                            <option value={"ADMIN"}> Administrador </option>
+                                            <option value={"USER"}> Usuário </option>
                                         </select>
                                     </FormGroup>
 
