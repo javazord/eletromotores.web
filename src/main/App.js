@@ -13,13 +13,15 @@ import 'primeicons/primeicons.css';
 
 import 'toastr/build/toastr.css'
 import 'toastr/build/toastr.min.css'
+import Menubar, { MenuBar } from '../components/navbar/menubar';
+import MenuBarRender from '../components/navbar/menubar-render';
 
 
 class App extends React.Component {
   render() {
     return (
       <AuthProvider>
-        <Navbar />
+        <MenuBar/>
         <Body>
           <Rotas />
         </Body>

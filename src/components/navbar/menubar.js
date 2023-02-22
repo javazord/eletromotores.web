@@ -1,0 +1,86 @@
+import React from 'react';
+import { Menubar } from 'primereact/menubar';
+import MenuBarRender from './menubar-render';
+import { AuthConsumer } from "../../main/authProvider";
+import NavbarDrop from './navbar-drop';
+
+export function MenuBar(props) {
+    console.log(props.autenticationUser)
+    const items = [
+        {
+            label: 'Home',
+            icon: 'pi pi-fw pi-home',
+            url: '/home'
+        },
+        {
+            label: 'Usuário',
+            icon: 'pi pi-fw pi-user',
+            items: [
+                {
+                    label: 'Novo',
+                    icon: 'pi pi-fw pi-user-plus',
+                    url: '/cadastro-colaboradores'
+                },
+                {
+                    label: 'Search',
+                    icon: 'pi pi-fw pi-users',
+                    url: '/buscar-colaboradores'
+                }
+            ]
+        },
+        {
+            label: 'Motor',
+            icon: 'pi pi-fw pi-bolt',
+            items: [
+                {
+                    label: 'Novo',
+                    icon: 'pi pi-fw pi-cog',
+                    url: '/buscar-motores'
+                },
+                {
+                    label: 'Search',
+                    icon: 'pi pi-fw pi-search',
+                    url: '/cadastro-motores'
+                }
+            ]
+        },
+        {
+            label: 'Sair',
+            icon: 'pi pi-fw pi-power-off',
+            url: '/',
+            command: props.deslogar
+        }
+    ];
+
+    const start = (
+        <div style={{ display: 'flex', alignItems: 'center' }}>
+            <img alt="logo" src="https://cdn-icons-png.flaticon.com/512/2362/2362738.png" height="40" className="mr-2" />
+            <span style={{ fontSize: '1.3rem' }} className="m-1"> Eletromotores</span>
+        </div>
+    );
+
+    const end = [
+        {
+            label: 'Sair',
+            icon: 'pi pi-fw pi-power-off'
+        }
+    ];
+
+    return (
+        
+        <MenuBarRender render={props.autenticationUser}>
+            <div className="card">
+                <Menubar model={items} start={start} />
+            </div>
+        </MenuBarRender>
+    )
+}
+
+export default () => (
+    <AuthConsumer>
+        {(context) => (
+            <><MenuBar autenticationUser={context.authenticated} deslogar={context.endSession} />
+                </>
+        )}
+    </AuthConsumer>
+)

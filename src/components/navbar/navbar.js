@@ -1,7 +1,7 @@
 import React from "react";
 import NavbarItem from "./navbar-item";
 import { AuthConsumer } from "../../main/authProvider";
-import NavbarRender from "./navbar-render";
+import MenuBarRender from "./menubar-render";
 import NavbarDrop from "./navbar-drop";
 import NavbarDropItem from "./navbar-drop-item";
 import Col from "../grid/col";
@@ -9,7 +9,7 @@ import Col from "../grid/col";
 export function Navbar(props) {
 
     return (
-        <NavbarRender render={props.autenticationUser}>
+        <MenuBarRender render={props.autenticationUser}>
             <div className="container-xl">
                 <a className="navbar-brand" href="/home">Eletromotores</a>
                 <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarsExample07XL" aria-controls="navbarsExample07XL" aria-expanded="false" aria-label="Toggle navigation">
@@ -30,7 +30,7 @@ export function Navbar(props) {
                     </ul>
                 </div>
             </div>
-        </NavbarRender>
+        </MenuBarRender>
 
     )
 
