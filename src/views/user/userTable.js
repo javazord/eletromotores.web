@@ -1,56 +1,29 @@
 import React from "react";
 import { Role } from "./userAttributes";
-import { Condition } from "./userAttributes";
-import Row from '../../components/grid/row';
-import Col from '../../components/grid/col';
+import { DataTable } from 'primereact/datatable';
+import { Column } from 'primereact/column';
+import { Button } from 'primereact/button';
 
 export default props => {
 
-    const rows = props.users.map(user => {
-        return (
-            <tr key={user.id}>
-                <td>{user.login}</td>
-
-                <td>{Role(user)}</td>
-
-                <td>{Condition(user)}</td>
-                <td>
-                    <div className="col">
-
-                    </div>
-                    <button title="visualizar">
-                        <i className="pi pi-eye p-1" onClick={e => props.view(user)}></i>
-                    </button>
-                    <button title="editar">
-                        <i className="pi pi-file-edit p-1" onClick={e => props.edit(user)}></i>
-                    </button>
-
-                </td>
-            </tr>
-        )
-    })
+    const button = (rowData) => {
+        return <>
+            <Button type="button" icon={"pi pi-eye"} className="p-button-sm p-button-text" onClick={e => props.view(rowData)} />
+            <Button type="button" icon={"pi pi-user-edit"} className="p-button-sm p-button-text" onClick={e => props.edit(rowData)} />
+        </>;
+    };
 
     return (
-        <Row>
-            <Col className="-md-12">
-                <div className="bs-component">
-                    <table className="table table-hover text-center">
-                        <thead>
-                            <tr>
-                                <th scope="col">Login</th>
-                                <th scope="col">Função</th>
-                                <th scope="col">Situação</th>
-                                <th scope="col">Ação</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {rows}
-                        </tbody>
-                    </table>
-                </div>
-            </Col>
-        </Row>
-    )
+        <div className="card">
+            <DataTable value={props.users} paginator scrollable stripedRows scrollHeight="400px" style={{ minWidth: '20rem' }} rows={10} rowsPerPageOptions={[10, 25, 50]} >
+                <Column field="id" header="Id" ></Column>
+                <Column field="login" header="Login"></Column>
+                <Column field={Role} header="Função"></Column>
+                <Column body={button} header="Ação"></Column>
+            </DataTable>
+        </div>
+    );
+
 
 
 }

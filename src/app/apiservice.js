@@ -2,7 +2,7 @@ import axios from "axios";
 
 const baseURL = process.env.REACT_APP_API_URL
 
-const httpCliente = axios.create({
+const httpClient = axios.create({
     baseURL: baseURL,
     withCredentials: true
 })
@@ -16,28 +16,28 @@ class ApiService {
 
     static tokenRegister(token){
         if (token) {
-            httpCliente.defaults.headers.common['Authorization'] = `Bearer ${token}`
+            httpClient.defaults.headers.common['Authorization'] = `Bearer ${token.token}`
         }
     }
 
     post(url, obj) {
         const request = `${this.apiUrl}${url}`
-        return httpCliente.post(request, obj)
+        return httpClient.post(request, obj)
     }
 
     put(url, obj) {
         const request = `${this.apiUrl}${url}`
-        return httpCliente.put(request, obj)
+        return httpClient.put(request, obj)
     }
 
     delete(url) {
         const request = `${this.apiUrl}${url}`
-        return httpCliente.delete(request)
+        return httpClient.delete(request)
     }
 
     get(url) {
         const request = `${this.apiUrl}${url}`
-        return httpCliente.get(request)
+        return httpClient.get(request)
     }
 
 

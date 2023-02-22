@@ -7,6 +7,7 @@ import Row from '../components/grid/row';
 import Col from '../components/grid/col';
 import { AuthContext } from '../main/authProvider'
 import FormGroup from "../components/grid/form-group";
+import { Button } from "primereact/button";
 
 
 export class Login extends Component {
@@ -37,21 +38,33 @@ export class Login extends Component {
 
     render() {
         return (
-            <Row>
-                <Col  >
-                    <Card title="Autenticar" >
+            <Row >
+                <Col className="col-md-6 mx-auto">
+                    <Card title="Autenticar">
 
-                        <FormGroup label="Login">
-                            <input type="email" value={this.state.login} name="login" onChange={e => this.setState({ login: e.target.value })} className="form-control" />
-                        </FormGroup>
+                        <Row>
+                            <Col>
+                                <FormGroup label="Login">
+                                    <input type="email" value={this.state.login} name="login" onChange={e => this.setState({ login: e.target.value })} className="form-control" />
+                                </FormGroup>
+                            </Col>
+                        </Row>
 
-                        <FormGroup label="Senha">
-                            <input type="password" value={this.state.password} name="password" onChange={e => this.setState({ password: e.target.value })} className="form-control" />
-                        </FormGroup>
+                        <Row>
+                            <Col>
+                                <FormGroup label="Senha">
+                                    <input type="password" value={this.state.password} name="password" onChange={e => this.setState({ password: e.target.value })} className="form-control" />
+                                </FormGroup>
+                            </Col>
+                        </Row>
 
-                        <FormGroup >
-                            <button onClick={this.enter} type="button" className="btn btn-primary">Entrar</button>
-                        </FormGroup>
+                        <Row>
+                            <Col className="d-flex justify-content-end mt-2">
+                                <FormGroup >
+                                    <Button onClick={this.enter} label="Entrar" icon="pi pi-sign-in"></Button>
+                                </FormGroup>
+                            </Col>
+                        </Row>
 
                     </Card>
                 </Col>

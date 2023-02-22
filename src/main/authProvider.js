@@ -19,6 +19,7 @@ export default class AuthProvider extends React.Component{
         const token = tokenDTO.token
         const claims = jwt.decode(token)
         const usuario = {
+            id: claims.id,
             login: claims.login,
             role: claims.role
         }

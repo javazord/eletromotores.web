@@ -1,6 +1,6 @@
 import React, { Fragment } from "react";
 import MotorService from '../../app/service/motor/motorService'
-import Card from "../../components/card";
+import { Card } from "primereact/card";
 import { showMessageSuccess } from "../../components/toastr";
 import { showMessageError } from "../../components/toastr";
 import FormGroup from '../../components/grid/form-group'
@@ -10,10 +10,9 @@ import { Button } from 'primereact/button'
 import HandleInputResetValues from '../../components/events/handleInputResetValues'
 import Checkbox from "../../components/grid/checkbox";
 import LocalStorageService from "../../app/localStorage";
+import { AuthContext } from "../../main/authProvider";
 
 class MotorRegister extends React.Component {
-
-
 
     state = {
         marca: "",
@@ -32,9 +31,8 @@ class MotorRegister extends React.Component {
             peso: 0
         },
         voltagens: [],
-        amperagens: [0, 0, 0, 0],
+        amperagens: [0, 0, 0, 0, 0],
         checkboxVolts: [127, 220, 380, 440, 760],
-        usuario: LocalStorageService.getItem('_usuario_logado'),
         indexAWG: 1,
         indexESP: 1
     }
@@ -48,8 +46,16 @@ class MotorRegister extends React.Component {
         this.setState({ [event.target.name]: event.target.value })
     }
     handleInputChangePeso = (event) => {
-        console.log(this.state.fio.peso)
-        this.setState({...this.state, peso: event.target.value})
+        this.setState({ ...this.state, peso: event.target.value })
+    }
+    handleInputChangePeso = (event) => {
+        const { id, value } = event.target;
+        this.setState(prevState => ({
+            fio: {
+                ...prevState.fio,
+                [id]: value
+            }
+        }));
     }
 
     addInputsESP = (e) => {
@@ -82,7 +88,6 @@ class MotorRegister extends React.Component {
     }
 
     removeInputs = () => {
-        //this.setState([...this.state.fio.awgs.filter((_, index) => index != posicao)])
         this.state.fio.awgs.pop()
         this.state.fio.quantidades.pop()
         const awgs = [...this.state.fio.awgs, ""]
@@ -150,7 +155,7 @@ class MotorRegister extends React.Component {
 
     create = () => {
 
-        const { marca, modelo, ranhuras, rotacao, ligacao, potencia, medidaInterna, medidaExterna, tensao, fio, voltagens, amperagens, usuario } = this.state
+        const { marca, modelo, ranhuras, rotacao, ligacao, potencia, medidaInterna, medidaExterna, tensao, fio, voltagens, amperagens } = this.state
 
         const motor = {
             marca,
@@ -170,7 +175,7 @@ class MotorRegister extends React.Component {
             },
             voltagens: voltagens.map(str => { return parseInt(str, 10) }),
             amperagens: amperagens.map(str => { return parseFloat(str, 10) }),
-            usuario: usuario.id
+            usuario: this.context.authUser.id
         }
 
         this.service.save(motor)
@@ -185,7 +190,7 @@ class MotorRegister extends React.Component {
     render() {
         return (
 
-            <Card title={"Cadastrar Motor"}>
+            <Card title={"Cadastrar Motor"} >
                 <Row>
                     <Col>
                         <FormGroup label="Marca">
@@ -212,7 +217,7 @@ class MotorRegister extends React.Component {
                 <Row>
                     <Col>
                         <FormGroup label="Peso">
-                            <input name="peso" onChange={e => this.setState({peso: e.target.value})} type="number" className="form-control" />
+                            <input id="peso" onChange={this.handleInputChangePeso} value={this.state.fio.peso} type="number" className="form-control" />
                         </FormGroup>
                     </Col>
                     <Col>
@@ -243,9 +248,7 @@ class MotorRegister extends React.Component {
 
                     }
                     <div className="col-md-2 mt-2 d-flex align-items-end">
-                        <button className="p-button p-component p-button-rounded p-button-icon-only" title="Adicionar AWG/Quantidade" type='button' onClick={this.addInputs}>
-                            <span className="p-button-icon p-c pi pi-plus"></span>
-                        </button>
+                        <Button icon="pi pi-plus" rounded outlined severity="info" aria-label="Adicionar" title="Adicionar AWG/Quantidade" size="sm" onClick={this.addInputs} />
                     </div>
                 </Row>
 
@@ -265,9 +268,7 @@ class MotorRegister extends React.Component {
 
 
                     <div className="col-md-2 mt-2 d-flex align-items-end">
-                        <button className="p-button p-component p-button-rounded p-button-danger p-button-icon-only" title="Remover AWG/Quantidade" type='button' onClick={this.removeInputs}>
-                            <span className="p-button-icon p-c pi pi-minus"></span>
-                        </button>
+                        <Button icon="pi pi-minus" rounded outlined severity="danger" aria-label="Adicionar" title="Remover AWG/Quantidade" size="sm" onClick={this.removeInputs} />
                     </div>
 
                 </Row>
@@ -286,64 +287,54 @@ class MotorRegister extends React.Component {
                     }
 
                     <div className="col-md-2 mt-2 d-flex align-items-end">
-                        <button className="m-1 p-button p-component p-button-rounded p-button-icon-only" title="Adicionar Espiras" type='button' onClick={this.addInputsESP}>
-                            <span className="p-button-icon p-c pi pi-plus"></span>
-                        </button>
-                        <button className="m-1 p-button p-component p-button-rounded p-button-danger p-button-icon-only" title="Remover Espiras" type='button' onClick={this.removeInputsESP}>
-                            <span className="p-button-icon p-c pi pi-minus"></span>
-                        </button>
+                        <Button icon="pi pi-plus" rounded outlined severity="info" aria-label="Adicionar Espiras" title="Adicionar Espiras" size="sm" onClick={this.addInputsESP} />
+                        <Button icon="pi pi-minus" rounded outlined severity="danger" aria-label="Remover Espiras" title="Remover Espiras" size="sm" onClick={this.removeInputsESP} />
                     </div>
 
                 </Row>
                 <Row>
+                    <Row>
+                        {
+                            this.state.amperagens.map((amp, index) => (
 
-                    {
-                        this.state.amperagens.map((amp, index) => (
+                                <Col key={index}>
+                                    <label>Amperagem {index + 1}</label>
+                                    <input className="form-control" type="number" value={amp} id={`amp${index + 1}`} onChange={(e) => this.handleChangeAMP(e, index)} />
+                                </Col>
 
-                            <Col className="col-md-2" key={index}>
-                                <label>Amperagens {index + 1}</label>
-                                <input className="form-control" type="number" value={amp} id={`amp${index + 1}`} onChange={(e) => this.handleChangeAMP(e, index)} />
-                            </Col>
+                            ))
+                        }
+                    </Row>
+                    <Row>
+                        {
+                            this.state.checkboxVolts.map((item, index) => (
+                                <Col key={item}>
+                                    <label>Volagem {index + 1}</label>
+                                    <Checkbox label={`${item}v`} name={item} value={item} onChange={(e) => this.handleCheckbox(e)} />
+                                </Col>
+                            ))
+                        }
+                    </Row>
+                </Row>
 
-                        ))
-                    }
-                    <Col>
+                <Row>
+                    <Col className="col-md-3">
+                        <FormGroup label="Tensão">
+                            <input className="form-control" name="tensao" value={this.state.tensao} disabled />
+                        </FormGroup>
+                    </Col>
+                    <Col className="col-md-4">
                         <FormGroup label="Ligação">
                             <input name="ligacao" value={this.state.ligacao} onChange={this.handleInputChange} type="text" className="form-control" />
                         </FormGroup>
                     </Col>
 
                 </Row>
-                <Row className="align-items-center">
-                    <Col>
-                        <label >Voltagens</label>
-                        <Row>
-                            {
-                                this.state.checkboxVolts.map((item) => (
-
-                                    <Col key={item}>
-
-                                        <Checkbox label={`${item}v`} name={item} value={item} onChange={(e) => this.handleCheckbox(e)} />
-                                    </Col>
-                                ))
-                            }
-                        </Row>
-                    </Col>
-
-                    <Col className="col-md-6">
-                        <FormGroup label="Tensão">
-                            <input className="form-control" name="tensao" value={this.state.tensao} disabled />
-                        </FormGroup>
-                    </Col>
-                </Row>
                 <Row>
-                    <Col className="mt-2 text-right">
-                        <button onClick={this.create} type="button" className="btn btn-success"><span className="pi pi-check"></span> Cadastrar</button>
+                    <Col className="d-flex justify-content-end mt-2">
+                        <Button onClick={this.create} label="Cadastrar" icon="pi pi-check" size="sm"/>
                     </Col>
-
                 </Row>
-
-
 
             </Card>
 
@@ -351,10 +342,6 @@ class MotorRegister extends React.Component {
 
     }
 
-
-
 }
-
-
-
+MotorRegister.contextType = AuthContext;
 export default MotorRegister

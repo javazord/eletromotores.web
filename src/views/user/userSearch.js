@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import UserService from "../../app/service/user/userService";
-import Card from '../../components/card'
+import {Card} from 'primereact/card'
 import FormGroup from '../../components/grid/form-group'
 import { showMessageAlert, showMessageSuccess } from "../../components/toastr";
 import { showMessageError } from "../../components/toastr";
@@ -23,11 +23,12 @@ export default class UserSearch extends React.Component {
         condition: 1,
         role: '',
         users: [],
+        lista: [],
         user: {},
-        showConfirmDiaglog: false,
-        editDiaglog: false
+        showConfirmDialog: false,
+        editDialog: false
     }
-
+    
     constructor() {
         super();
         this.service = new UserService();
@@ -61,14 +62,14 @@ export default class UserSearch extends React.Component {
         }
         this.service.update(usuario)
             .then(response => {
-                this.clearLogin()
 
                 showMessageSuccess('Usuário atualizado com sucesso!')
                 this.cancel()
                 //limpar o input search
 
                 //atualiza table
-                this.buttonSearch()
+                this.clearLogin()
+                this.setState({users: []})
             }).catch(erro => {
                 showMessageError(erro.response.data)
             })
@@ -80,34 +81,42 @@ export default class UserSearch extends React.Component {
 
     //modal para ver dados do usuário
     view = (user) => {
-        this.setState({ showConfirmDiaglog: true, user: user })
+        this.setState({ showConfirmDialog: true, user: user })
     }
 
     //modal para editar dados do usuário
     edit = (user) => {
         this.setState({ id: user.id, role: user.role, login: user.login, password: user.password })
-        this.setState({ editDiaglog: true, user: user })
+        this.setState({ editDialog: true, user: user })
     }
 
     //modal para cancelar a atualização de dados
     cancel = () => {
-        this.setState({ editDiaglog: false, user: {} })
-        this.clearLogin()
+        this.setState({ editDialog: false, user: {} })
+
     }
 
     handleInputChange = (event) => {
         this.setState({ [event.target.name]: event.target.value })
     }
+    onHide = () => {
+        this.setState({ editDialog: false, showConfirmDialog: false });
+        this.clearLogin()
+    }
 
     render() {
 
-        const footer = (
+        const btnAttfooter = (
             <div>
                 <Button label="Atualizar" className="p-button-success" icon="pi pi-check" onClick={this.update} />
-                <Button label="Cancelar" className="p-button-danger" icon="pi pi-times" onClick={this.cancel} />
+                <Button label="Cancelar" className="p-button-danger" icon="pi pi-times" onClick={this.onHide} />
             </div>
         );
-
+        const btnShowfooter = (
+            <div>
+                <Button label="Fechar" className="p-button-secondary" icon="pi pi-times" onClick={this.onHide} />
+            </div>
+        );
         return (
             <>
 
@@ -116,21 +125,21 @@ export default class UserSearch extends React.Component {
                         <Col>
                             <input name="login" value={this.state.login} onChange={this.handleInputChange} type="text" className="form-control" placeholder="Informe o login" id="inputLogin" />
                         </Col>
-                        <Col>
-                            <select name="condition" value={this.state.condition} onChange={this.handleInputChange} className="form-control" id="exampleSelect1">
+                        <Col >
+                            <select name="condition" value={this.state.condition} onChange={this.handleInputChange} className="form-select" id="exampleSelect1">
                                 <option value="1">Ativado</option>
                                 <option value="0">Desativado</option>
                             </select>
                         </Col>
                         <Col>
-                            <button onClick={this.buttonSearch} className="btn btn-primary" type="submit">Buscar</button>
+                            <Button onClick={this.buttonSearch} className="btn btn-primary" label="Buscar" size="sm"/>
                         </Col>
                     </Row>
 
                     <br />
 
                     <Row>
-                        <Col className="-md-12">
+                        <Col className="mx-auto">
                             <UserTable users={this.state.users} view={this.view} edit={this.edit} />
                         </Col>
                     </Row>
@@ -138,53 +147,47 @@ export default class UserSearch extends React.Component {
 
 
                     <div>
-                        <Dialog header={this.state.user.login} visible={this.state.showConfirmDiaglog} modal={true} style={{ width: '30vw' }} onHide={() => this.setState({ showConfirmDiaglog: false })}>
-                            <Row>
-                                <Col>
-                                    <FormGroup>
+                        <Dialog header={this.state.user.login} visible={this.state.showConfirmDialog} modal={true} footer={btnShowfooter} onHide={this.onHide}>
+                            <div >
+                                <Row >
+                                    <Col>
                                         <input type="text" className="form-control" name="role" value={Role(this.state.user)} readOnly />
-                                    </FormGroup>
-                                </Col>
-                                <Col>
-                                    <FormGroup>
+                                    </Col>
+
+                                    <Col>
                                         <input type="text" className="form-control" name="condition" value={Condition(this.state.user)} readOnly />
-                                    </FormGroup>
-                                </Col>
-                            </Row>
+
+                                    </Col>
+                                </Row>
+                            </div>
+
                         </Dialog>
                     </div>
 
 
                     <div>
-                        <Dialog header="Colaborador" visible={this.state.editDiaglog} footer={footer} modal={true} style={{ width: '50vw' }} onHide={() => this.setState({ editDiaglog: false, login: '' })}>
-                            <div className="row mb-2">
+                        <Dialog header="Colaborador" visible={this.state.editDialog} footer={btnAttfooter} modal={true} onHide={this.onHide}>
 
+                            <Row >
                                 <Col>
-                                    <FormGroup>
-                                        <input type="text" className="form-control" value={this.state.user.login} name="login" onChange={HandleInputChange} disabled />
-                                    </FormGroup>
-                                    <FormGroup>
-                                        <input type="password" className="form-control" value={this.state.user.password} name="password" onChange={HandleInputChange} disabled />
-                                    </FormGroup>
+                                        <input type="text" className="form-control m-1" value={this.state.user.login} name="login" onChange={(this.handleInputChange)} disabled />
+                                    
+                                        <input type="password" className="form-control m-1" value={this.state.user.password} name="password" onChange={this.handleInputChange} disabled />
+                                    
                                 </Col>
 
                                 <Col>
-                                    <FormGroup>
-                                        <select className="form-control" value={this.state.role} name="role" onChange={HandleInputChange} >
+                                        <select className="form-select m-1" value={this.state.role} name="role" onChange={this.handleInputChange} >
                                             <option value={"ADMIN"}> Administrador </option>
                                             <option value={"USER"}> Usuário </option>
                                         </select>
-                                    </FormGroup>
 
-                                    <FormGroup>
-                                        <select className="form-control" value={this.state.condition} name="condition" onChange={HandleInputChange}>
-                                            <option value={1}> Ativado </option>
-                                            <option value={0}> Desativado </option>
+                                        <select className="form-select m-1" value={this.state.condition} name="condition" onChange={this.handleInputChange}>
+                                            <option value={true}> Ativado </option>
+                                            <option value={false}> Desativado </option>
                                         </select>
-                                    </FormGroup>
                                 </Col>
-
-                            </div>
+                            </Row>
                         </Dialog>
                     </div>
                 </Card>

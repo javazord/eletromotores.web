@@ -2,11 +2,11 @@ import React from "react"
 
 
 export function Role(props) {
-    if (props.role == "ROLE_ADMIN") {
+    if (props.role == "ADMIN") {
         return "Administrador"
     }
 
-    if (props.role == "ROLE_USER") {
+    if (props.role == "USER") {
         return "Usuário"
     }
 }

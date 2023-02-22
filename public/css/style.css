@@ -6,6 +6,9 @@ div.child  {
   position: absolute;
   top: 50%;
   left: 50%;
-  margin-right: -50%;
-  width: 50%;
-  transform: translate(-50%, -50%) }
+
+
+}
+body{
+background-color: rgba(83, 113, 141, 0.486);
+}
