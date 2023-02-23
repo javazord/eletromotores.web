@@ -11,6 +11,7 @@ import Col from "../../components/grid/col";
 import { Dialog } from 'primereact/dialog';
 import Checkbox from "../../components/grid/checkbox";
 import Modal from "./viewDialog";
+import {Button} from 'primereact/button'
 
 
 class MotorSearch extends React.Component {
@@ -138,7 +139,7 @@ class MotorSearch extends React.Component {
 
                         <Col className=" mt-auto">
                             <FormGroup>
-                                <button onClick={this.buttonSearch} className="btn btn-primary" type="submit">Buscar</button>
+                                <Button onClick={this.buttonSearch} className="btn btn-primary" icon="pi pi-search" size="sm" label="Buscar"/>
                             </FormGroup>
 
                         </Col>

@@ -6,7 +6,7 @@ export default function Body(props) {
 
 
     return (
-        <div className="d-flex align-items-center mx-auto " style={{ height: "92vh" }}>
+        <div className="d-flex align-items-center" style={{ height: "92vh" }}>
             <div className="container">
                 {props.children}
             </div>

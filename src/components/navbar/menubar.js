@@ -5,7 +5,6 @@ import { AuthConsumer } from "../../main/authProvider";
 import NavbarDrop from './navbar-drop';
 
 export function MenuBar(props) {
-    console.log(props.autenticationUser)
     const items = [
         {
             label: 'Home',
@@ -22,7 +21,7 @@ export function MenuBar(props) {
                     url: '/cadastro-colaboradores'
                 },
                 {
-                    label: 'Search',
+                    label: 'Pesquisar',
                     icon: 'pi pi-fw pi-users',
                     url: '/buscar-colaboradores'
                 }
@@ -35,12 +34,12 @@ export function MenuBar(props) {
                 {
                     label: 'Novo',
                     icon: 'pi pi-fw pi-cog',
-                    url: '/buscar-motores'
+                    url: '/cadastro-motores'
                 },
                 {
-                    label: 'Search',
+                    label: 'Pesquisar',
                     icon: 'pi pi-fw pi-search',
-                    url: '/cadastro-motores'
+                    url: '/buscar-motores'
                 }
             ]
         },
@@ -67,7 +66,7 @@ export function MenuBar(props) {
     ];
 
     return (
-        
+
         <MenuBarRender render={props.autenticationUser}>
             <div className="card">
                 <Menubar model={items} start={start} />
@@ -79,8 +78,8 @@ export function MenuBar(props) {
 export default () => (
     <AuthConsumer>
         {(context) => (
-            <><MenuBar autenticationUser={context.authenticated} deslogar={context.endSession} />
-                </>
+            <MenuBar autenticationUser={context.authenticated} deslogar={context.endSession} />
+
         )}
     </AuthConsumer>
 )

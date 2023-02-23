@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import Card from '../components/card'
+import { Card } from 'primereact/card';
 import UserService from '../app/service/user/userService';
 import { Form, useNavigate } from "react-router-dom";
 import { showMessageError } from "../components/toastr";
@@ -36,11 +36,17 @@ export class Login extends Component {
 
     }
 
+
+
     render() {
+        const header = (
+            <img alt="Card" src="https://media.istockphoto.com/id/501392396/pt/foto/fios-de-cobre-com-um-motor-el%C3%A9ctrico-magn%C3%A9tico-dispositivo-de-rotor.jpg?s=612x612&w=0&k=20&c=oVhB-txdoKgrO4Y56wKQYReEjnIBkRHf4RaTf9xB8o0=" style={{maxWidth: "100%", width: "100%"}}  />
+        );
+
         return (
             <Row >
-                <Col className="col-md-6 mx-auto">
-                    <Card title="Autenticar">
+                <Col className="col-md-5 mx-auto">
+                    <Card title="Autenticar" header={header} style={{width: "500px", height: "600px"}}>
 
                         <Row>
                             <Col>
@@ -61,7 +67,7 @@ export class Login extends Component {
                         <Row>
                             <Col className="d-flex justify-content-end mt-2">
                                 <FormGroup >
-                                    <Button onClick={this.enter} label="Entrar" icon="pi pi-sign-in"></Button>
+                                    <Button onClick={this.enter} label="Entrar" icon="pi pi-sign-in" size="sm"></Button>
                                 </FormGroup>
                             </Col>
                         </Row>

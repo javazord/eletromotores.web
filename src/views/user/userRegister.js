@@ -54,7 +54,7 @@ class UserRegister extends React.Component {
 
         const footer = (
             <div className="d-flex justify-content-end">
-                <Button label="Cadastrar" icon="pi pi-check" onClick={this.create} loading={this.state.loading} />
+                <Button label="Cadastrar" icon="pi pi-check" onClick={this.create} loading={this.state.loading} size="sm"/>
             </div>
         );
         return (

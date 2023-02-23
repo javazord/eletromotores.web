@@ -4,26 +4,26 @@ import Row from "../../components/grid/row";
 import { Dialog } from "primereact/dialog";
 import FormGroup from "../../components/grid/form-group";
 import Checkbox from "../../components/grid/checkbox";
+import { Button } from 'primereact/button'
 
 function Modal(props) {
     const { motor, visible, onHide } = props;
     if (!motor) {
         return null;
     }
+    const footer = (
+        <Button className="btn btn-secondary" label="Fechar" onClick={onHide} size="sm"/>
+    )
     return (
+
+
         <Dialog
             header={`Detalhes do Motor ${motor.marca} | Data ${new Intl.DateTimeFormat('pt-BR').format(motor.registro)}`}
             visible={visible}
             modal={true}
             style={{ width: '60vw' }}
             onHide={onHide} // Passa a propriedade onHide para o componente Dialog
-            footer={
-                <div>
-                    <button className="btn btn-secondary" onClick={onHide}>
-                        Fechar
-                    </button>
-                </div>
-            }
+            footer={footer}
         >
             <Row>
                 <Col>

@@ -287,8 +287,8 @@ class MotorRegister extends React.Component {
                     }
 
                     <div className="col-md-2 mt-2 d-flex align-items-end">
-                        <Button icon="pi pi-plus" rounded outlined severity="info" aria-label="Adicionar Espiras" title="Adicionar Espiras" size="sm" onClick={this.addInputsESP} />
-                        <Button icon="pi pi-minus" rounded outlined severity="danger" aria-label="Remover Espiras" title="Remover Espiras" size="sm" onClick={this.removeInputsESP} />
+                        <Button icon="pi pi-plus" rounded outlined severity="info" title="Adicionar Espiras" onClick={this.addInputsESP} />
+                        <Button icon="pi pi-minus" rounded outlined severity="danger" title="Remover Espiras" onClick={this.removeInputsESP} />
                     </div>
 
                 </Row>

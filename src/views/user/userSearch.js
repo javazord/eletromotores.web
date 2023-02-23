@@ -114,7 +114,7 @@ export default class UserSearch extends React.Component {
         );
         const btnShowfooter = (
             <div>
-                <Button label="Fechar" className="p-button-secondary" icon="pi pi-times" onClick={this.onHide} />
+                <Button label="Fechar" className="p-button-secondary" icon="pi pi-times" onClick={this.onHide} size="sm"/>
             </div>
         );
         return (
@@ -123,16 +123,16 @@ export default class UserSearch extends React.Component {
                 <Card title="Pesquisar">
                     <Row>
                         <Col>
-                            <input name="login" value={this.state.login} onChange={this.handleInputChange} type="text" className="form-control" placeholder="Informe o login" id="inputLogin" />
+                            <input name="login" value={this.state.login} onChange={this.handleInputChange} type="text" className="form-control mt-1" placeholder="Informe o login" id="inputLogin" />
                         </Col>
-                        <Col >
-                            <select name="condition" value={this.state.condition} onChange={this.handleInputChange} className="form-select" id="exampleSelect1">
+                        <Col className="text-center">
+                            <select name="condition" value={this.state.condition} onChange={this.handleInputChange} className="form-select mt-1" id="exampleSelect1">
                                 <option value="1">Ativado</option>
                                 <option value="0">Desativado</option>
                             </select>
                         </Col>
                         <Col>
-                            <Button onClick={this.buttonSearch} className="btn btn-primary" label="Buscar" size="sm"/>
+                            <Button onClick={this.buttonSearch} className="btn btn-primary" icon="pi pi-search" label="Buscar" size="sm"/>
                         </Col>
                     </Row>
 
