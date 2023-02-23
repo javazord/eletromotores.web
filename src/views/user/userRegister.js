@@ -35,6 +35,7 @@ class UserRegister extends React.Component {
                 showMessageSuccess('Usuário cadastrado com sucesso!')
                 HandleInputResetValues()
             }).catch(erro => {
+                console.log(erro)
                 showMessageError(erro.response.data)
             })
     }
@@ -59,7 +60,7 @@ class UserRegister extends React.Component {
         );
         return (
             <Row >
-                <Col className="col-md-6 mx-auto">
+                <Col className="col-md-7 mx-auto">
                     <Card title={"Cadastrar Colaborador"} footer={footer} >
                         <Row>
                             <Col >

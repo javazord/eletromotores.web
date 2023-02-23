@@ -108,8 +108,8 @@ export default class UserSearch extends React.Component {
 
         const btnAttfooter = (
             <div>
-                <Button label="Atualizar" className="p-button-success" icon="pi pi-check" onClick={this.update} />
-                <Button label="Cancelar" className="p-button-danger" icon="pi pi-times" onClick={this.onHide} />
+                <Button label="Atualizar" className="p-button-success" icon="pi pi-check" onClick={this.update} size="sm"/>
+                <Button label="Cancelar" className="p-button-danger" icon="pi pi-times" onClick={this.onHide} size="sm"/>
             </div>
         );
         const btnShowfooter = (

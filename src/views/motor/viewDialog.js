@@ -18,7 +18,7 @@ function Modal(props) {
 
 
         <Dialog
-            header={`Detalhes do Motor ${motor.marca} | Data ${new Intl.DateTimeFormat('pt-BR').format(motor.registro)}`}
+            header={`Registrado em ${new Intl.DateTimeFormat('pt-BR').format(motor.registro)}`}
             visible={visible}
             modal={true}
             style={{ width: '60vw' }}

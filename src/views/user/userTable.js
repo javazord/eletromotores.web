@@ -14,14 +14,12 @@ export default props => {
     };
 
     return (
-        <div className="card">
             <DataTable value={props.users} paginator scrollable stripedRows scrollHeight="400px" style={{ minWidth: '20rem' }} rows={10} rowsPerPageOptions={[10, 25, 50]} >
                 <Column field="id" header="Id" ></Column>
                 <Column field="login" header="Login"></Column>
                 <Column field={Role} header="Função"></Column>
                 <Column body={button} header="Ação"></Column>
             </DataTable>
-        </div>
     );
 
 

@@ -137,11 +137,12 @@ class MotorRegister extends React.Component {
             updatedList.splice(this.state.voltagens.indexOf(e.target.value), 1);
             this.validateCheckbox(updatedList)
         }
+        updatedList.sort();
         this.setState({ voltagens: updatedList });
     }
 
     validateCheckbox = (updatedList) => {
-
+        
         if (updatedList.includes(220) && updatedList.includes(380) && updatedList.includes(440) && updatedList.includes(760)) {
             updatedList.includes(127) ? this.setState({ tensao: "" }) : this.setState({ tensao: "TRIFASICO" })
 
@@ -177,7 +178,7 @@ class MotorRegister extends React.Component {
             amperagens: amperagens.map(str => { return parseFloat(str, 10) }),
             usuario: this.context.authUser.id
         }
-
+        
         this.service.save(motor)
             .then(response => {
                 showMessageSuccess('Motor cadastrado com sucesso!')
@@ -248,7 +249,7 @@ class MotorRegister extends React.Component {
 
                     }
                     <div className="col-md-2 mt-2 d-flex align-items-end">
-                        <Button icon="pi pi-plus" rounded outlined severity="info" aria-label="Adicionar" title="Adicionar AWG/Quantidade" size="sm" onClick={this.addInputs} />
+                        <Button icon="pi pi-plus" rounded text raised severity="info" aria-label="Adicionar" title="Adicionar AWG/Quantidade" size="sm" onClick={this.addInputs} />
                     </div>
                 </Row>
 
@@ -268,7 +269,7 @@ class MotorRegister extends React.Component {
 
 
                     <div className="col-md-2 mt-2 d-flex align-items-end">
-                        <Button icon="pi pi-minus" rounded outlined severity="danger" aria-label="Adicionar" title="Remover AWG/Quantidade" size="sm" onClick={this.removeInputs} />
+                        <Button icon="pi pi-minus" rounded text raised severity="danger" aria-label="Adicionar" title="Remover AWG/Quantidade" size="sm" onClick={this.removeInputs} />
                     </div>
 
                 </Row>
@@ -287,8 +288,8 @@ class MotorRegister extends React.Component {
                     }
 
                     <div className="col-md-2 mt-2 d-flex align-items-end">
-                        <Button icon="pi pi-plus" rounded outlined severity="info" title="Adicionar Espiras" onClick={this.addInputsESP} />
-                        <Button icon="pi pi-minus" rounded outlined severity="danger" title="Remover Espiras" onClick={this.removeInputsESP} />
+                        <Button className="mr-1" icon="pi pi-plus" rounded text raised severity="info" title="Adicionar Espiras" onClick={this.addInputsESP} />
+                        <Button className="ml-1" icon="pi pi-minus" rounded text raised severity="danger" title="Remover Espiras" onClick={this.removeInputsESP} />
                     </div>
 
                 </Row>

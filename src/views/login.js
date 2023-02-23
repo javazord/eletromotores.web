@@ -40,13 +40,13 @@ export class Login extends Component {
 
     render() {
         const header = (
-            <img alt="Card" src="https://media.istockphoto.com/id/501392396/pt/foto/fios-de-cobre-com-um-motor-el%C3%A9ctrico-magn%C3%A9tico-dispositivo-de-rotor.jpg?s=612x612&w=0&k=20&c=oVhB-txdoKgrO4Y56wKQYReEjnIBkRHf4RaTf9xB8o0=" style={{maxWidth: "100%", width: "100%"}}  />
+            <img alt="Card" src="https://media.istockphoto.com/id/501392396/pt/foto/fios-de-cobre-com-um-motor-el%C3%A9ctrico-magn%C3%A9tico-dispositivo-de-rotor.jpg?s=612x612&w=0&k=20&c=oVhB-txdoKgrO4Y56wKQYReEjnIBkRHf4RaTf9xB8o0=" style={{ maxWidth: "100%", width: "100%" }} />
         );
 
         return (
-            <Row >
+            <Row className="align-content-center justify-content-md-center">
                 <Col className="col-md-5 mx-auto">
-                    <Card title="Autenticar" header={header} style={{width: "500px", height: "600px"}}>
+                    <Card title="Autenticar" header={header} style={{ width: "500px", height: "620px" }}>
 
                         <Row>
                             <Col>
@@ -75,6 +75,7 @@ export class Login extends Component {
                     </Card>
                 </Col>
             </Row>
+
         )
 
     }

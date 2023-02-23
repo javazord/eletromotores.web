@@ -16,6 +16,7 @@ export default class AuthProvider extends React.Component{
     }
 
     beginSession = (tokenDTO) => {
+        
         const token = tokenDTO.token
         const claims = jwt.decode(token)
         const usuario = {
