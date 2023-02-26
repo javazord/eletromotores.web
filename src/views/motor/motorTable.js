@@ -15,17 +15,19 @@ export default props => {
     };
 
     return (
-        <DataTable value={props.motores} paginator scrollable scrollHeight="400px" rows={10} rowsPerPageOptions={[10, 25, 50]} width="400px" height="400px">
-            <Column field="id" header="Id"></Column>
-            <Column field="marca" header="Marca"></Column>
-            <Column field="modelo" header="Modelo"></Column>
-            <Column field={Tensao} header="Tensão"></Column>
-            <Column field="rotacao" header="Rotação"></Column>
-            <Column field="ranhuras" header="Ranhuras"></Column>
-            <Column field="medidaInterna" header="Comprimento"></Column>
-            <Column field="medidaExterna" header="M. Externa"></Column>
-            <Column body={button} header="Ação"></Column>
-        </DataTable>
+        <div >
+            <DataTable value={props.motores} paginator scrollable stripedRows scrollHeight="400px" rows={10} rowsPerPageOptions={[10, 25, 50]} width="400px" height="400px">
+                <Column field="marca" header="Marca" align={"center"}></Column>
+                <Column field="modelo" header="Modelo" align={"center"}></Column>
+                <Column field={Tensao} header="Tensão" align={"center"}></Column>
+                <Column field="rotacao" header="Rotação" align={"center"}></Column>
+                <Column field="ranhuras" header="Ranhuras" align={"center"}></Column>
+                <Column field="medidaInterna" header="Comprimento" align={"center"}></Column>
+                <Column field="medidaExterna" header="M. Externa" align={"center"}></Column>
+                <Column field={button} header="Ação" align={"center"}></Column>
+            </DataTable>
+        </div>
+
     );
 
 }

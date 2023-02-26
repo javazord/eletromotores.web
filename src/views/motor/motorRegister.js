@@ -128,18 +128,24 @@ class MotorRegister extends React.Component {
     }
 
     handleCheckbox = (e) => {
-        var updatedList = [...this.state.voltagens].map(str => { return parseInt(str, 10) });
-
-        if (e.target.checked) {
-            updatedList = [...this.state.voltagens, e.target.value];
-            this.validateCheckbox(updatedList.map(str => { return parseInt(str, 10) }))
+        const { value, checked } = e.target;
+        const { voltagens } = this.state;
+        
+        let updatedList;
+        
+        if (checked && !voltagens.includes(value)) {
+          updatedList = [...voltagens, value];
+        } else if (!checked) {
+          const index = voltagens.findIndex(val => val === value);
+          updatedList = [...voltagens.slice(0, index), ...voltagens.slice(index + 1)];
         } else {
-            updatedList.splice(this.state.voltagens.indexOf(e.target.value), 1);
-            this.validateCheckbox(updatedList)
+          updatedList = voltagens;
         }
-        updatedList.sort();
-        this.setState({ voltagens: updatedList });
-    }
+        
+        this.setState({ voltagens: updatedList }, () => {
+          this.validateCheckbox(updatedList.map(str => parseInt(str, 10)));
+        });
+      }
 
     validateCheckbox = (updatedList) => {
         

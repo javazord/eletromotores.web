@@ -12,7 +12,7 @@ function Modal(props) {
         return null;
     }
     const footer = (
-        <Button className="btn btn-secondary" label="Fechar" onClick={onHide} size="sm"/>
+        <Button label="Fechar" className="p-button-secondary" icon="pi pi-times" onClick={onHide} size="sm"/>
     )
     return (
 
@@ -28,54 +28,136 @@ function Modal(props) {
             <Row>
                 <Col>
                     <FormGroup label="Marca">
-                        <input name="marca" value={motor.marca} className="form-control" readOnly />
+                        <input name="marca" value={motor.marca} type="text" className="form-control" disabled/>
                     </FormGroup>
                 </Col>
                 <Col>
                     <FormGroup label="Modelo">
-                        <input name="modelo" value={motor.modelo} className="form-control" readOnly />
+                        <input name="modelo" value={motor.modelo} type="text" className="form-control" disabled/>
                     </FormGroup>
                 </Col>
                 <Col>
                     <FormGroup label="Ranhuras">
-                        <input name="ranhuras" value={motor.ranhuras} className="form-control" readOnly />
+                        <input name="ranhuras" value={motor.ranhuras} type="number" className="form-control" disabled/>
                     </FormGroup>
                 </Col>
                 <Col>
                     <FormGroup label="Rotação">
-                        <input name="rotacao" value={motor.rotacao} className="form-control" readOnly />
+                        <input name="rotacao" value={motor.rotacao} type="number" className="form-control" disabled/>
                     </FormGroup>
                 </Col>
             </Row>
+
             <Row>
                 <Col>
                     <FormGroup label="Peso">
-                        <input name="peso" value={motor.fio.peso} className="form-control" readOnly />
+                        <input id="peso" value={motor.fio.peso} type="number" className="form-control" disabled/>
                     </FormGroup>
                 </Col>
                 <Col>
                     <FormGroup label="Potência">
-                        <input name="potencia" value={motor.potencia} className="form-control" readOnly />
+                        <input name="potencia" value={motor.potencia} type="number" className="form-control" disabled/>
                     </FormGroup>
                 </Col>
                 <Col>
-                    <FormGroup label="Voltagem">
-                        <input name="voltagem" value={motor.voltagens.join(', ')} className="form-control" readOnly />
+                    <FormGroup label="Comprimento">
+                        <input name="medidaInterna" value={motor.medidaInterna} type="number" min="1" max="100" className="form-control" disabled/>
                     </FormGroup>
                 </Col>
                 <Col>
-                    <FormGroup label="Amperagem">
-                        <input name="amperagem" value={motor.amperagens.join(', ')} className="form-control" readOnly />
+                    <FormGroup label="Medida Externa">
+                        <input name="medidaExterna" value={motor.medidaExterna} type="number" className="form-control" disabled/>
                     </FormGroup>
                 </Col>
+            </Row>
+
+            <Row>
+                {
+                    motor.fio.awgs.map((valor, index) => (
+                        <Col className="col-md-2" key={index}>
+                            <label>Awg {index + 1}</label>
+                            <input className="form-control" type="number" value={valor} id={`awg${index + 1}`} disabled/>
+                        </Col>
+                    ))
+
+                }
+            </Row>
+
+            <Row>
+                {
+
+                    motor.fio.quantidades.map((qtd, index) => (
+
+                        <Col className="col-md-2" key={index}>
+                            <label>Quantidade {index + 1}</label>
+                            <input className="form-control" type="number" value={qtd} id={`qtd${index + 1}`} disabled/>
+                        </Col>
+
+                    ))
+
+                }
+
             </Row>
             <Row>
-                <Col>
-                    <FormGroup label="Usuário">
-                        <input name="usuario" value={motor.usuario.login} className="form-control" readOnly />
+                {
+
+                    motor.fio.espiras.map((esp, index) => (
+
+                        <Col className="col-md-2" key={index}>
+                            <label>Espiras {index + 1}</label>
+                            <input className="form-control" type="number" value={esp} id={`esp${index + 1}`} disabled/>
+                        </Col>
+
+                    ))
+
+                }
+
+            </Row>
+            <Row>
+                <Row>
+                    {
+                        motor.amperagens.map((amp, index) => (
+
+                            <Col key={index}>
+                                <label>Amperagem {index + 1}</label>
+                                <input className="form-control" type="number" value={amp} id={`amp${index + 1}`} disabled/>
+                            </Col>
+
+                        ))
+                    }
+                </Row>
+                <Row>
+                    {
+                        motor.voltagens.map((amp, index) => (
+
+                            <Col key={index}>
+                                <label>Voltagem {index + 1}</label>
+                                <input className="form-control" type="number" value={amp} id={`amp${index + 1}`} disabled/>
+                            </Col>
+
+                        ))
+                    }
+                </Row>
+            </Row>
+
+            <Row>
+                <Col className="col-md-3">
+                    <FormGroup label="Tensão">
+                        <input  name="tensao" value={motor.tensao} className="form-control" disabled />
+                    </FormGroup>
+                </Col>
+                <Col className="col-md-5">
+                    <FormGroup label="Ligação">
+                        <input name="ligacao" value={motor.ligacao} type="text" className="form-control" disabled/>
+                    </FormGroup>
+                </Col>
+                <Col className="col-md-4">
+                    <FormGroup label="Colaborador ">
+                        <input name="usuario" value={motor.usuario.login} type="text" className="form-control" disabled/>
                     </FormGroup>
                 </Col>
             </Row>
+
         </Dialog>
     );
 }
