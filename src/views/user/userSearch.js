@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import UserService from "../../app/service/user/userService";
-import {Card} from 'primereact/card'
+import { Card } from 'primereact/card'
 import FormGroup from '../../components/grid/form-group'
 import { showMessageAlert, showMessageSuccess } from "../../components/toastr";
 import { showMessageError } from "../../components/toastr";
@@ -12,6 +12,8 @@ import { Condition, Role } from "./userAttributes";
 import HandleInputChange from '../../components/events/handleInputChange'
 import Row from "../../components/grid/row";
 import Col from "../../components/grid/col";
+import { AuthContext } from "../../main/authProvider";
+import Render from "../../components/grid/render";
 
 
 export default class UserSearch extends React.Component {
@@ -19,7 +21,6 @@ export default class UserSearch extends React.Component {
     state = {
         id: null,
         login: '',
-        password: '',
         condition: 1,
         role: '',
         users: [],
@@ -28,7 +29,7 @@ export default class UserSearch extends React.Component {
         showConfirmDialog: false,
         editDialog: false
     }
-    
+
     constructor() {
         super();
         this.service = new UserService();
@@ -69,7 +70,7 @@ export default class UserSearch extends React.Component {
 
                 //atualiza table
                 this.clearLogin()
-                this.setState({users: []})
+                this.setState({ users: [] })
             }).catch(erro => {
                 showMessageError(erro.response.data)
             })
@@ -108,13 +109,13 @@ export default class UserSearch extends React.Component {
 
         const btnAttfooter = (
             <div>
-                <Button label="Atualizar" className="p-button-success" icon="pi pi-check" onClick={this.update} size="sm"/>
-                <Button label="Cancelar" className="p-button-danger" icon="pi pi-times" onClick={this.onHide} size="sm"/>
+                <Button label="Atualizar" className="p-button-success" icon="pi pi-check" onClick={this.update} size="sm" />
+                <Button label="Cancelar" className="p-button-danger" icon="pi pi-times" onClick={this.onHide} size="sm" />
             </div>
         );
         const btnShowfooter = (
             <div>
-                <Button label="Fechar" className="p-button-secondary" icon="pi pi-times" onClick={this.onHide} size="sm"/>
+                <Button label="Fechar" className="p-button-secondary" icon="pi pi-times" onClick={this.onHide} size="sm" />
             </div>
         );
         return (
@@ -132,15 +133,12 @@ export default class UserSearch extends React.Component {
                             </select>
                         </Col>
                         <Col>
-                            <Button onClick={this.buttonSearch} className="btn btn-primary" icon="pi pi-search" label="Buscar" size="sm"/>
+                            <Button onClick={this.buttonSearch} className="btn btn-primary" icon="pi pi-search" label="Buscar" size="sm" />
                         </Col>
                     </Row>
-
-                    <br />
-
                     <Row>
                         <Col className="mx-auto">
-                            <UserTable users={this.state.users} view={this.view} edit={this.edit} />
+                            <UserTable users={this.state.users} view={this.view} edit={this.edit} context={this.context}/>
                         </Col>
                     </Row>
 
@@ -170,24 +168,25 @@ export default class UserSearch extends React.Component {
 
                             <Row >
                                 <Col>
-                                        <input type="text" className="form-control m-1" value={this.state.user.login} name="login" onChange={(this.handleInputChange)} disabled />
-                                    
-                                        <input type="password" className="form-control m-1" value={this.state.user.password} name="password" onChange={this.handleInputChange} disabled />
-                                    
+                                    <input type="text" className="form-control m-1" value={this.state.user.login} name="login" onChange={(this.handleInputChange)} disabled />
                                 </Col>
 
                                 <Col>
-                                        <select className="form-select m-1" value={this.state.role} name="role" onChange={this.handleInputChange} >
-                                            <option value={"ADMIN"}> Administrador </option>
-                                            <option value={"USER"}> Usuário </option>
-                                        </select>
-
-                                        <select className="form-select m-1" value={this.state.condition} name="condition" onChange={this.handleInputChange}>
-                                            <option value={true}> Ativado </option>
-                                            <option value={false}> Desativado </option>
-                                        </select>
+                                    <select className="form-select m-1" value={this.state.role} name="role" onChange={this.handleInputChange} >
+                                        <option value={"ADMIN"}> Administrador </option>
+                                        <option value={"USER"}> Usuário </option>
+                                    </select>
                                 </Col>
                             </Row>
+                            <Row>
+                                <Col>
+                                    <select className="form-select m-1" value={this.state.condition} name="condition" onChange={this.handleInputChange}>
+                                        <option value={true}> Ativado </option>
+                                        <option value={false}> Desativado </option>
+                                    </select>
+                                </Col>
+                            </Row>
+
                         </Dialog>
                     </div>
                 </Card>
@@ -198,3 +197,4 @@ export default class UserSearch extends React.Component {
     }
 
 }
+UserSearch.contextType = AuthContext;

@@ -1,6 +1,6 @@
 import React from 'react';
 import { Menubar } from 'primereact/menubar';
-import MenuBarRender from './menubar-render';
+import Render from '../grid/render';
 import { AuthConsumer } from "../../main/authProvider";
 import NavbarDrop from './navbar-drop';
 
@@ -67,11 +67,11 @@ export function MenuBar(props) {
 
     return (
 
-        <MenuBarRender render={props.autenticationUser}>
+        <Render render={props.autenticationUser}>
             <div className="card">
                 <Menubar model={items} start={start} />
             </div>
-        </MenuBarRender>
+        </Render>
     )
 }
 

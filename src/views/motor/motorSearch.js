@@ -1,5 +1,4 @@
 import React from "react";
-import { Link } from "react-router-dom";
 import MotorService from "../../app/service/motor/motorService";
 import { Card } from 'primereact/card'
 import FormGroup from '../../components/grid/form-group'
@@ -8,10 +7,9 @@ import { showMessageAlert, showMessageSuccess } from "../../components/toastr";
 import { showMessageError } from "../../components/toastr";
 import MotorTable from "./motorTable";
 import Col from "../../components/grid/col";
-import { Dialog } from 'primereact/dialog';
-import Checkbox from "../../components/grid/checkbox";
-import Modal from "./viewDialog";
-import {Button} from 'primereact/button'
+import ViewMotorDialog from "./viewMotorDialog";
+import { Button } from 'primereact/button'
+import EditMotorDialog from "./editMotorDialog";
 
 
 class MotorSearch extends React.Component {
@@ -35,7 +33,8 @@ class MotorSearch extends React.Component {
             medidaExterna: 0,
             potencia: 0,
         },
-        showConfirmDialog: false
+        showConfirmDialog: false,
+        editConfirmDialog: false
     }
 
     constructor() {
@@ -95,8 +94,12 @@ class MotorSearch extends React.Component {
         this.setState({ showConfirmDialog: true, motor: motor })
     }
 
+    edit = (motor) => {
+        this.setState({ editConfirmDialog: true, motor: motor })
+    }
+
     onHide = () => {
-        this.setState({ showConfirmDialog: false });
+        this.setState({ showConfirmDialog: false, editConfirmDialog: false });
     };
 
     //modal para cancelar a atualização de dados
@@ -139,26 +142,24 @@ class MotorSearch extends React.Component {
 
                         <Col className=" mt-auto">
                             <FormGroup>
-                                <Button onClick={this.buttonSearch} className="btn btn-primary" icon="pi pi-search" size="sm" label="Buscar"/>
+                                <Button onClick={this.buttonSearch} className="btn btn-primary" icon="pi pi-search" size="sm" label="Buscar" />
                             </FormGroup>
 
                         </Col>
                     </Row>
 
-                    <br />
-
                     <Row>
                         <Col >
-                            <MotorTable motores={this.state.motores} view={this.view} />
+                            <MotorTable motores={this.state.motores} view={this.view} edit={this.edit} />
                         </Col>
                     </Row>
 
-
                 </Card>
 
-                <div>
-                    <Modal motor={this.state.motor} visible={this.state.showConfirmDialog} onHide={this.onHide} />
-                </div>
+                <ViewMotorDialog motor={this.state.motor} visible={this.state.showConfirmDialog} onHide={this.onHide} />
+
+                <EditMotorDialog motor={this.state.motor} visible={this.state.editConfirmDialog} onHide={this.onHide} />
+
             </>
 
 

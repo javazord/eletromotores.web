@@ -10,7 +10,7 @@ export default props => {
     const button = (rowData) => {
         return <>
             <Button type="button" icon={"pi pi-eye"} className="p-button-sm p-button-text" onClick={e => props.view(rowData)} />
-            <Button type="button" icon={"pi pi-user-edit"} className="p-button-sm p-button-text" />
+            <Button type="button" icon={"pi pi-user-edit"} className="p-button-sm p-button-text" onClick={e => props.edit(rowData)}/>
         </>;
     };
 
