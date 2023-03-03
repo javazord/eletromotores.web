@@ -1,18 +1,18 @@
 import React from "react";
 import MotorService from "../../app/service/motor/motorService";
-import { Card } from 'primereact/card'
-import FormGroup from '../../components/grid/form-group'
+import { Card } from 'primereact/card';
 import Row from "../../components/grid/row";
-import { showMessageAlert, showMessageSuccess } from "../../components/toastr";
-import { showMessageError } from "../../components/toastr";
+import { showMessageAlert } from "../../components/toastr";
 import MotorTable from "./motorTable";
 import Col from "../../components/grid/col";
 import ViewMotorDialog from "./viewMotorDialog";
-import { Button } from 'primereact/button'
+import { Button } from 'primereact/button';
 import EditMotorDialog from "./editMotorDialog";
+import { AuthContext } from "../../main/authProvider";
+import { Input, Label } from "reactstrap";
 
 
-class MotorSearch extends React.Component {
+export default class MotorSearch extends React.Component {
 
     state = {
         motores: [],
@@ -112,60 +112,44 @@ class MotorSearch extends React.Component {
         return (
             <>
                 <Card title="Pesquisar">
-
-                    <Row className="">
+                    <Row className="d-flex align-items-end">
                         <Col>
-                            <FormGroup label="Marca">
-                                <input name="marca" value={this.state.marca} onChange={this.handleInputChange} type="text" className="form-control" id="inputLogin" />
-                            </FormGroup>
+                            <Label>Marca</Label>
+                            <Input name="marca" value={this.state.marca} onChange={this.handleInputChange} type="text" className="form-control mt-1" id="inputLogin" />
                         </Col>
                         <Col>
-                            <FormGroup label="Ranhuras">
-                                <input name="ranhuras" value={this.state.ranhuras} onChange={this.handleInputChange} type="number" className="form-control" id="inputLogin" />
-                            </FormGroup>
+                            <Label>Ranhuras</Label>
+                            <Input name="ranhuras" value={this.state.ranhuras} onChange={this.handleInputChange} type="number" className="form-control mt-1" id="inputLogin" />
                         </Col>
                         <Col>
-                            <FormGroup label="Potência">
-                                <input name="potencia" value={this.state.potencia} onChange={this.handleInputChange} type="number" className="form-control" id="inputLogin" />
-                            </FormGroup>
+                            <Label>Potência</Label>
+                            <Input name="potencia" value={this.state.potencia} onChange={this.handleInputChange} type="number" className="form-control mt-1" id="inputLogin" />
                         </Col>
                         <Col>
-                            <FormGroup label="Comprimento">
-                                <input name="medidaInterna" value={this.state.medidaInterna} onChange={this.handleInputChange} type="number" className="form-control" id="inputLogin" />
-                            </FormGroup>
+                            <Label>Comprimento</Label>
+                            <Input name="medidaInterna" value={this.state.medidaInterna} onChange={this.handleInputChange} type="number" className="form-control mt-1" id="inputLogin" />
                         </Col>
                         <Col >
-                            <FormGroup label="M. Externa">
-                                <input name="medidaExterna" value={this.state.medidaExterna} onChange={this.handleInputChange} type="number" className="form-control" id="inputLogin" />
-                            </FormGroup>
+                            <Label>M. Externa</Label>
+                            <Input name="medidaExterna" value={this.state.medidaExterna} onChange={this.handleInputChange} type="number" className="form-control mt-1" id="inputLogin" />
                         </Col>
 
-                        <Col className=" mt-auto">
-                            <FormGroup>
-                                <Button onClick={this.buttonSearch} className="btn btn-primary" icon="pi pi-search" size="sm" label="Buscar" />
-                            </FormGroup>
-
+                        <Col className="">
+                            <Button onClick={this.buttonSearch} className="btn btn-primary" icon="pi pi-search" size="sm" label="Buscar" />
                         </Col>
                     </Row>
+                    <br />
 
-                    <Row>
-                        <Col >
-                            <MotorTable motores={this.state.motores} view={this.view} edit={this.edit} />
-                        </Col>
-                    </Row>
+                    <MotorTable motores={this.state.motores} view={this.view} edit={this.edit} context={this.context} />
 
                 </Card>
 
                 <ViewMotorDialog motor={this.state.motor} visible={this.state.showConfirmDialog} onHide={this.onHide} />
 
                 <EditMotorDialog motor={this.state.motor} visible={this.state.editConfirmDialog} onHide={this.onHide} />
-
             </>
-
-
         )
     }
 
 }
-
-export default MotorSearch
+MotorSearch.contextType = AuthContext;

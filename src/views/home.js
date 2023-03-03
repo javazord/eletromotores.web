@@ -2,7 +2,7 @@ import { render } from "@testing-library/react";
 import React from "react";
 import { AuthContext } from "../main/authProvider";
 
-class Home extends React.Component {
+export default class Home extends React.Component {
 
     render() {
        const usuarioLogado = this.context.authUser;
@@ -17,4 +17,3 @@ class Home extends React.Component {
 
 }
 Home.contextType = AuthContext;
-export default Home

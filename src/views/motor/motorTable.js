@@ -4,19 +4,24 @@ import { Button } from "primereact/button";
 import { Column } from "primereact/column";
 import { DataTable } from "primereact/datatable";
 import { Card } from "primereact/card";
+import Render from "../../components/grid/render";
 
 export default props => {
-
+    
     const button = (rowData) => {
         return <>
             <Button type="button" icon={"pi pi-eye"} className="p-button-sm p-button-text" onClick={e => props.view(rowData)} />
-            <Button type="button" icon={"pi pi-user-edit"} className="p-button-sm p-button-text" onClick={e => props.edit(rowData)}/>
+            <Render render={props.context.authUser.role == "Administrador"}>
+                <Button type="button" icon={"pi pi-user-edit"} className="p-button-sm p-button-text" onClick={e => props.edit(rowData)} />
+            </Render>
+
         </>;
     };
 
     return (
         <div >
             <DataTable value={props.motores} paginator scrollable stripedRows scrollHeight="400px" rows={10} rowsPerPageOptions={[10, 25, 50]} width="400px" height="400px">
+                <Column field="id" header="Id" align={"center"}></Column>
                 <Column field="marca" header="Marca" align={"center"}></Column>
                 <Column field="modelo" header="Modelo" align={"center"}></Column>
                 <Column field={Tensao} header="Tensão" align={"center"}></Column>

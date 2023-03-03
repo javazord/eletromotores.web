@@ -5,7 +5,7 @@ import HandleInputResetValues from "../../components/events/handleInputResetValu
 import HandleInputChange from "../../components/events/handleInputChange";
 import { Button } from "primereact/button";
 import React, { useState } from 'react';
-import { Row, Col } from 'reactstrap';
+import { Row, Col, Input } from 'reactstrap';
 
 const UserRegister = () => {
 
@@ -66,7 +66,7 @@ const UserRegister = () => {
         <Card title={"Cadastrar Colaborador"} footer={footer} >
           <Row>
             <Col >
-              <input name="login" value={state.login} onChange={handleInputChange} className="form-control m-1" placeholder="Login" />
+              <Input name="login" value={state.login} onChange={handleInputChange} className="form-control m-1" placeholder="Login" />
 
               <select name="role" value={state.role} onChange={handleInputChange} className="form-select m-1" >
                 <option value="USER">Usuario</option>
@@ -74,9 +74,9 @@ const UserRegister = () => {
               </select>
             </Col>
             <Col>
-              <input name="password" value={state.password} onChange={handleInputChange} type="password" className="form-control m-1" placeholder="Senha" />
+              <Input name="password" value={state.password} onChange={handleInputChange} type="password" className="form-control m-1" placeholder="Senha" />
 
-              <input name="repeatPassword" value={state.repeatPassword} onChange={handleInputChange} type="password" className="form-control m-1" placeholder="Repetir senha" />
+              <Input name="repeatPassword" value={state.repeatPassword} onChange={handleInputChange} type="password" className="form-control m-1" placeholder="Repetir senha" />
 
             </Col>
           </Row>

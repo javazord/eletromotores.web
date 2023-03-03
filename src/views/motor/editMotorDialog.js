@@ -1,29 +1,47 @@
 import React, { useState } from "react";
-import Col from "../../components/grid/col";
-import Row from "../../components/grid/row";
+import { Row, Col, Input, Label } from "reactstrap";
 import { Dialog } from "primereact/dialog";
 import FormGroup from "../../components/grid/form-group";
 import Checkbox from "../../components/grid/checkbox";
 import { Button } from 'primereact/button'
+import { useEffect } from "react";
+import MotorService from '../../app/service/motor/motorService'
+import { showMessageError, showMessageSuccess } from "../../components/toastr";
 
-function EditMotorDialog(props) {
+export default function EditMotorDialog(props) {
 
+    const service = new MotorService();
     const { visible, onHide } = props;
-    const [motor, setMotor] = useState(props.motor);
-    console.log(props.motor)
+
+    const [motor, setMotor] = useState(useEffect(() => {
+        setMotor(props.motor);
+    }, [props.motor]));
+
     if (!motor) {
         return null;
     }
+    
+    const update = () => {
+        
+        motor.usuario = motor.usuario.id
+        service.update(motor)
+            .then(response => {
+                showMessageSuccess('Motor cadastrado com sucesso!')
+            }).catch(erro => {
+                console.log(erro)
+                showMessageError(erro.response.data)
+            })
+    }
 
     const footer = (
-        <><Button label="Atualizar" className="p-button-success" icon="pi pi-check" onClick={onHide} size="sm" />
+        <><Button label="Atualizar" className="p-button-success" icon="pi pi-check" onClick={update} size="sm" />
             <Button label="Fechar" className="p-button-secondary" icon="pi pi-times" onClick={onHide} size="sm" /></>
     )
 
-    const handleOnChange = event => {
+    const handleOnChange = (event) => {
         const { name, value } = event.target;
         setMotor({ ...motor, [name]: value });
-      };
+    };
 
     return (
 
@@ -37,47 +55,39 @@ function EditMotorDialog(props) {
         >
             <Row>
                 <Col>
-                    <FormGroup label="Marca">
-                        <input name="marca" value={motor.marca} type="text" className="form-control" onChange={handleOnChange}/>
-                    </FormGroup>
+                    <Label>Marca</Label>
+                    <Input name="marca" value={motor.marca} type="text" className="form-control" onChange={handleOnChange} />
                 </Col>
                 <Col>
-                    <FormGroup label="Modelo">
-                        <input name="modelo" value={motor.modelo} type="text" className="form-control" onChange={handleOnChange}/>
-                    </FormGroup>
+                    <Label>Modelo</Label>
+                    <Input name="modelo" value={motor.modelo} type="text" className="form-control" onChange={handleOnChange} />
                 </Col>
                 <Col>
-                    <FormGroup label="Ranhuras">
-                        <input name="ranhuras" value={motor.ranhuras} type="number" className="form-control" onChange={handleOnChange}/>
-                    </FormGroup>
+                    <Label>Ranhuras</Label>
+                    <Input name="ranhuras" value={motor.ranhuras} type="number" className="form-control" onChange={handleOnChange} />
                 </Col>
                 <Col>
-                    <FormGroup label="Rotação">
-                        <input name="rotacao" value={motor.rotacao} type="number" className="form-control" onChange={handleOnChange}/>
-                    </FormGroup>
+                    <Label>Rotação</Label>
+                    <Input name="rotacao" value={motor.rotacao} type="number" className="form-control" onChange={handleOnChange} />
                 </Col>
             </Row>
 
             <Row>
                 <Col>
-                    <FormGroup label="Peso">
-                        <input id="peso" value={motor.fio.peso} type="number" className="form-control" />
-                    </FormGroup>
+                    <Label>Peso</Label>
+                    <Input id="peso" value={motor.fio.peso} type="number" className="form-control" onChange={handleOnChange} />
                 </Col>
                 <Col>
-                    <FormGroup label="Potência">
-                        <input name="potencia" value={motor.potencia} type="number" className="form-control" />
-                    </FormGroup>
+                    <Label>Potência</Label>
+                    <Input name="potencia" value={motor.potencia} type="number" className="form-control" onChange={handleOnChange} />
                 </Col>
                 <Col>
-                    <FormGroup label="Comprimento">
-                        <input name="medidaInterna" value={motor.medidaInterna} type="number" min="1" max="100" className="form-control" />
-                    </FormGroup>
+                    <Label>Comprimento</Label>
+                    <Input name="medidaInterna" value={motor.medidaInterna} type="number" min="1" max="100" className="form-control" onChange={handleOnChange} />
                 </Col>
                 <Col>
-                    <FormGroup label="Medida Externa">
-                        <input name="medidaExterna" value={motor.medidaExterna} type="number" className="form-control" />
-                    </FormGroup>
+                    <Label>Medida Externa</Label>
+                    <Input name="medidaExterna" value={motor.medidaExterna} type="number" className="form-control" onChange={handleOnChange} />
                 </Col>
             </Row>
 
@@ -85,8 +95,8 @@ function EditMotorDialog(props) {
                 {
                     motor.fio.awgs.map((valor, index) => (
                         <Col className="col-md-2" key={index}>
-                            <label>Awg {index + 1}</label>
-                            <input className="form-control" type="number" value={valor} id={`awg${index + 1}`} />
+                            <Label>Awg {index + 1}</Label>
+                            <Input className="form-control" type="number" value={valor} id={`awg${index + 1}`} onChange={handleOnChange} />
                         </Col>
                     ))
 
@@ -99,12 +109,10 @@ function EditMotorDialog(props) {
                     motor.fio.quantidades.map((qtd, index) => (
 
                         <Col className="col-md-2" key={index}>
-                            <label>Quantidade {index + 1}</label>
-                            <input className="form-control" type="number" value={qtd} id={`qtd${index + 1}`} />
+                            <Label>Quantidade {index + 1}</Label>
+                            <Input className="form-control" type="number" value={qtd} id={`qtd${index + 1}`} onChange={handleOnChange} />
                         </Col>
-
                     ))
-
                 }
 
             </Row>
@@ -114,12 +122,10 @@ function EditMotorDialog(props) {
                     motor.fio.espiras.map((esp, index) => (
 
                         <Col className="col-md-2" key={index}>
-                            <label>Espiras {index + 1}</label>
-                            <input className="form-control" type="number" value={esp} id={`esp${index + 1}`} />
+                            <Label>Espiras {index + 1}</Label>
+                            <Input className="form-control" type="number" value={esp} id={`esp${index + 1}`} onChange={handleOnChange} />
                         </Col>
-
                     ))
-
                 }
 
             </Row>
@@ -129,10 +135,9 @@ function EditMotorDialog(props) {
                         motor.amperagens.map((amp, index) => (
 
                             <Col key={index}>
-                                <label>Amperagem {index + 1}</label>
-                                <input className="form-control" type="number" value={amp} id={`amp${index + 1}`} />
+                                <Label>Amperagem {index + 1}</Label>
+                                <Input className="form-control" type="number" value={amp} id={`amp${index + 1}`} onChange={handleOnChange} />
                             </Col>
-
                         ))
                     }
                 </Row>
@@ -141,10 +146,9 @@ function EditMotorDialog(props) {
                         motor.voltagens.map((amp, index) => (
 
                             <Col key={index}>
-                                <label>Voltagem {index + 1}</label>
-                                <input className="form-control" type="number" value={amp} id={`amp${index + 1}`} />
+                                <Label>Voltagem {index + 1}</Label>
+                                <Input className="form-control" type="number" value={amp} id={`amp${index + 1}`} onChange={handleOnChange} />
                             </Col>
-
                         ))
                     }
                 </Row>
@@ -152,24 +156,19 @@ function EditMotorDialog(props) {
 
             <Row>
                 <Col className="col-md-3">
-                    <FormGroup label="Tensão">
-                        <input name="tensao" value={motor.tensao} className="form-control" />
-                    </FormGroup>
+                    <Label>Tensão</Label>
+                    <Input name="tensao" value={motor.tensao} className="form-control" onChange={handleOnChange} />
                 </Col>
                 <Col className="col-md-5">
-                    <FormGroup label="Ligação">
-                        <input name="ligacao" value={motor.ligacao} type="text" className="form-control" />
-                    </FormGroup>
+                    <Label>Ligação</Label>
+                    <Input name="ligacao" value={motor.ligacao} type="text" className="form-control" onChange={handleOnChange} />
                 </Col>
                 <Col className="col-md-4">
-                    <FormGroup label="Colaborador ">
-                        <input name="usuario" value={motor.usuario.login} type="text" className="form-control" />
-                    </FormGroup>
+                    <Label>Colaborador</Label>
+                    <Input name="usuario" value={motor.usuario.login} type="text" className="form-control" onChange={handleOnChange} />
                 </Col>
             </Row>
 
         </Dialog>
     );
 }
-
-export default EditMotorDialog;

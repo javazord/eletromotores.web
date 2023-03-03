@@ -1,19 +1,16 @@
 import React from "react";
-import { Link } from "react-router-dom";
 import UserService from "../../app/service/user/userService";
-import { Card } from 'primereact/card'
-import FormGroup from '../../components/grid/form-group'
+import { Card } from 'primereact/card';
 import { showMessageAlert, showMessageSuccess } from "../../components/toastr";
 import { showMessageError } from "../../components/toastr";
 import UserTable from "./userTable";
 import { Dialog } from 'primereact/dialog';
-import { Button } from 'primereact/button'
+import { Button } from 'primereact/button';
 import { Condition, Role } from "./userAttributes";
-import HandleInputChange from '../../components/events/handleInputChange'
 import Row from "../../components/grid/row";
 import Col from "../../components/grid/col";
 import { AuthContext } from "../../main/authProvider";
-import Render from "../../components/grid/render";
+import { Input, Label } from "reactstrap";
 
 
 export default class UserSearch extends React.Component {
@@ -110,7 +107,7 @@ export default class UserSearch extends React.Component {
         const btnAttfooter = (
             <div>
                 <Button label="Atualizar" className="p-button-success" icon="pi pi-check" onClick={this.update} size="sm" />
-                <Button label="Cancelar" className="p-button-danger" icon="pi pi-times" onClick={this.onHide} size="sm" />
+                <Button label="Fechar" className="p-button-secondary" icon="pi pi-times" onClick={this.onHide} size="sm" />
             </div>
         );
         const btnShowfooter = (
@@ -122,11 +119,13 @@ export default class UserSearch extends React.Component {
             <>
 
                 <Card title="Pesquisar">
-                    <Row>
+                    <Row className="d-flex align-items-end">
                         <Col>
-                            <input name="login" value={this.state.login} onChange={this.handleInputChange} type="text" className="form-control mt-1" placeholder="Informe o login" id="inputLogin" />
+                            <Label>Login</Label>
+                            <Input name="login" value={this.state.login} onChange={this.handleInputChange} type="text" className="form-control mt-1" placeholder="Informe o login" id="inputLogin" />
                         </Col>
-                        <Col className="text-center">
+                        <Col>
+                            <Label>Condição</Label>
                             <select name="condition" value={this.state.condition} onChange={this.handleInputChange} className="form-select mt-1" id="exampleSelect1">
                                 <option value="1">Ativado</option>
                                 <option value="0">Desativado</option>
@@ -136,59 +135,54 @@ export default class UserSearch extends React.Component {
                             <Button onClick={this.buttonSearch} className="btn btn-primary" icon="pi pi-search" label="Buscar" size="sm" />
                         </Col>
                     </Row>
-                    <Row>
-                        <Col className="mx-auto">
-                            <UserTable users={this.state.users} view={this.view} edit={this.edit} context={this.context}/>
-                        </Col>
-                    </Row>
+                    <br />
 
+                    <UserTable users={this.state.users} view={this.view} edit={this.edit} context={this.context} />
 
+                    <Dialog header={`Colaborador - ${this.state.user.login}`} visible={this.state.showConfirmDialog} modal={true} footer={btnShowfooter} onHide={this.onHide}>
 
-                    <div>
-                        <Dialog header={this.state.user.login} visible={this.state.showConfirmDialog} modal={true} footer={btnShowfooter} onHide={this.onHide}>
-                            <div >
-                                <Row >
-                                    <Col>
-                                        <input type="text" className="form-control" name="role" value={Role(this.state.user)} readOnly />
-                                    </Col>
+                        <Row >
+                            <Col>
+                                <Label>Função</Label>
+                                <Input type="text" className="form-control" name="role" value={Role(this.state.user)} readOnly />
+                            </Col>
 
-                                    <Col>
-                                        <input type="text" className="form-control" name="condition" value={Condition(this.state.user)} readOnly />
+                            <Col>
+                                <Label>Condição</Label>
+                                <Input type="text" className="form-control" name="condition" value={Condition(this.state.user)} readOnly />
+                            </Col>
+                        </Row>
 
-                                    </Col>
-                                </Row>
-                            </div>
+                    </Dialog>
 
-                        </Dialog>
-                    </div>
+                    <Dialog header="Colaborador" visible={this.state.editDialog} footer={btnAttfooter} modal={true} onHide={this.onHide}>
 
+                        <Row >
+                            <Col>
+                                <Label>Login</Label>
+                                <Input type="text" className="form-control" value={this.state.user.login} name="login" onChange={(this.handleInputChange)} readOnly />
+                            </Col>
 
-                    <div>
-                        <Dialog header="Colaborador" visible={this.state.editDialog} footer={btnAttfooter} modal={true} onHide={this.onHide}>
+                            <Col>
+                                <Label>Função</Label>
+                                <select className="form-select" value={this.state.role} name="role" onChange={this.handleInputChange} >
+                                    <option value={"ADMIN"}> Administrador </option>
+                                    <option value={"USER"}> Usuário </option>
+                                </select>
+                            </Col>
+                        </Row>
+                        <Row>
+                            <Col>
+                                <Label>Condição</Label>
+                                <select className="form-select" value={this.state.condition} name="condition" onChange={this.handleInputChange}>
+                                    <option value={true}> Ativado </option>
+                                    <option value={false}> Desativado </option>
+                                </select>
+                            </Col>
+                        </Row>
 
-                            <Row >
-                                <Col>
-                                    <input type="text" className="form-control m-1" value={this.state.user.login} name="login" onChange={(this.handleInputChange)} disabled />
-                                </Col>
+                    </Dialog>
 
-                                <Col>
-                                    <select className="form-select m-1" value={this.state.role} name="role" onChange={this.handleInputChange} >
-                                        <option value={"ADMIN"}> Administrador </option>
-                                        <option value={"USER"}> Usuário </option>
-                                    </select>
-                                </Col>
-                            </Row>
-                            <Row>
-                                <Col>
-                                    <select className="form-select m-1" value={this.state.condition} name="condition" onChange={this.handleInputChange}>
-                                        <option value={true}> Ativado </option>
-                                        <option value={false}> Desativado </option>
-                                    </select>
-                                </Col>
-                            </Row>
-
-                        </Dialog>
-                    </div>
                 </Card>
 
             </>
