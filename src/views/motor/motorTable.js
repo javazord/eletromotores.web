@@ -3,7 +3,6 @@ import { Tensao } from "./motorAttributes";
 import { Button } from "primereact/button";
 import { Column } from "primereact/column";
 import { DataTable } from "primereact/datatable";
-import { Card } from "primereact/card";
 import Render from "../../components/grid/render";
 
 export default props => {

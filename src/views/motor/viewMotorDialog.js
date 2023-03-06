@@ -1,9 +1,7 @@
 import React from "react";
-import Col from "../../components/grid/col";
-import Row from "../../components/grid/row";
 import { Dialog } from "primereact/dialog";
 import { Button } from 'primereact/button';
-import { Input, Label } from "reactstrap";
+import { Col, Row, Input, Label } from "reactstrap";
 
 export default function ViewMotorDialog(props) {
     const { motor, visible, onHide } = props;
@@ -11,7 +9,7 @@ export default function ViewMotorDialog(props) {
         return null;
     }
     const footer = (
-        <Button label="Fechar" className="p-button-secondary" icon="pi pi-times" onClick={onHide} size="sm" />
+        <Button label="Fechar" className="p-button-secondary mt-2" icon="pi pi-times" onClick={onHide} size="sm" />
     )
     return (
 
@@ -100,9 +98,9 @@ export default function ViewMotorDialog(props) {
             <Row>
                 <Row>
                     {
-                        motor.amperagens.map((amp, index) => (
+                        motor.voltagens.map((amp, index) => (
                             <Col key={index}>
-                                <Label>Amperagem {index + 1}</Label>
+                                <Label>Voltagem {index + 1}</Label>
                                 <Input className="form-control" type="number" value={amp} id={`amp${index + 1}`} disabled />
                             </Col>
                         ))
@@ -110,9 +108,9 @@ export default function ViewMotorDialog(props) {
                 </Row>
                 <Row>
                     {
-                        motor.voltagens.map((amp, index) => (
+                        motor.amperagens.map((amp, index) => (
                             <Col key={index}>
-                                <Label>Voltagem {index + 1}</Label>
+                                <Label>Amperagem {index + 1}</Label>
                                 <Input className="form-control" type="number" value={amp} id={`amp${index + 1}`} disabled />
                             </Col>
                         ))

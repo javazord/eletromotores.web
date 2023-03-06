@@ -12,7 +12,6 @@ export default class UserService extends ApiService{
 
     save(usuario){
         return this.post('', usuario)
-        
     }
 
     update(usuario){
@@ -26,6 +25,5 @@ export default class UserService extends ApiService{
                 
         return this.get(params)
     }
-
-
+    
 }

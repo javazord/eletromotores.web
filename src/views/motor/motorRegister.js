@@ -1,18 +1,17 @@
-import React, { Fragment } from "react";
-import MotorService from '../../app/service/motor/motorService'
+import React from "react";
+import MotorService from '../../app/service/motor/motorService';
 import { Card } from "primereact/card";
-import { showMessageSuccess } from "../../components/toastr";
+import { showMessageAlert, showMessageSuccess } from "../../components/toastr";
 import { showMessageError } from "../../components/toastr";
-import FormGroup from '../../components/grid/form-group'
-import Col from "../../components/grid/col";
-import Row from '../../components/grid/row'
-import { Button } from 'primereact/button'
-import HandleInputResetValues from '../../components/events/handleInputResetValues'
+import { Col, Row } from 'reactstrap';
+import { Button } from 'primereact/button';
+import HandleInputResetValues from '../../components/events/handleInputResetValues';
 import Checkbox from "../../components/grid/checkbox";
-import LocalStorageService from "../../app/localStorage";
 import { AuthContext } from "../../main/authProvider";
+import { Input, Label } from "reactstrap";
+import { validate } from "./motorAttributes";
 
-class MotorRegister extends React.Component {
+export default class MotorRegister extends React.Component {
 
     state = {
         marca: "",
@@ -31,8 +30,9 @@ class MotorRegister extends React.Component {
             peso: 0
         },
         voltagens: [],
-        amperagens: [0, 0, 0, 0, 0],
+        amperagens: [],
         checkboxVolts: [127, 220, 380, 440, 760],
+        inputsAmps: [],
         indexAWG: 1,
         indexESP: 1
     }
@@ -130,25 +130,47 @@ class MotorRegister extends React.Component {
     handleCheckbox = (e) => {
         const { value, checked } = e.target;
         const { voltagens } = this.state;
-        
+        let checkboxVolts = this.state.checkboxVolts;
+        let amperagens = this.state.amperagens;
+        let inputsAmps = this.state.inputsAmps;
         let updatedList;
-        
+
         if (checked && !voltagens.includes(value)) {
-          updatedList = [...voltagens, value];
+            updatedList = [...voltagens, value];
         } else if (!checked) {
-          const index = voltagens.findIndex(val => val === value);
-          updatedList = [...voltagens.slice(0, index), ...voltagens.slice(index + 1)];
+            const index = voltagens.findIndex(val => val === value);
+            updatedList = [...voltagens.slice(0, index), ...voltagens.slice(index + 1)];
         } else {
-          updatedList = voltagens;
+            updatedList = voltagens;
         }
-        
+
         this.setState({ voltagens: updatedList }, () => {
-          this.validateCheckbox(updatedList.map(str => parseInt(str, 10)));
+            this.validateCheckbox(updatedList.map(str => parseInt(str, 10)));
         });
-      }
+
+
+        if (checked) {
+            const index = inputsAmps.length + 1;
+            inputsAmps.push(
+                <><Label>Amperagem {index}</Label>
+                    <Input className="form-control" type="number" onChange={(e) => this.handleChangeAMP(e, index)} /></>
+            );
+        } else {
+            const index = checkboxVolts.indexOf(value);
+            if (index > -1) {
+                checkboxVolts.splice(index, 1);
+                inputsAmps.splice(index, 1);
+                //index = index - 1;
+
+            }
+            inputsAmps.pop()
+        }
+
+        this.setState({ checkboxVolts, amperagens, inputsAmps });
+    }
 
     validateCheckbox = (updatedList) => {
-        
+
         if (updatedList.includes(220) && updatedList.includes(380) && updatedList.includes(440) && updatedList.includes(760)) {
             updatedList.includes(127) ? this.setState({ tensao: "" }) : this.setState({ tensao: "TRIFASICO" })
 
@@ -180,11 +202,17 @@ class MotorRegister extends React.Component {
                 espiras: fio.espiras.map(str => { return parseInt(str, 10) }),
                 peso: parseInt(fio.peso),
             },
-            voltagens: voltagens.map(str => { return parseInt(str, 10) }),
+            voltagens: voltagens.sort().map(str => { return parseInt(str, 10) }),
             amperagens: amperagens.map(str => { return parseFloat(str, 10) }),
             usuario: this.context.authUser.id
         }
-        
+        try {
+            validate(motor);
+        } catch (error) {
+            const msgs = error.mensagens;
+            msgs.forEach(msg => showMessageAlert(msg));
+            return false;
+        }
         this.service.save(motor)
             .then(response => {
                 showMessageSuccess('Motor cadastrado com sucesso!')
@@ -200,47 +228,39 @@ class MotorRegister extends React.Component {
             <Card title={"Cadastrar Motor"} >
                 <Row>
                     <Col>
-                        <FormGroup label="Marca">
-                            <input name="marca" value={this.state.marca} onChange={this.handleInputChange} type="text" className="form-control" />
-                        </FormGroup>
+                        <Label>Marca</Label>
+                        <Input name="marca" value={this.state.marca} onChange={this.handleInputChange} type="text" className="form-control" />
                     </Col>
                     <Col>
-                        <FormGroup label="Modelo">
-                            <input name="modelo" value={this.state.modelo} onChange={this.handleInputChange} type="text" className="form-control" />
-                        </FormGroup>
+                        <Label>Modelo</Label>
+                        <Input name="modelo" value={this.state.modelo} onChange={this.handleInputChange} type="text" className="form-control" />
                     </Col>
                     <Col>
-                        <FormGroup label="Ranhuras">
-                            <input name="ranhuras" value={this.state.ranhuras} onChange={this.handleInputChange} type="number" className="form-control" />
-                        </FormGroup>
+                        <Label>Ranhuras</Label>
+                        <Input name="ranhuras" value={this.state.ranhuras} onChange={this.handleInputChange} type="number" className="form-control" />
                     </Col>
                     <Col>
-                        <FormGroup label="Rotação">
-                            <input name="rotacao" value={this.state.rotacao} onChange={this.handleInputChange} type="number" className="form-control" />
-                        </FormGroup>
+                        <Label>Rotação</Label>
+                        <Input name="rotacao" value={this.state.rotacao} onChange={this.handleInputChange} type="number" className="form-control" />
                     </Col>
                 </Row>
 
                 <Row>
                     <Col>
-                        <FormGroup label="Peso">
-                            <input id="peso" onChange={this.handleInputChangePeso} value={this.state.fio.peso} type="number" className="form-control" />
-                        </FormGroup>
+                        <Label>Peso</Label>
+                        <Input id="peso" onChange={this.handleInputChangePeso} value={this.state.fio.peso} type="number" className="form-control" />
                     </Col>
                     <Col>
-                        <FormGroup label="Potência">
-                            <input name="potencia" value={this.state.potencia} onChange={this.handleInputChange} type="number" className="form-control" />
-                        </FormGroup>
+                        <Label>Potência</Label>
+                        <Input name="potencia" value={this.state.potencia} onChange={this.handleInputChange} type="number" className="form-control" />
                     </Col>
                     <Col>
-                        <FormGroup label="Comprimento">
-                            <input name="medidaInterna" value={this.state.medidaInterna} onChange={this.handleInputChange} type="number" min="1" max="100" className="form-control" />
-                        </FormGroup>
+                        <Label>Comprimento</Label>
+                        <Input name="medidaInterna" value={this.state.medidaInterna} onChange={this.handleInputChange} type="number" min="1" max="100" className="form-control" />
                     </Col>
                     <Col>
-                        <FormGroup label="Medida Externa">
-                            <input name="medidaExterna" value={this.state.medidaExterna} onChange={this.handleInputChange} type="number" className="form-control" />
-                        </FormGroup>
+                        <Label>M. Externa</Label>
+                        <Input name="medidaExterna" value={this.state.medidaExterna} onChange={this.handleInputChange} type="number" className="form-control" />
                     </Col>
                 </Row>
 
@@ -248,15 +268,16 @@ class MotorRegister extends React.Component {
                     {
                         this.state.fio.awgs.map((valor, index) => (
                             <Col className="col-md-2" key={index}>
-                                <label>Awg {index + 1}</label>
-                                <input className="form-control" type="number" value={valor} id={`awg${index + 1}`} onChange={(e) => this.handleChangeAWG(e, index)} />
+                                <Label>Awg {index + 1}</Label>
+                                <Input className="form-control" type="number" value={valor} id={`awg${index + 1}`} onChange={(e) => this.handleChangeAWG(e, index)} />
                             </Col>
                         ))
 
                     }
-                    <div className="col-md-2 mt-2 d-flex align-items-end">
-                        <Button icon="pi pi-plus" rounded text raised severity="info" aria-label="Adicionar" title="Adicionar AWG/Quantidade" size="sm" onClick={this.addInputs} />
-                    </div>
+
+                    <Col className="col-md-2 mt-2 d-flex align-items-end">
+                        <Button icon="pi pi-plus" rounded raised severity="info" aria-label="Adicionar" title="Adicionar AWG/Quantidade" size="sm" onClick={this.addInputs} />
+                    </Col>
                 </Row>
 
                 <Row>
@@ -265,19 +286,17 @@ class MotorRegister extends React.Component {
                         this.state.fio.quantidades.map((qtd, index) => (
 
                             <Col className="col-md-2" key={index}>
-                                <label>Quantidade {index + 1}</label>
-                                <input className="form-control" type="number" value={qtd} id={`qtd${index + 1}`} onChange={(e) => this.handleChangeQTD(e, index)} />
+                                <Label>Quantidade {index + 1}</Label>
+                                <Input className="form-control" type="number" value={qtd} id={`qtd${index + 1}`} onChange={(e) => this.handleChangeQTD(e, index)} />
                             </Col>
 
                         ))
 
                     }
 
-
-                    <div className="col-md-2 mt-2 d-flex align-items-end">
-                        <Button icon="pi pi-minus" rounded text raised severity="danger" aria-label="Adicionar" title="Remover AWG/Quantidade" size="sm" onClick={this.removeInputs} />
-                    </div>
-
+                    <Col className="col-md-2 mt-2 d-flex align-items-end">
+                        <Button icon="pi pi-minus" rounded raised severity="danger" aria-label="Adicionar" title="Remover AWG/Quantidade" size="sm" onClick={this.removeInputs} />
+                    </Col>
                 </Row>
                 <Row>
                     {
@@ -285,61 +304,46 @@ class MotorRegister extends React.Component {
                         this.state.fio.espiras.map((esp, index) => (
 
                             <Col className="col-md-2" key={index}>
-                                <label>Espiras {index + 1}</label>
-                                <input className="form-control" type="number" value={esp} id={`esp${index + 1}`} onChange={(e) => this.handleChangeESP(e, index)} />
+                                <Label>Espiras {index + 1}</Label>
+                                <Input className="form-control" type="number" value={esp} id={`esp${index + 1}`} onChange={(e) => this.handleChangeESP(e, index)} />
                             </Col>
 
                         ))
 
                     }
-
-                    <div className="col-md-2 mt-2 d-flex align-items-end">
-                        <Button className="mr-1" icon="pi pi-plus" rounded text raised severity="info" title="Adicionar Espiras" onClick={this.addInputsESP} />
-                        <Button className="ml-1" icon="pi pi-minus" rounded text raised severity="danger" title="Remover Espiras" onClick={this.removeInputsESP} />
-                    </div>
+                    <Col className="col-2 mt-2 d-flex align-items-end" >
+                        <Button className="me-1" icon="pi pi-plus" rounded raised severity="info" title="Adicionar Espiras" onClick={this.addInputsESP} size="sm" />
+                        <Button className="ms-1" icon="pi pi-minus" rounded raised severity="danger" title="Remover Espiras" onClick={this.removeInputsESP} size="sm" />
+                    </Col>
 
                 </Row>
-                <Row>
-                    <Row>
-                        {
-                            this.state.amperagens.map((amp, index) => (
+                <Row className="mt-2">
+                    {
+                        this.state.checkboxVolts.map((item, index) => (
+                            <Col key={item}>
+                                <Label>Voltagem {index + 1}</Label>
+                                <Checkbox label={`${item}v`} name={item} value={item} onChange={(e) => this.handleCheckbox(e)} />
+                                {this.state.inputsAmps[index] }
+                            </Col>
+                        ))
+                    }
 
-                                <Col key={index}>
-                                    <label>Amperagem {index + 1}</label>
-                                    <input className="form-control" type="number" value={amp} id={`amp${index + 1}`} onChange={(e) => this.handleChangeAMP(e, index)} />
-                                </Col>
-
-                            ))
-                        }
-                    </Row>
-                    <Row>
-                        {
-                            this.state.checkboxVolts.map((item, index) => (
-                                <Col key={item}>
-                                    <label>Volagem {index + 1}</label>
-                                    <Checkbox label={`${item}v`} name={item} value={item} onChange={(e) => this.handleCheckbox(e)} />
-                                </Col>
-                            ))
-                        }
-                    </Row>
                 </Row>
 
                 <Row>
                     <Col className="col-md-3">
-                        <FormGroup label="Tensão">
-                            <input className="form-control" name="tensao" value={this.state.tensao} disabled />
-                        </FormGroup>
+                        <Label>Tensão</Label>
+                        <Input className="form-control" name="tensao" value={this.state.tensao} disabled />
                     </Col>
-                    <Col className="col-md-4">
-                        <FormGroup label="Ligação">
-                            <input name="ligacao" value={this.state.ligacao} onChange={this.handleInputChange} type="text" className="form-control" />
-                        </FormGroup>
+                    <Col >
+                        <Label>Ligação</Label>
+                        <Input name="ligacao" value={this.state.ligacao} onChange={this.handleInputChange} type="text" className="form-control" />
                     </Col>
 
                 </Row>
                 <Row>
                     <Col className="d-flex justify-content-end mt-2">
-                        <Button onClick={this.create} label="Cadastrar" icon="pi pi-check" size="sm"/>
+                        <Button onClick={this.create} label="Cadastrar" icon="pi pi-check" size="sm" />
                     </Col>
                 </Row>
 
@@ -351,4 +355,3 @@ class MotorRegister extends React.Component {
 
 }
 MotorRegister.contextType = AuthContext;
-export default MotorRegister

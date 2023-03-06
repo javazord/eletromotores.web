@@ -1,12 +1,11 @@
 import React, { useState } from "react";
 import { Row, Col, Input, Label } from "reactstrap";
 import { Dialog } from "primereact/dialog";
-import FormGroup from "../../components/grid/form-group";
-import Checkbox from "../../components/grid/checkbox";
-import { Button } from 'primereact/button'
+import { Button } from 'primereact/button';
 import { useEffect } from "react";
-import MotorService from '../../app/service/motor/motorService'
-import { showMessageError, showMessageSuccess } from "../../components/toastr";
+import MotorService from '../../app/service/motor/motorService';
+import { showMessageAlert, showMessageError, showMessageSuccess } from "../../components/toastr";
+import { validate } from "./motorAttributes";
 
 export default function EditMotorDialog(props) {
 
@@ -24,9 +23,16 @@ export default function EditMotorDialog(props) {
     const update = () => {
         
         motor.usuario = motor.usuario.id
+        try {
+            validate(motor);
+          } catch (error) {
+            const msgs = error.mensagens;
+            msgs.forEach(msg => showMessageAlert(msg));
+            return false;
+          }
         service.update(motor)
             .then(response => {
-                showMessageSuccess('Motor cadastrado com sucesso!')
+                showMessageSuccess('Motor atualizado com sucesso!')
             }).catch(erro => {
                 console.log(erro)
                 showMessageError(erro.response.data)

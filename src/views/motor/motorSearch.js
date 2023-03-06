@@ -1,15 +1,13 @@
 import React from "react";
 import MotorService from "../../app/service/motor/motorService";
 import { Card } from 'primereact/card';
-import Row from "../../components/grid/row";
 import { showMessageAlert } from "../../components/toastr";
 import MotorTable from "./motorTable";
-import Col from "../../components/grid/col";
 import ViewMotorDialog from "./viewMotorDialog";
 import { Button } from 'primereact/button';
 import EditMotorDialog from "./editMotorDialog";
 import { AuthContext } from "../../main/authProvider";
-import { Input, Label } from "reactstrap";
+import { Col, Row, Input, Label } from "reactstrap";
 
 
 export default class MotorSearch extends React.Component {
@@ -46,13 +44,12 @@ export default class MotorSearch extends React.Component {
         const { motor } = this.state;
         const motorFilter = {
             marca: motor.marca,
-            modelo: motor.modelo,
             ranhuras: motor.ranhuras,
             medidaInterna: motor.medidaInterna,
             medidaExterna: motor.medidaExterna,
-            potencia: motor.potencia,
-            fio: motor.fio,
+            potencia: motor.potencia
         };
+        
         this.service.search(motorFilter)
             .then(response => {
                 const list = response.data;
@@ -65,6 +62,30 @@ export default class MotorSearch extends React.Component {
                 console.log(erro)
             })
 
+    }
+
+    resetState = () => {
+        this.setState({
+            motor: {
+                fio: {
+                    awgs: [],
+                    quantidades: [],
+                    espiras: [],
+                    peso: 0
+                },
+                voltagens: [],
+                amperagens: [],
+                usuario: {},
+                marca: '',
+                modelo: '',
+                ranhuras: 0,
+                medidaInterna: 0,
+                medidaExterna: 0,
+                potencia: 0,
+            },
+            showConfirmDialog: false,
+            editConfirmDialog: false
+        })
     }
 
     handleInputChange = (event) => {
@@ -99,13 +120,12 @@ export default class MotorSearch extends React.Component {
     }
 
     onHide = () => {
-        this.setState({ showConfirmDialog: false, editConfirmDialog: false });
+        this.resetState();
     };
 
     //modal para cancelar a atualização de dados
     cancel = () => {
         this.setState({ showConfirmDialog: false })
-        this.clearLogin()
     }
 
     render() {

@@ -1,4 +1,4 @@
-import React from "react"
+import ValidateError from "../../app/exception/validateError"
 
 
 export function Role(props) {
@@ -17,5 +17,25 @@ export function Condition(props) {
     } else {
         return "Desativado"
     }
+}
+
+export function Validate(user) {
+
+    const msgs = []
+
+    if (!user.login) {
+        msgs.push('Informe um login')
+    }
+    if (!user.password) {
+        msgs.push('Informe uma senha')
+    }
+    if (user.password !== user.repeatPassword || !user.repeatPassword) {
+        msgs.push('A senhas informadas não conhecidem')
+    }
+
+    if (msgs && msgs.length > 0) {
+        throw new ValidateError(msgs)
+    }
+
 }
 

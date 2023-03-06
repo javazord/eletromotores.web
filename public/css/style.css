@@ -14,7 +14,7 @@ background-color: rgba(83, 113, 141, 0.308);
 }
 
 .page {
-  height: 92vh;
+  height: 100vh;
   display: flex;
   justify-content: center;
   align-items: center;

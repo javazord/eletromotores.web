@@ -1,11 +1,10 @@
 import { Card } from 'primereact/card';
 import UserService from "../../app/service/user/userService";
-import { showMessageSuccess, showMessageError } from "../../components/toastr";
-import HandleInputResetValues from "../../components/events/handleInputResetValues";
-import HandleInputChange from "../../components/events/handleInputChange";
+import { showMessageSuccess, showMessageError, showMessageAlert } from "../../components/toastr";
 import { Button } from "primereact/button";
 import React, { useState } from 'react';
 import { Row, Col, Input } from 'reactstrap';
+import { Validate } from './userAttributes';
 
 const UserRegister = () => {
 
@@ -20,8 +19,16 @@ const UserRegister = () => {
   const service = new UserService();
 
   const create = () => {
-    const { login, password, role } = state;
-    const usuario = { login, password, role }
+    const { login, password, repeatPassword, role } = state;
+    const usuario = { login, password, repeatPassword, role }
+
+    try {
+      Validate(usuario);
+    } catch (error) {
+      const msgs = error.mensagens;
+      msgs.forEach(msg => showMessageAlert(msg));
+      return false;
+    }
     load()
     service.save(usuario)
       .then(response => {

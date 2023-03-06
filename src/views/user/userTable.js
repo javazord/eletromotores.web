@@ -1,5 +1,5 @@
 import React from "react";
-import { Role } from "./userAttributes";
+import { Condition, Role } from "./userAttributes";
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 import { Button } from 'primereact/button';
@@ -22,6 +22,7 @@ export default props => {
             <Column field="id" header="Id" align={"center"}></Column>
             <Column field="login" header="Login" align={"center"}></Column>
             <Column field={Role} header="Função" align={"center"}></Column>
+            <Column field={Condition} header="Condição" align={"center"}></Column>
             <Column body={button} header="Ação" align={"center"}></Column>
         </DataTable>
     );

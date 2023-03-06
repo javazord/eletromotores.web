@@ -2,7 +2,6 @@ import React from 'react';
 import { Menubar } from 'primereact/menubar';
 import Render from '../grid/render';
 import { AuthConsumer } from "../../main/authProvider";
-import NavbarDrop from './navbar-drop';
 
 export function MenuBar(props) {
     const items = [
@@ -52,10 +51,13 @@ export function MenuBar(props) {
     ];
 
     const start = (
-        <div style={{ display: 'flex', alignItems: 'center' }}>
-            <img alt="logo" src="https://cdn-icons-png.flaticon.com/512/2362/2362738.png" height="40" className="mr-2" />
-            <span style={{ fontSize: '1.3rem' }} className="m-1"> Eletromotores</span>
-        </div>
+        <a href='/home' style={{color: 'black', textDecoration: 'none' }}>
+            <div style={{ display: 'flex', alignItems: 'center' }}>
+                <img alt="logo" src="https://cdn-icons-png.flaticon.com/512/2362/2362738.png" height="40" className="mr-2" />
+                <span style={{ fontSize: '1.3rem' }} className="m-1" > Eletromotores</span>
+            </div>
+        </a>
+
     );
 
     const end = [

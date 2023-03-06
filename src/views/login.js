@@ -1,13 +1,11 @@
 import React, { Component } from "react";
 import { Card } from 'primereact/card';
 import UserService from '../app/service/user/userService';
-import { Form, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { showMessageError } from "../components/toastr";
-import Row from '../components/grid/row';
-import Col from '../components/grid/col';
-import { AuthContext } from '../main/authProvider'
-import FormGroup from "../components/grid/form-group";
+import { AuthContext } from '../main/authProvider';
 import { Button } from "primereact/button";
+import { Row, Col, Input, Label } from "reactstrap";
 
 
 export class Login extends Component {
@@ -32,11 +30,7 @@ export class Login extends Component {
         }).catch(erro => {
             showMessageError(erro.response.data)
         })
-
-
     }
-
-
 
     render() {
         const header = (
@@ -44,31 +38,27 @@ export class Login extends Component {
         );
 
         return (
-            <Row className="align-content-center justify-content-md-center">
-                <Col className="col-md-5 mx-auto">
-                    <Card title="Autenticar" header={header} style={{ width: "500px", height: "620px" }}>
+            <Row>
+                <Col style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                    <Card title="Autenticar" header={header}  style={{ width: "500px", height: "630px" }}>
 
                         <Row>
                             <Col>
-                                <FormGroup label="Login">
-                                    <input type="email" value={this.state.login} name="login" onChange={e => this.setState({ login: e.target.value })} className="form-control" />
-                                </FormGroup>
+                                <Label>Login</Label>
+                                <Input type="email" value={this.state.login} name="login" onChange={e => this.setState({ login: e.target.value })} className="form-control" />
                             </Col>
                         </Row>
 
                         <Row>
                             <Col>
-                                <FormGroup label="Senha">
-                                    <input type="password" value={this.state.password} name="password" onChange={e => this.setState({ password: e.target.value })} className="form-control" />
-                                </FormGroup>
+                                <Label>Senha</Label>
+                                <Input type="password" value={this.state.password} name="password" onChange={e => this.setState({ password: e.target.value })} className="form-control" />
                             </Col>
                         </Row>
 
                         <Row>
-                            <Col className="d-flex justify-content-end mt-2">
-                                <FormGroup >
-                                    <Button onClick={this.enter} label="Entrar" icon="pi pi-sign-in" size="sm"></Button>
-                                </FormGroup>
+                            <Col className="col-md-12 mt-3">
+                                <Button className="col-md-12" onClick={this.enter} label="Entrar" size="sm"></Button>
                             </Col>
                         </Row>
 
