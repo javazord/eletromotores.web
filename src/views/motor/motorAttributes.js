@@ -29,14 +29,8 @@ export function validate(motor) {
     if (!isValidNumber(motor.ranhuras)) {
         msgs.push('Informe um número de ranhuras válido')
     }
-    if (!isValidNumber(motor.rotacao)) {
-        msgs.push('Informe um número de rotação válido')
-    }
     if (!isValidNumber(motor.fio.peso)) {
         msgs.push('Informe um peso válido')
-    }
-    if (!isValidNumber(motor.potencia)) {
-        msgs.push('Informe um número de potência válido')
     }
     if (!isValidNumber(motor.medidaInterna)) {
         msgs.push('Informe um campo de comprimento válido')
@@ -60,12 +54,6 @@ export function validate(motor) {
     motor.fio.espiras.forEach(espiras => {
         if (!isValidNumber(espiras)) {
             msgs.push('Informe um número de espiras válido')
-        }
-    });
-
-    motor.amperagens.forEach(amps => {
-        if (!isValidNumber(amps)) {
-            msgs.push('Informe uma amperagem válida')
         }
     });
 

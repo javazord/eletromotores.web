@@ -63,7 +63,7 @@ export default function ViewMotorDialog(props) {
                 {
                     motor.fio.awgs.map((valor, index) => (
                         <Col className="col-md-2" key={index}>
-                            <Label>Awg {index + 1}</Label>
+                            <Label>Awg</Label>
                             <Input className="form-control" type="number" value={valor} id={`awg${index + 1}`} disabled />
                         </Col>
                     ))
@@ -76,7 +76,7 @@ export default function ViewMotorDialog(props) {
                     motor.fio.quantidades.map((qtd, index) => (
 
                         <Col className="col-md-2" key={index}>
-                            <Label>Quantidade {index + 1}</Label>
+                            <Label>Quantidade</Label>
                             <Input className="form-control" type="number" value={qtd} id={`qtd${index + 1}`} disabled />
                         </Col>
 
@@ -89,7 +89,7 @@ export default function ViewMotorDialog(props) {
                     motor.fio.espiras.map((esp, index) => (
 
                         <Col className="col-md-2" key={index}>
-                            <Label>Espiras {index + 1}</Label>
+                            <Label>Espiras</Label>
                             <Input className="form-control" type="number" value={esp} id={`esp${index + 1}`} disabled />
                         </Col>
                     ))
@@ -100,7 +100,7 @@ export default function ViewMotorDialog(props) {
                     {
                         motor.voltagens.map((amp, index) => (
                             <Col key={index}>
-                                <Label>Voltagem {index + 1}</Label>
+                                <Label>Voltagem</Label>
                                 <Input className="form-control" type="number" value={amp} id={`amp${index + 1}`} disabled />
                             </Col>
                         ))
@@ -110,7 +110,7 @@ export default function ViewMotorDialog(props) {
                     {
                         motor.amperagens.map((amp, index) => (
                             <Col key={index}>
-                                <Label>Amperagem {index + 1}</Label>
+                                <Label>Amperagem </Label>
                                 <Input className="form-control" type="number" value={amp} id={`amp${index + 1}`} disabled />
                             </Col>
                         ))

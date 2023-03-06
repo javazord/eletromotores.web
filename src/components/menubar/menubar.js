@@ -4,6 +4,7 @@ import Render from '../grid/render';
 import { AuthConsumer } from "../../main/authProvider";
 
 export function MenuBar(props) {
+    console.log(props)
     const items = [
         {
             label: 'Home',
@@ -80,7 +81,7 @@ export function MenuBar(props) {
 export default () => (
     <AuthConsumer>
         {(context) => (
-            <MenuBar autenticationUser={context.authenticated} deslogar={context.endSession} />
+            <MenuBar autenticationUser={context.authenticated} authUser={context.authUser} deslogar={context.endSession} />
 
         )}
     </AuthConsumer>

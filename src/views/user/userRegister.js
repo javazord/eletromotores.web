@@ -2,9 +2,10 @@ import { Card } from 'primereact/card';
 import UserService from "../../app/service/user/userService";
 import { showMessageSuccess, showMessageError, showMessageAlert } from "../../components/toastr";
 import { Button } from "primereact/button";
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Row, Col, Input } from 'reactstrap';
 import { Validate } from './userAttributes';
+import HandleInputResetValues from '../../components/events/handleInputResetValues';
 
 const UserRegister = () => {
 
@@ -13,7 +14,8 @@ const UserRegister = () => {
     password: '',
     repeatPassword: '',
     role: 'USER',
-    loading: false
+    loading: false,
+    reset: false
   });
 
   const service = new UserService();
@@ -33,12 +35,39 @@ const UserRegister = () => {
     service.save(usuario)
       .then(response => {
         showMessageSuccess('Usuário cadastrado com sucesso!')
-        handleInputResetValues()
+        resetState();
+
       }).catch(erro => {
         console.log(erro)
         showMessageError(erro.response.data)
       })
   }
+
+  const resetState = () => {
+    setState(prevState => ({
+      ...prevState,
+      login: '',
+      password: '',
+      repeatPassword: '',
+      role: 'USER',
+      loading: false
+    }));
+  };
+
+  useEffect(() => {
+    if (state.reset) {
+      setState(prevState => ({
+        ...prevState,
+        reset: false // setando o estado reset para false
+      }));
+      document.querySelectorAll('input').forEach(input => {
+        input.value = '';
+      });
+      document.querySelectorAll('select').forEach(select => {
+        select.value = 'USER';
+      });
+    }
+  }, [state.reset]);
 
   const load = () => {
     setState({ ...state, loading: true });
@@ -49,16 +78,6 @@ const UserRegister = () => {
 
   const handleInputChange = (event) => {
     setState({ ...state, [event.target.name]: event.target.value })
-  }
-
-  const handleInputResetValues = () => {
-    setState({
-      login: '',
-      password: '',
-      repeatPassword: '',
-      role: 'USER',
-      loading: false
-    });
   }
 
   const footer = (

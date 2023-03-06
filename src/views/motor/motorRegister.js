@@ -10,6 +10,7 @@ import Checkbox from "../../components/grid/checkbox";
 import { AuthContext } from "../../main/authProvider";
 import { Input, Label } from "reactstrap";
 import { validate } from "./motorAttributes";
+import { Dropdown } from 'primereact/dropdown';
 
 export default class MotorRegister extends React.Component {
 
@@ -152,8 +153,8 @@ export default class MotorRegister extends React.Component {
         if (checked) {
             const index = inputsAmps.length + 1;
             inputsAmps.push(
-                <><Label>Amperagem {index}</Label>
-                    <Input className="form-control" type="number" onChange={(e) => this.handleChangeAMP(e, index)} /></>
+                <><Label>Amperagem</Label>
+                    <Input className="form-control" type="number" onChange={(e) => this.handleChangeAMP(e, index)} bsSize="sm" /></>
             );
         } else {
             const index = checkboxVolts.indexOf(value);
@@ -228,39 +229,39 @@ export default class MotorRegister extends React.Component {
             <Card title={"Cadastrar Motor"} >
                 <Row>
                     <Col>
-                        <Label>Marca</Label>
-                        <Input name="marca" value={this.state.marca} onChange={this.handleInputChange} type="text" className="form-control" />
+                        <Label>Marca <span>*</span></Label>
+                        <Input name="marca" value={this.state.marca} onChange={this.handleInputChange} type="text" className="form-control" bsSize="sm" />
                     </Col>
                     <Col>
                         <Label>Modelo</Label>
-                        <Input name="modelo" value={this.state.modelo} onChange={this.handleInputChange} type="text" className="form-control" />
+                        <Input name="modelo" value={this.state.modelo} onChange={this.handleInputChange} type="text" className="form-control" bsSize="sm" />
                     </Col>
                     <Col>
-                        <Label>Ranhuras</Label>
-                        <Input name="ranhuras" value={this.state.ranhuras} onChange={this.handleInputChange} type="number" className="form-control" />
+                        <Label>Ranhuras <span>*</span></Label>
+                        <Input name="ranhuras" value={this.state.ranhuras} onChange={this.handleInputChange} type="number" className="form-control" bsSize="sm" />
                     </Col>
                     <Col>
                         <Label>Rotação</Label>
-                        <Input name="rotacao" value={this.state.rotacao} onChange={this.handleInputChange} type="number" className="form-control" />
+                        <Input name="rotacao" value={this.state.rotacao} onChange={this.handleInputChange} type="number" className="form-control" bsSize="sm" />
                     </Col>
                 </Row>
 
                 <Row>
                     <Col>
-                        <Label>Peso</Label>
-                        <Input id="peso" onChange={this.handleInputChangePeso} value={this.state.fio.peso} type="number" className="form-control" />
+                        <Label>Peso <span>*</span></Label>
+                        <Input id="peso" onChange={this.handleInputChangePeso} value={this.state.fio.peso} type="number" className="form-control" bsSize="sm" />
                     </Col>
                     <Col>
                         <Label>Potência</Label>
-                        <Input name="potencia" value={this.state.potencia} onChange={this.handleInputChange} type="number" className="form-control" />
+                        <Input name="potencia" value={this.state.potencia} onChange={this.handleInputChange} type="number" className="form-control" bsSize="sm" />
                     </Col>
                     <Col>
-                        <Label>Comprimento</Label>
-                        <Input name="medidaInterna" value={this.state.medidaInterna} onChange={this.handleInputChange} type="number" min="1" max="100" className="form-control" />
+                        <Label>Comprimento <span>*</span></Label>
+                        <Input name="medidaInterna" value={this.state.medidaInterna} onChange={this.handleInputChange} type="number" min="1" max="100" className="form-control" bsSize="sm" />
                     </Col>
                     <Col>
-                        <Label>M. Externa</Label>
-                        <Input name="medidaExterna" value={this.state.medidaExterna} onChange={this.handleInputChange} type="number" className="form-control" />
+                        <Label>M. Externa <span>*</span></Label>
+                        <Input name="medidaExterna" value={this.state.medidaExterna} onChange={this.handleInputChange} type="number" className="form-control" bsSize="sm" />
                     </Col>
                 </Row>
 
@@ -268,8 +269,8 @@ export default class MotorRegister extends React.Component {
                     {
                         this.state.fio.awgs.map((valor, index) => (
                             <Col className="col-md-2" key={index}>
-                                <Label>Awg {index + 1}</Label>
-                                <Input className="form-control" type="number" value={valor} id={`awg${index + 1}`} onChange={(e) => this.handleChangeAWG(e, index)} />
+                                <Label>Awg <span>*</span></Label>
+                                <Input className="form-control" type="number" value={valor} id={`awg${index + 1}`} onChange={(e) => this.handleChangeAWG(e, index)} bsSize="sm" />
                             </Col>
                         ))
 
@@ -286,8 +287,8 @@ export default class MotorRegister extends React.Component {
                         this.state.fio.quantidades.map((qtd, index) => (
 
                             <Col className="col-md-2" key={index}>
-                                <Label>Quantidade {index + 1}</Label>
-                                <Input className="form-control" type="number" value={qtd} id={`qtd${index + 1}`} onChange={(e) => this.handleChangeQTD(e, index)} />
+                                <Label>Quantidade <span>*</span></Label>
+                                <Input className="form-control" type="number" value={qtd} id={`qtd${index + 1}`} onChange={(e) => this.handleChangeQTD(e, index)} bsSize="sm" />
                             </Col>
 
                         ))
@@ -304,8 +305,8 @@ export default class MotorRegister extends React.Component {
                         this.state.fio.espiras.map((esp, index) => (
 
                             <Col className="col-md-2" key={index}>
-                                <Label>Espiras {index + 1}</Label>
-                                <Input className="form-control" type="number" value={esp} id={`esp${index + 1}`} onChange={(e) => this.handleChangeESP(e, index)} />
+                                <Label>Espiras <span>*</span></Label>
+                                <Input className="form-control" type="number" value={esp} id={`esp${index + 1}`} onChange={(e) => this.handleChangeESP(e, index)} bsSize="sm" />
                             </Col>
 
                         ))
@@ -321,9 +322,9 @@ export default class MotorRegister extends React.Component {
                     {
                         this.state.checkboxVolts.map((item, index) => (
                             <Col key={item}>
-                                <Label>Voltagem {index + 1}</Label>
+                                <Label>Voltagem <span>*</span></Label>
                                 <Checkbox label={`${item}v`} name={item} value={item} onChange={(e) => this.handleCheckbox(e)} />
-                                {this.state.inputsAmps[index] }
+                                {this.state.inputsAmps[index]}
                             </Col>
                         ))
                     }
@@ -332,14 +333,20 @@ export default class MotorRegister extends React.Component {
 
                 <Row>
                     <Col className="col-md-3">
-                        <Label>Tensão</Label>
-                        <Input className="form-control" name="tensao" value={this.state.tensao} disabled />
+                        <Label>Tensão <span>*</span></Label>
+                        <Input className="form-control" name="tensao" value={this.state.tensao} disabled bsSize="sm" />
                     </Col>
-                    <Col >
-                        <Label>Ligação</Label>
-                        <Input name="ligacao" value={this.state.ligacao} onChange={this.handleInputChange} type="text" className="form-control" />
+                    <Col className="col-md-5">
+                        <Label>Ligação <span>*</span></Label>
+                        <Input name="ligacao" value={this.state.ligacao} onChange={this.handleInputChange} type="text" className="form-control" bsSize="sm" />
                     </Col>
-
+                    <Col className="col-md-4">
+                        <Label>Empresa <span>*</span></Label>
+                        <select name="role" className="form-select form-select-sm" >
+                            <option value="USER">Arcelor</option>
+                            <option value="ADMIN">Rivelli</option>
+                        </select>
+                    </Col>
                 </Row>
                 <Row>
                     <Col className="d-flex justify-content-end mt-2">

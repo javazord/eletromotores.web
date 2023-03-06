@@ -19,17 +19,17 @@ export default function EditMotorDialog(props) {
     if (!motor) {
         return null;
     }
-    
+
     const update = () => {
-        
+
         motor.usuario = motor.usuario.id
         try {
             validate(motor);
-          } catch (error) {
+        } catch (error) {
             const msgs = error.mensagens;
             msgs.forEach(msg => showMessageAlert(msg));
             return false;
-          }
+        }
         service.update(motor)
             .then(response => {
                 showMessageSuccess('Motor atualizado com sucesso!')
@@ -138,17 +138,6 @@ export default function EditMotorDialog(props) {
             <Row>
                 <Row>
                     {
-                        motor.amperagens.map((amp, index) => (
-
-                            <Col key={index}>
-                                <Label>Amperagem {index + 1}</Label>
-                                <Input className="form-control" type="number" value={amp} id={`amp${index + 1}`} onChange={handleOnChange} />
-                            </Col>
-                        ))
-                    }
-                </Row>
-                <Row>
-                    {
                         motor.voltagens.map((amp, index) => (
 
                             <Col key={index}>
@@ -158,6 +147,18 @@ export default function EditMotorDialog(props) {
                         ))
                     }
                 </Row>
+                <Row>
+                    {
+                        motor.amperagens.map((amp, index) => (
+
+                            <Col key={index}>
+                                <Label>Amperagem {index + 1}</Label>
+                                <Input className="form-control" type="number" value={amp} id={`amp${index + 1}`} onChange={handleOnChange} />
+                            </Col>
+                        ))
+                    }
+                </Row>
+
             </Row>
 
             <Row>
