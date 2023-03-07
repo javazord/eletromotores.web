@@ -31,8 +31,12 @@ export default class MotorRegister extends React.Component {
             espiras: [],
             peso: 0
         },
-        voltagens: [],
-        amperagens: [],
+        motorVoltagem: {
+            
+        },
+        motorAmperagem: {
+
+        },
         checkboxVolts: [127, 220, 380, 440, 760],
         inputsAmps: [],
         indexAWG: 1,
