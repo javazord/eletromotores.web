@@ -26,7 +26,7 @@ export default props => {
                 <Column field={Tensao} header="Tensão" align={"center"}></Column>
                 <Column field="rotacao" header="Rotação" align={"center"}></Column>
                 <Column field="ranhuras" header="Ranhuras" align={"center"}></Column>
-                <Column field="medidaInterna" header="Comprimento" align={"center"}></Column>
+                <Column field="comprimento" header="Comprimento" align={"center"}></Column>
                 <Column field="medidaExterna" header="M. Externa" align={"center"}></Column>
                 <Column field={button} header="Ação" align={"center"}></Column>
             </DataTable>

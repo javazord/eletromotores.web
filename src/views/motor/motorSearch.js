@@ -27,7 +27,7 @@ export default class MotorSearch extends React.Component {
             marca: '',
             modelo: '',
             ranhuras: 0,
-            medidaInterna: 0,
+            comprimento: 0,
             medidaExterna: 0,
             potencia: 0,
         },
@@ -45,7 +45,7 @@ export default class MotorSearch extends React.Component {
         const motorFilter = {
             marca: motor.marca,
             ranhuras: motor.ranhuras,
-            medidaInterna: motor.medidaInterna,
+            comprimento: motor.comprimento,
             medidaExterna: motor.medidaExterna,
             potencia: motor.potencia
         };
@@ -79,7 +79,7 @@ export default class MotorSearch extends React.Component {
                 marca: '',
                 modelo: '',
                 ranhuras: 0,
-                medidaInterna: 0,
+                comprimento: 0,
                 medidaExterna: 0,
                 potencia: 0,
             },
@@ -147,7 +147,7 @@ export default class MotorSearch extends React.Component {
                         </Col>
                         <Col>
                             <Label>Comprimento</Label>
-                            <Input name="medidaInterna" value={this.state.medidaInterna} onChange={this.handleInputChange} type="number" className="form-control mt-1" id="inputLogin" />
+                            <Input name="comprimento" value={this.state.comprimento} onChange={this.handleInputChange} type="number" className="form-control mt-1" id="inputLogin" />
                         </Col>
                         <Col >
                             <Label>M. Externa</Label>

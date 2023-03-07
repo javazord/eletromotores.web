@@ -126,9 +126,12 @@ export default function ViewMotorDialog(props) {
                 <Col className="col-md-5">
                     <Label>Ligação</Label>
                     <Input name="ligacao" value={motor.ligacao} type="text" className="form-control" disabled />
-
                 </Col>
-                <Col className="col-md-4">
+                <Col className="col-md-2">
+                    <Label>Empresa</Label>
+                    <Input name="empresa" value={motor.empresa} type="text" className="form-control" disabled/>
+                </Col>
+                <Col className="col-md-2">
                     <Label>Colaborador</Label>
                     <Input name="usuario" value={motor.usuario.login} type="text" className="form-control" disabled />
                 </Col>

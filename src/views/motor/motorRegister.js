@@ -21,9 +21,10 @@ export default class MotorRegister extends React.Component {
         rotacao: 0,
         ligacao: "",
         potencia: 0,
-        medidaInterna: 0,
+        comprimento: 0,
         medidaExterna: 0,
         tensao: "",
+        empresa: "",
         fio: {
             awgs: [],
             quantidades: [],
@@ -185,7 +186,7 @@ export default class MotorRegister extends React.Component {
 
     create = () => {
 
-        const { marca, modelo, ranhuras, rotacao, ligacao, potencia, medidaInterna, medidaExterna, tensao, fio, voltagens, amperagens } = this.state
+        const { marca, modelo, ranhuras, rotacao, ligacao, potencia, comprimento, medidaExterna, tensao, fio, voltagens, amperagens, empresa } = this.state
 
         const motor = {
             marca,
@@ -194,9 +195,10 @@ export default class MotorRegister extends React.Component {
             rotacao: parseInt(rotacao),
             ligacao,
             potencia: parseInt(potencia),
-            medidaInterna: parseInt(medidaInterna),
+            comprimento: parseInt(comprimento),
             medidaExterna: parseInt(medidaExterna),
             tensao,
+            empresa,
             fio: {
                 awgs: fio.awgs.map(str => { return parseInt(str, 10) }),
                 quantidades: fio.quantidades.map(str => { return parseInt(str, 10) }),
@@ -257,7 +259,7 @@ export default class MotorRegister extends React.Component {
                     </Col>
                     <Col>
                         <Label>Comprimento <span>*</span></Label>
-                        <Input name="medidaInterna" value={this.state.medidaInterna} onChange={this.handleInputChange} type="number" min="1" max="100" className="form-control" bsSize="sm" />
+                        <Input name="comprimento" value={this.state.comprimento} onChange={this.handleInputChange} type="number" min="1" max="100" className="form-control" bsSize="sm" />
                     </Col>
                     <Col>
                         <Label>M. Externa <span>*</span></Label>
@@ -342,9 +344,11 @@ export default class MotorRegister extends React.Component {
                     </Col>
                     <Col className="col-md-4">
                         <Label>Empresa <span>*</span></Label>
-                        <select name="role" className="form-select form-select-sm" >
-                            <option value="USER">Arcelor</option>
-                            <option value="ADMIN">Rivelli</option>
+                        <select name="role" value={this.state.empresa} onChange={this.handleInputChange} className="form-select form-select-sm" >
+                            <option value="ARCELOR">Arcelor</option>
+                            <option value="RIVELLI">Rivelli</option>
+                            <option value="DOWCORNING">Dow Corning</option>
+                            <option value="PARTICULAR">Particular</option>
                         </select>
                     </Col>
                 </Row>

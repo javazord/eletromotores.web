@@ -32,7 +32,7 @@ export function validate(motor) {
     if (!isValidNumber(motor.fio.peso)) {
         msgs.push('Informe um peso válido')
     }
-    if (!isValidNumber(motor.medidaInterna)) {
+    if (!isValidNumber(motor.comprimento)) {
         msgs.push('Informe um campo de comprimento válido')
     }
     if (!isValidNumber(motor.medidaExterna)) {
