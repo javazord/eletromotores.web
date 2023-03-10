@@ -1,11 +1,11 @@
 import { Card } from 'primereact/card';
 import UserService from "../../app/service/user/userService";
-import { showMessageSuccess, showMessageError, showMessageAlert } from "../../components/toastr";
 import { Button } from "primereact/button";
 import React, { useEffect, useState } from 'react';
 import { Row, Col, Input } from 'reactstrap';
 import { Validate } from './userAttributes';
-import HandleInputResetValues from '../../components/events/handleInputResetValues';
+import { useToast } from "../../components/toast";
+const { showMessageAlert, showMessageError, showMessageSuccess } = useToast();
 
 const UserRegister = () => {
 

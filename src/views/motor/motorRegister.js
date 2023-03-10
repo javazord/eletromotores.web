@@ -1,8 +1,6 @@
 import React from "react";
 import MotorService from '../../app/service/motor/motorService';
 import { Card } from "primereact/card";
-import { showMessageAlert, showMessageSuccess } from "../../components/toastr";
-import { showMessageError } from "../../components/toastr";
 import { Col, Row } from 'reactstrap';
 import { Button } from 'primereact/button';
 import HandleInputResetValues from '../../components/events/handleInputResetValues';
@@ -10,7 +8,8 @@ import Checkbox from "../../components/grid/checkbox";
 import { AuthContext } from "../../main/authProvider";
 import { Input, Label } from "reactstrap";
 import { validate } from "./motorAttributes";
-import { Dropdown } from 'primereact/dropdown';
+import { useToast } from "../../components/toast";
+const { showMessageAlert, showMessageError, showMessageSuccess } = useToast();
 
 export default class MotorRegister extends React.Component {
 
@@ -31,12 +30,8 @@ export default class MotorRegister extends React.Component {
             espiras: [],
             peso: 0
         },
-        motorVoltagem: {
-            
-        },
-        motorAmperagem: {
-
-        },
+        voltagens: [],
+        amperagens: [],
         checkboxVolts: [127, 220, 380, 440, 760],
         inputsAmps: [],
         indexAWG: 1,
@@ -188,6 +183,33 @@ export default class MotorRegister extends React.Component {
         }
     }
 
+    resetState = () => {
+        this.setState({
+            marca: "",
+            modelo: "",
+            ranhuras: 0,
+            rotacao: 0,
+            ligacao: "",
+            potencia: 0,
+            comprimento: 0,
+            medidaExterna: 0,
+            tensao: "",
+            empresa: "",
+            fio: {
+                awgs: [],
+                quantidades: [],
+                espiras: [],
+                peso: 0
+            },
+            voltagens: [],
+            amperagens: [],
+            checkboxVolts: [127, 220, 380, 440, 760],
+            inputsAmps: [],
+            indexAWG: 1,
+            indexESP: 1
+        })
+    }
+
     create = () => {
 
         const { marca, modelo, ranhuras, rotacao, ligacao, potencia, comprimento, medidaExterna, tensao, fio, voltagens, amperagens, empresa } = this.state
@@ -222,8 +244,9 @@ export default class MotorRegister extends React.Component {
         }
         this.service.save(motor)
             .then(response => {
-                showMessageSuccess('Motor cadastrado com sucesso!')
+                showMessageSuccess("Motor registrado com sucesso!")
                 HandleInputResetValues()
+                this.resetState()
             }).catch(erro => {
                 showMessageError(erro.response.data)
             })
@@ -348,7 +371,7 @@ export default class MotorRegister extends React.Component {
                     </Col>
                     <Col className="col-md-4">
                         <Label>Empresa <span>*</span></Label>
-                        <select name="role" value={this.state.empresa} onChange={this.handleInputChange} className="form-select form-select-sm" >
+                        <select name="empresa" value={this.state.empresa} onChange={this.handleInputChange} className="form-select form-select-sm" >
                             <option value="ARCELOR">Arcelor</option>
                             <option value="RIVELLI">Rivelli</option>
                             <option value="DOWCORNING">Dow Corning</option>

@@ -9,9 +9,10 @@ export default props => {
     
     const button = (rowData) => {
         return <>
-            <Button type="button" icon={"pi pi-eye"} className="p-button-sm p-button-text" onClick={e => props.view(rowData)} />
+            <Button type="button" icon={"pi pi-eye"} className="p-button-sm p-button-text" style={{ color: 'green' }} onClick={e => props.view(rowData)} />
             <Render render={props.context.authUser.role == "Administrador"}>
                 <Button type="button" icon={"pi pi-user-edit"} className="p-button-sm p-button-text" onClick={e => props.edit(rowData)} />
+                <Button type="button" icon={"pi pi-trash"}  className="p-button-sm p-button-text" style={{ color: 'red' }} onClick={e => props.delete(rowData)} />
             </Render>
 
         </>;

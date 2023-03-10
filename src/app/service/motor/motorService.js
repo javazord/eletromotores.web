@@ -10,6 +10,10 @@ export default class MotorService extends ApiService{
         return this.post('', motor)
     }
 
+    deletar(id){
+        return this.delete(`/${id}`)
+    }
+
     update(motor){
         return this.put(`/${motor.id}`, motor)
     }

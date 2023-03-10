@@ -1,6 +1,6 @@
 import ApiService from "../../apiservice";
 
-export default class UserService extends ApiService{
+export  class UserService extends ApiService{
 
     constructor(){
         super('api/usuarios');

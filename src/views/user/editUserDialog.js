@@ -3,7 +3,8 @@ import { Dialog } from "primereact/dialog";
 import { useEffect, useState } from "react";
 import { Col, Input, Label, Row } from "reactstrap";
 import UserService from "../../app/service/user/userService";
-import { showMessageError, showMessageSuccess } from "../../components/toastr";
+import { useToast } from "../../components/toast";
+const { showMessageAlert, showMessageError, showMessageSuccess } = useToast();
 
 export default function EditUserDialog(props) {
 

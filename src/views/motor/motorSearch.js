@@ -1,13 +1,14 @@
 import React from "react";
 import MotorService from "../../app/service/motor/motorService";
 import { Card } from 'primereact/card';
-import { showMessageAlert } from "../../components/toastr";
 import MotorTable from "./motorTable";
 import ViewMotorDialog from "./viewMotorDialog";
 import { Button } from 'primereact/button';
 import EditMotorDialog from "./editMotorDialog";
 import { AuthContext } from "../../main/authProvider";
 import { Col, Row, Input, Label } from "reactstrap";
+import { useToast } from "../../components/toast";
+const { showMessageAlert, showMessageError, showMessageSuccess } = useToast();
 
 
 export default class MotorSearch extends React.Component {
@@ -119,6 +120,23 @@ export default class MotorSearch extends React.Component {
         this.setState({ editConfirmDialog: true, motor: motor })
     }
 
+    delete = (motor) => {
+        try {
+            this.service.deletar(motor.id)
+            .then(response => {
+                const motores = this.state.motores;
+                console.log(motores)
+                const index = motores.indexOf(motor)
+                motores.splice(index, 1)
+                this.setState({motores: motores})
+                console.log(motores)
+                showMessageSuccess("Motor deletado com sucesso!")
+            })
+        } catch (error) {
+            showMessageError("Ocorreu um erro ao deletar o motor")
+        }
+    }
+
     onHide = () => {
         this.resetState();
     };
@@ -160,7 +178,7 @@ export default class MotorSearch extends React.Component {
                     </Row>
                     <br />
 
-                    <MotorTable motores={this.state.motores} view={this.view} edit={this.edit} context={this.context} />
+                    <MotorTable motores={this.state.motores} view={this.view} edit={this.edit} delete={this.delete} context={this.context} />
 
                 </Card>
 

@@ -1,7 +1,6 @@
 import React from "react";
 import UserService from "../../app/service/user/userService";
 import { Card } from 'primereact/card';
-import { showMessageAlert } from "../../components/toastr";
 import UserTable from "./userTable";
 import { Button } from 'primereact/button';
 import { AuthContext } from "../../main/authProvider";
@@ -9,6 +8,8 @@ import { Input, Label } from "reactstrap";
 import ViewUserDialog from "./viewUserDialog";
 import EditUserDialog from "./editUserDialog";
 import { Row, Col } from 'reactstrap';
+import { useToast } from "../../components/toast";
+const { showMessageAlert, showMessageError, showMessageSuccess } = useToast();
 
 
 export default class UserSearch extends React.Component {

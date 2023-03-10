@@ -3,13 +3,14 @@ import { Row, Col, Input, Label } from "reactstrap";
 import { Dialog } from "primereact/dialog";
 import { Button } from 'primereact/button';
 import { useEffect } from "react";
-import MotorService from '../../app/service/motor/motorService';
-import { showMessageAlert, showMessageError, showMessageSuccess } from "../../components/toastr";
+import {MotorService} from '../../app/service/motor/motorService';
 import { validate } from "./motorAttributes";
+import { useToast } from "../../components/toast";
 
 export default function EditMotorDialog(props) {
 
     const service = new MotorService();
+    const { showMessageSuccess , showMessageError } = useToast();
     const { visible, onHide } = props;
 
     const [motor, setMotor] = useState(useEffect(() => {
