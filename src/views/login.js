@@ -15,6 +15,7 @@ export function Login(props) {
     const { showMessageError, toast } = useToast();
     const [login, setLogin] = useState('');
     const [password, setPassword] = useState('');
+    const [inputSenha, setInputSenha] = useState('');
 
     const enter = () => {
         const user = { login, password };
@@ -26,6 +27,13 @@ export function Login(props) {
             showMessageError(msgs);
             return false;
         }
+
+        props.service.blankPassword({user})
+        .then(response => {
+            console.log(response.data);
+        }).catch(erro =>{
+            console.log(erro)
+        })
 
         props.service.authenticate({
             login: login,

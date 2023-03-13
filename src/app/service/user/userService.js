@@ -25,5 +25,9 @@ export default class UserService extends ApiService{
                 
         return this.get(params)
     }
+
+    blankPassword(usuario){
+        return this.get('/update-password', usuario)
+    }
     
 }
