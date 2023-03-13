@@ -6,11 +6,9 @@ import { Button } from 'primereact/button';
 import Render from "../../components/grid/render";
 
 export default props => {
-    
     const button = (rowData) => {
         return <>
-            <Button type="button" icon={"pi pi-eye"} className="p-button-sm p-button-text" onClick={e => props.view(rowData)} />
-            <Render render={props.context.authUser.role == "Administrador"}>
+            <Render render={props.context.role == "Administrador"}>
                 <Button type="button" icon={"pi pi-user-edit"} className="p-button-sm p-button-text" onClick={e => props.edit(rowData)} />
             </Render>
 

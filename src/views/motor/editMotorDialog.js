@@ -5,12 +5,13 @@ import { Button } from 'primereact/button';
 import { useEffect } from "react";
 import {MotorService} from '../../app/service/motor/motorService';
 import { validate } from "./motorAttributes";
-import { useToast } from "../../components/toast";
+import useToast from '../../components/toast';
+
 
 export default function EditMotorDialog(props) {
 
     const service = new MotorService();
-    const { showMessageSuccess , showMessageError } = useToast();
+    const toast = useToast();
     const { visible, onHide } = props;
 
     const [motor, setMotor] = useState(useEffect(() => {
@@ -28,15 +29,15 @@ export default function EditMotorDialog(props) {
             validate(motor);
         } catch (error) {
             const msgs = error.mensagens;
-            msgs.forEach(msg => showMessageAlert(msg));
+            msgs.forEach(msg => toast.showMessageAlert(msg));
             return false;
         }
         service.update(motor)
             .then(response => {
-                showMessageSuccess('Motor atualizado com sucesso!')
+                toast.showMessageSuccess('Motor atualizado com sucesso!')
             }).catch(erro => {
                 console.log(erro)
-                showMessageError(erro.response.data)
+                toast.showMessageError(erro.response.data)
             })
     }
 

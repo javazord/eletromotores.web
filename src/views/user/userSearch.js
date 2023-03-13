@@ -1,131 +1,102 @@
-import React from "react";
-import UserService from "../../app/service/user/userService";
+import React, { useContext, useState } from "react";
 import { Card } from 'primereact/card';
 import UserTable from "./userTable";
 import { Button } from 'primereact/button';
 import { AuthContext } from "../../main/authProvider";
-import { Input, Label } from "reactstrap";
-import ViewUserDialog from "./viewUserDialog";
 import EditUserDialog from "./editUserDialog";
-import { Row, Col } from 'reactstrap';
-import { useToast } from "../../components/toast";
-const { showMessageAlert, showMessageError, showMessageSuccess } = useToast();
+import { Row, Col, Label, Input } from 'reactstrap';
+import UserService from "../../app/service/user/userService";
+import useToast from "../../components/toast";
+import { Toast } from "primereact/toast";
 
 
-export default class UserSearch extends React.Component {
+export default function UserSearch() {
 
-    state = {
-        id: null,
-        login: '',
-        condition: 1,
-        role: '',
-        users: [],
-        lista: [],
-        user: {},
-        showConfirmDialog: false,
-        editConfirmDialog: false
-    }
+    const [login, setLogin] = useState('');
+    const [condition, setCondition] = useState(1);
+    const [users, setUsers] = useState([]);
+    const [lista, setLista] = useState([]);
+    const [user, setUser] = useState({});
+    const [showConfirmDialog, setShowConfirmDialog] = useState(false);
+    const [editConfirmDialog, setEditConfirmDialog] = useState(false);
+    const service = new UserService();
+    const {authUser} = useContext(AuthContext);
+    const {showMessageAlert, toast} = useToast();
 
-    constructor() {
-        super();
-        this.service = new UserService();
-    }
-
-    buttonSearch = () => {
-        const { login, condition } = this.state;
+    const buttonSearch = () => {
         const userFilter = { login, condition }
-        this.service.search(userFilter)
+        service.search(userFilter)
             .then(response => {
                 const lista = response.data;
                 if (lista.length < 1) {
-                    showMessageAlert("Nenhum colaborador encontrado.")
+                    
+                    showMessageAlert("Nenhum colaborador encontrado")
                 } else {
                     const list = lista.map(user => ({
                         ...user,
                         condition: user.condition ? 1 : 0
                     }));
-                    this.setState({ users: list });
+                    setUsers(list);
                 }
-                this.setState({ users: lista });
+                setLista(lista);
             }).catch(erro => {
                 console.log(erro)
             })
 
     }
 
-    resetState = () => {
-        this.setState({
-            login: '',
-            condition: this.state.condition,
-            showConfirmDialog: false,
-            editConfirmDialog: false
-        })
+    const resetState = () => {
+        setLogin('');
+        setCondition(condition);
+        setShowConfirmDialog(false);
+        setEditConfirmDialog(false);
     }
 
     //modal para ver dados do usuário
-    view = (user) => {
-        this.setState({ showConfirmDialog: true, user: user })
+    const view = (user) => {
+        setShowConfirmDialog(true);
+        setUser(user);
     }
 
     //modal para editar dados do usuário
-    edit = (user) => {
-        this.setState({ editConfirmDialog: true, user: user })
+    const edit = (user) => {
+        setEditConfirmDialog(true);
+        setUser(user);
     }
 
-    handleInputChange = (event) => {
-        this.setState({ [event.target.name]: event.target.value })
-    }
-    onHide = () => {
-        this.resetState();
+    const onHide = () => {
+        resetState();
     }
 
-    render() {
+    return (
+        <>
+            <Card title="Pesquisar">
+                <Row className="d-flex align-items-end">
+                    <Col>
+                        <Label>Login</Label>
+                        <Input name="login" value={login} onChange={e => setLogin(e.target.value)} type="text" className="form-control mt-1" placeholder="Informe o login"  />
+                    </Col>
+                    <Col>
+                        <Label>Condição</Label>
+                        <select name="condition" value={condition} onChange={e => setCondition(e.target.value)} className="form-select mt-1" >
+                            <option value="1">Ativado</option>
+                            <option value="0">Desativado</option>
+                        </select>
+                    </Col>
+                    <Col>
+                        <Button onClick={buttonSearch} className="btn btn-primary" icon="pi pi-search" label="Buscar" size="sm" />
+                        <Toast ref={toast}/>
+                    </Col>
+                </Row>
+                <br />
+                <UserTable users={users} view={view} edit={edit} context={authUser} />
 
-        const btnAttfooter = (
-            <div>
-                <Button label="Atualizar" className="p-button-success" icon="pi pi-check" onClick={this.update} size="sm" />
-                <Button label="Fechar" className="p-button-secondary" icon="pi pi-times" onClick={this.onHide} size="sm" />
-            </div>
-        );
-        const btnShowfooter = (
-            <div>
-                <Button label="Fechar" className="p-button-secondary" icon="pi pi-times" onClick={this.onHide} size="sm" />
-            </div>
-        );
-        return (
-            <>
+                <EditUserDialog user={user} visible={editConfirmDialog} onHide={onHide} />
 
-                <Card title="Pesquisar">
-                    <Row className="d-flex align-items-end">
-                        <Col>
-                            <Label>Login</Label>
-                            <Input name="login" value={this.state.login} onChange={this.handleInputChange} type="text" className="form-control mt-1" placeholder="Informe o login" id="inputLogin" />
-                        </Col>
-                        <Col>
-                            <Label>Condição</Label>
-                            <select name="condition" value={this.state.condition} onChange={this.handleInputChange} className="form-select mt-1" id="exampleSelect1">
-                                <option value="1">Ativado</option>
-                                <option value="0">Desativado</option>
-                            </select>
-                        </Col>
-                        <Col>
-                            <Button onClick={this.buttonSearch} className="btn btn-primary" icon="pi pi-search" label="Buscar" size="sm" />
-                        </Col>
-                    </Row>
-                    <br />
+            </Card>
 
-                    <UserTable users={this.state.users} view={this.view} edit={this.edit} context={this.context} />
+        </>
 
-                    <ViewUserDialog user={this.state.user} visible={this.state.showConfirmDialog} onHide={this.onHide} />
-
-                    <EditUserDialog user={this.state.user} visible={this.state.editConfirmDialog} onHide={this.onHide} />
-
-                </Card>
-
-            </>
-
-        )
-    }
-
+    )
 }
-UserSearch.contextType = AuthContext;
+

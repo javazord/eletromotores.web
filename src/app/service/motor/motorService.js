@@ -1,6 +1,6 @@
 import ApiService from "../../apiservice";
 
-export default class MotorService extends ApiService{
+export class MotorService extends ApiService{
 
     constructor(){
         super('api/motores');

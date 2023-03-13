@@ -3,7 +3,7 @@ import ApiService from "../app/apiservice";
 import AuthService from "../app/service/user/authService";
 import jwt from 'jsonwebtoken'
 
-export const AuthContext = React.createContext()
+export const AuthContext = React.createContext();
 export const AuthConsumer = AuthContext.Consumer;
 const AProvider = AuthContext.Provider;
 

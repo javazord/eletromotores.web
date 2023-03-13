@@ -1,4 +1,6 @@
 
-export default function ValidateError(mensagens){
-    this.mensagens = mensagens;
+export default class ValidateError {
+    constructor(mensagens) {
+        this.mensagens = mensagens;
+    }
 }

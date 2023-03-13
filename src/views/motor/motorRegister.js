@@ -1,5 +1,4 @@
-import React from "react";
-import MotorService from '../../app/service/motor/motorService';
+import React, { useContext, useEffect, useState } from "react";
 import { Card } from "primereact/card";
 import { Col, Row } from 'reactstrap';
 import { Button } from 'primereact/button';
@@ -8,145 +7,143 @@ import Checkbox from "../../components/grid/checkbox";
 import { AuthContext } from "../../main/authProvider";
 import { Input, Label } from "reactstrap";
 import { validate } from "./motorAttributes";
-import { useToast } from "../../components/toast";
-const { showMessageAlert, showMessageError, showMessageSuccess } = useToast();
+import { MotorService } from "../../app/service/motor/motorService";
+import useToast from "../../components/toast";
+import { Toast } from "primereact/toast";
 
-export default class MotorRegister extends React.Component {
+const MotorRegister = () => {
 
-    state = {
-        marca: "",
-        modelo: "",
-        ranhuras: 0,
+    const [motor, setMotor] = useState({
         rotacao: 0,
-        ligacao: "",
+        modelo: '',
+        ranhuras: 0,
+        marca: '',
+        ligacao: '',
         potencia: 0,
         comprimento: 0,
         medidaExterna: 0,
-        tensao: "",
-        empresa: "",
+        empresa: '',
+        tensao: '',
         fio: {
-            awgs: [],
-            quantidades: [],
-            espiras: [],
-            peso: 0
+            awgs: [""],
+            quantidades: [""],
+            espiras: [""],
+            peso: 0,
         },
         voltagens: [],
         amperagens: [],
-        checkboxVolts: [127, 220, 380, 440, 760],
-        inputsAmps: [],
-        indexAWG: 1,
-        indexESP: 1
+        usuario: {},
+    });
+    const [checkboxVolts, setCheckboxVolts] = useState([127, 220, 380, 440, 760])
+    const [inputsAmps, setInputsAmps] = useState([])
+    const [indexAWG, setIndexAWG] = useState([1])
+    const [indexESP, setIndexESP] = useState([1])
+    const { showMessageSuccess, showMessageAlert, showMessageError, toast } = useToast();
+    const { authUser } = useContext(AuthContext);
+    const service = new MotorService();
+
+    const handleInputChange = (event) => {
+        setMotor({ ...motor, [event.target.name]: event.target.value })
     }
 
-    constructor() {
-        super();
-        this.service = new MotorService();
-    }
-
-    handleInputChange = (event) => {
-        this.setState({ [event.target.name]: event.target.value })
-    }
-    handleInputChangePeso = (event) => {
-        this.setState({ ...this.state, peso: event.target.value })
-    }
-    handleInputChangePeso = (event) => {
-        const { id, value } = event.target;
-        this.setState(prevState => ({
+    const handleInputChangePeso = (event) => {
+        const { name, value } = event.target;
+        setMotor({
+            ...motor,
             fio: {
-                ...prevState.fio,
-                [id]: value
+                ...motor.fio,
+                [name]: value,
             }
-        }));
+        });
     }
 
-    addInputsESP = (e) => {
-        if (this.state.indexESP <= 5) {
+    const addInputsESP = (e) => {
+        if (indexESP <= 5) {
             e.preventDefault();
 
-            this.state.fio.espiras.push("")
-            const espiras = [...this.state.fio.espiras, ""]
-            this.setState({ espiras: espiras, indexESP: this.state.indexESP + 1 });
+            motor.fio.espiras.push("")
+            const espiras = [...motor.fio.espiras, ""]
+            setMotor({ espiras: espiras, indexESP: indexESP + 1 });
 
         }
     }
 
-    addInputs = (e) => {
-        if (this.state.indexAWG <= 5) {
+    const addInputs = (e) => {
+        if (indexAWG <= 5) {
             e.preventDefault();
 
-            this.state.fio.awgs.push("")
-            this.state.fio.quantidades.push("")
-            this.setState({ awgs: [...this.state.fio.awgs, ""], quantidades: [...this.state.fio.quantidades, ""], indexAWG: this.state.indexAWG + 1 });
+            motor.fio.awgs.push("")
+            motor.fio.quantidades.push("")
+            setMotor({ awgs: [...motor.fio.awgs, ""], quantidades: [...motor.fio.quantidades, ""], indexAWG: indexAWG + 1 });
 
         }
 
     };
 
-    removeInputsESP = () => {
-        this.state.fio.espiras.pop()
-        const espiras = [...this.state.fio.espiras, ""]
-        this.setState({ espiras: espiras, indexESP: this.state.indexESP - 1 })
+    const removeInputsESP = () => {
+        motor.fio.espiras.pop()
+        const espiras = [...motor.fio.espiras, ""]
+        setMotor({ espiras: espiras, indexESP: indexESP - 1 })
     }
 
-    removeInputs = () => {
-        this.state.fio.awgs.pop()
-        this.state.fio.quantidades.pop()
-        const awgs = [...this.state.fio.awgs, ""]
-        const quantidades = [...this.state.fio.quantidades, ""]
-        this.setState({ awgs: awgs, quantidades: quantidades, indexAWG: this.state.indexAWG - 1 })
+    const removeInputs = () => {
+        motor.fio.awgs.pop()
+        motor.fio.quantidades.pop()
+        const awgs = [...motor.fio.awgs, ""]
+        const quantidades = [...motor.fio.quantidades, ""]
+        setMotor({ awgs: awgs, quantidades: quantidades, indexAWG: indexAWG - 1 })
     };
 
     //pega o valor do input
-    handleChangeAWG = (e, index) => {
+    const handleChangeAWG = (e, index) => {
         //numero max estipulado é 5
+
         if (index <= 5) {
             e.preventDefault();
 
-            this.state.fio.awgs[index] = e.target.value;
-            this.setState([...this.state.fio.awgs])
+            motor.fio.awgs[index] = e.target.value;
+            setMotor([...motor.fio.awgs])
         }
     }
+
     //pega o valor do input
-    handleChangeQTD = (e, index) => {
+    const handleChangeQTD = (e, index) => {
         //numero max estipulado é 5
         if (index <= 5) {
             e.preventDefault();
 
-            this.state.fio.quantidades[index] = e.target.value;
-            this.setState([...this.state.fio.quantidades])
+            motor.fio.quantidades[index] = e.target.value;
+            setMotor([...motor.fio.quantidades])
         }
 
     }
 
-    handleChangeAMP = (e, index) => {
-        this.state.amperagens[index] = e.target.value;
-        this.setState([...this.state.amperagens]);
+    const handleChangeAMP = (e, index) => {
+        motor.amperagens[index] = e.target.value;
+        setMotor([...motor.amperagens]);
     }
 
-    handleChangeESP = (e, index) => {
-        this.state.fio.espiras[index] = e.target.value;
-        this.setState([...this.state.fio.espiras]);
+    const handleChangeESP = (e, index) => {
+        motor.fio.espiras[index] = e.target.value;
+        setMotor([...motor.fio.espiras]);
     }
 
-    handleCheckbox = (e) => {
+    const handleCheckbox = (e) => {
         const { value, checked } = e.target;
-        const { voltagens } = this.state;
-        let checkboxVolts = this.state.checkboxVolts;
-        let amperagens = this.state.amperagens;
-        let inputsAmps = this.state.inputsAmps;
+        let amperagens = motor.amperagens;
         let updatedList;
 
-        if (checked && !voltagens.includes(value)) {
-            updatedList = [...voltagens, value];
+        if (checked && !motor.voltagens.includes(value)) {
+            updatedList = [...motor.voltagens, value];
         } else if (!checked) {
-            const index = voltagens.findIndex(val => val === value);
-            updatedList = [...voltagens.slice(0, index), ...voltagens.slice(index + 1)];
+            const index = motor.voltagens.findIndex(val => val === value);
+            updatedList = [...motor.voltagens.slice(0, index), ...motor.voltagens.slice(index + 1)];
         } else {
-            updatedList = voltagens;
+            updatedList = motor.voltagens;
         }
 
-        this.setState({ voltagens: updatedList }, () => {
-            this.validateCheckbox(updatedList.map(str => parseInt(str, 10)));
+        setMotor({ voltagens: updatedList }, () => {
+            validateCheckbox(updatedList.map(str => parseInt(str, 10)));
         });
 
 
@@ -154,7 +151,7 @@ export default class MotorRegister extends React.Component {
             const index = inputsAmps.length + 1;
             inputsAmps.push(
                 <><Label>Amperagem</Label>
-                    <Input className="form-control" type="number" onChange={(e) => this.handleChangeAMP(e, index)} bsSize="sm" /></>
+                    <Input className="form-control" type="number" onChange={(e) => handleChangeAMP(e, index)} bsSize="sm" /></>
             );
         } else {
             const index = checkboxVolts.indexOf(value);
@@ -166,55 +163,53 @@ export default class MotorRegister extends React.Component {
             }
             inputsAmps.pop()
         }
-
-        this.setState({ checkboxVolts, amperagens, inputsAmps });
+        setMotor({ amperagens })
+        setCheckboxVolts({ checkboxVolts })
+        setInputsAmps({ inputsAmps })
     }
 
-    validateCheckbox = (updatedList) => {
+    const validateCheckbox = (updatedList) => {
 
         if (updatedList.includes(220) && updatedList.includes(380) && updatedList.includes(440) && updatedList.includes(760)) {
-            updatedList.includes(127) ? this.setState({ tensao: "" }) : this.setState({ tensao: "TRIFASICO" })
+            updatedList.includes(127) ? setMotor({ tensao: "" }) : setMotor({ tensao: "TRIFASICO" })
 
         } else if (updatedList.includes(127) && updatedList.includes(220)) {
-            updatedList.includes(380) || updatedList.includes(440) || updatedList.includes(760) ? this.setState({ tensao: "" }) : this.setState({ tensao: "MONOFASICO" })
+            updatedList.includes(380) || updatedList.includes(440) || updatedList.includes(760) ? setMotor({ tensao: "" }) : setMotor({ tensao: "MONOFASICO" })
 
         } else {
-            this.setState({ tensao: "" })
+            setMotor({ tensao: "" })
         }
     }
 
-    resetState = () => {
-        this.setState({
-            marca: "",
-            modelo: "",
-            ranhuras: 0,
+    const resetState = () => {
+        setMotor({
             rotacao: 0,
-            ligacao: "",
+            modelo: '',
+            ranhuras: 0,
+            marca: '',
+            ligacao: '',
             potencia: 0,
             comprimento: 0,
             medidaExterna: 0,
-            tensao: "",
-            empresa: "",
+            empresa: '',
+            tensao: '',
             fio: {
                 awgs: [],
                 quantidades: [],
                 espiras: [],
-                peso: 0
+                peso: 0,
             },
             voltagens: [],
             amperagens: [],
-            checkboxVolts: [127, 220, 380, 440, 760],
-            inputsAmps: [],
-            indexAWG: 1,
-            indexESP: 1
+            usuario: {},
         })
     }
 
-    create = () => {
+    const create = () => {
 
-        const { marca, modelo, ranhuras, rotacao, ligacao, potencia, comprimento, medidaExterna, tensao, fio, voltagens, amperagens, empresa } = this.state
+        const { marca, modelo, ranhuras, rotacao, ligacao, potencia, comprimento, medidaExterna, tensao, fio, voltagens, amperagens, empresa } = motor;
 
-        const motor = {
+        const motorInsert = {
             marca,
             modelo,
             ranhuras: parseInt(ranhuras),
@@ -233,163 +228,146 @@ export default class MotorRegister extends React.Component {
             },
             voltagens: voltagens.sort().map(str => { return parseInt(str, 10) }),
             amperagens: amperagens.map(str => { return parseFloat(str, 10) }),
-            usuario: this.context.authUser.id
+            usuario: authUser.id
         }
         try {
-            validate(motor);
+            validate(motorInsert);
         } catch (error) {
             const msgs = error.mensagens;
-            msgs.forEach(msg => showMessageAlert(msg));
+            showMessageAlert(msgs);
             return false;
         }
-        this.service.save(motor)
+        service.save(motorInsert)
             .then(response => {
                 showMessageSuccess("Motor registrado com sucesso!")
                 HandleInputResetValues()
-                this.resetState()
+                resetState()
             }).catch(erro => {
                 showMessageError(erro.response.data)
             })
     }
 
-    render() {
-        return (
+    return (
+        <Card title={"Cadastrar Motor"}>
+            <Row>
+                <Col>
+                    <Label>Marca<span>*</span></Label>
+                    <Input name="marca" value={motor.marca} onChange={handleInputChange} type="text" className="form-control" bsSize="sm" />
+                </Col>
+                <Col>
+                    <Label>Modelo</Label>
+                    <Input name="modelo" value={motor.modelo} onChange={handleInputChange} type="text" className="form-control" bsSize="sm" />
+                </Col>
+                <Col>
+                    <Label>Ranhuras<span>*</span></Label>
+                    <Input name="ranhuras" value={motor.ranhuras} onChange={handleInputChange} type="number" className="form-control" bsSize="sm" />
+                </Col>
+                <Col>
+                    <Label>Rotação</Label>
+                    <Input name="rotacao" value={motor.rotacao} onChange={handleInputChange} type="number" className="form-control" bsSize="sm" />
+                </Col>
+            </Row>
 
-            <Card title={"Cadastrar Motor"} >
-                <Row>
-                    <Col>
-                        <Label>Marca <span>*</span></Label>
-                        <Input name="marca" value={this.state.marca} onChange={this.handleInputChange} type="text" className="form-control" bsSize="sm" />
+            <Row>
+                <Col>
+                    <Label>Peso<span>*</span></Label>
+                    <Input name="peso" value={motor.fio.peso} onChange={handleInputChangePeso} type="number" className="form-control" bsSize="sm" />
+                </Col>
+                <Col>
+                    <Label>Potência</Label>
+                    <Input name="potencia" value={motor.potencia} onChange={handleInputChange} type="number" className="form-control" bsSize="sm" />
+                </Col>
+                <Col>
+                    <Label>Comprimento<span>*</span></Label>
+                    <Input name="comprimento" value={motor.comprimento} onChange={handleInputChange} type="number" min="1" max="100" className="form-control" bsSize="sm" />
+                </Col>
+                <Col>
+                    <Label>M. Externa<span>*</span></Label>
+                    <Input name="medidaExterna" value={motor.medidaExterna} onChange={handleInputChange} type="number" className="form-control" bsSize="sm" />
+                </Col>
+            </Row>
+
+            <Row>
+                {motor.fio.awgs.map((valor, index) => (
+                    <Col className="col-md-2" key={index}>
+                        <Label>Awg<span>*</span></Label>
+                        <Input className="form-control" type="number" value={valor} onChange={(e) => handleChangeAWG(e, index)} bsSize="sm" />
                     </Col>
-                    <Col>
-                        <Label>Modelo</Label>
-                        <Input name="modelo" value={this.state.modelo} onChange={this.handleInputChange} type="text" className="form-control" bsSize="sm" />
-                    </Col>
-                    <Col>
-                        <Label>Ranhuras <span>*</span></Label>
-                        <Input name="ranhuras" value={this.state.ranhuras} onChange={this.handleInputChange} type="number" className="form-control" bsSize="sm" />
-                    </Col>
-                    <Col>
-                        <Label>Rotação</Label>
-                        <Input name="rotacao" value={this.state.rotacao} onChange={this.handleInputChange} type="number" className="form-control" bsSize="sm" />
-                    </Col>
-                </Row>
+                ))}
 
-                <Row>
-                    <Col>
-                        <Label>Peso <span>*</span></Label>
-                        <Input id="peso" onChange={this.handleInputChangePeso} value={this.state.fio.peso} type="number" className="form-control" bsSize="sm" />
-                    </Col>
-                    <Col>
-                        <Label>Potência</Label>
-                        <Input name="potencia" value={this.state.potencia} onChange={this.handleInputChange} type="number" className="form-control" bsSize="sm" />
-                    </Col>
-                    <Col>
-                        <Label>Comprimento <span>*</span></Label>
-                        <Input name="comprimento" value={this.state.comprimento} onChange={this.handleInputChange} type="number" min="1" max="100" className="form-control" bsSize="sm" />
-                    </Col>
-                    <Col>
-                        <Label>M. Externa <span>*</span></Label>
-                        <Input name="medidaExterna" value={this.state.medidaExterna} onChange={this.handleInputChange} type="number" className="form-control" bsSize="sm" />
-                    </Col>
-                </Row>
+                <Col className="col-md-2 mt-2 d-flex align-items-end">
+                    <Button icon="pi pi-plus" rounded raised severity="info" aria-label="Adicionar" title="Adicionar AWG/Quantidade" size="sm" onClick={addInputs} />
+                </Col>
+            </Row>
 
-                <Row>
-                    {
-                        this.state.fio.awgs.map((valor, index) => (
-                            <Col className="col-md-2" key={index}>
-                                <Label>Awg <span>*</span></Label>
-                                <Input className="form-control" type="number" value={valor} id={`awg${index + 1}`} onChange={(e) => this.handleChangeAWG(e, index)} bsSize="sm" />
-                            </Col>
-                        ))
+            <Row>
+                {motor.fio.quantidades.map((qtd, index) => (
 
-                    }
-
-                    <Col className="col-md-2 mt-2 d-flex align-items-end">
-                        <Button icon="pi pi-plus" rounded raised severity="info" aria-label="Adicionar" title="Adicionar AWG/Quantidade" size="sm" onClick={this.addInputs} />
-                    </Col>
-                </Row>
-
-                <Row>
-                    {
-
-                        this.state.fio.quantidades.map((qtd, index) => (
-
-                            <Col className="col-md-2" key={index}>
-                                <Label>Quantidade <span>*</span></Label>
-                                <Input className="form-control" type="number" value={qtd} id={`qtd${index + 1}`} onChange={(e) => this.handleChangeQTD(e, index)} bsSize="sm" />
-                            </Col>
-
-                        ))
-
-                    }
-
-                    <Col className="col-md-2 mt-2 d-flex align-items-end">
-                        <Button icon="pi pi-minus" rounded raised severity="danger" aria-label="Adicionar" title="Remover AWG/Quantidade" size="sm" onClick={this.removeInputs} />
-                    </Col>
-                </Row>
-                <Row>
-                    {
-
-                        this.state.fio.espiras.map((esp, index) => (
-
-                            <Col className="col-md-2" key={index}>
-                                <Label>Espiras <span>*</span></Label>
-                                <Input className="form-control" type="number" value={esp} id={`esp${index + 1}`} onChange={(e) => this.handleChangeESP(e, index)} bsSize="sm" />
-                            </Col>
-
-                        ))
-
-                    }
-                    <Col className="col-2 mt-2 d-flex align-items-end" >
-                        <Button className="me-1" icon="pi pi-plus" rounded raised severity="info" title="Adicionar Espiras" onClick={this.addInputsESP} size="sm" />
-                        <Button className="ms-1" icon="pi pi-minus" rounded raised severity="danger" title="Remover Espiras" onClick={this.removeInputsESP} size="sm" />
+                    <Col className="col-md-2" key={index}>
+                        <Label>Quantidade<span>*</span></Label>
+                        <Input className="form-control" type="number" value={qtd} id={`qtd${index + 1}`} onChange={(e) => handleChangeQTD(e, index)} bsSize="sm" />
                     </Col>
 
-                </Row>
-                <Row className="mt-2">
-                    {
-                        this.state.checkboxVolts.map((item, index) => (
-                            <Col key={item}>
-                                <Label>Voltagem <span>*</span></Label>
-                                <Checkbox label={`${item}v`} name={item} value={item} onChange={(e) => this.handleCheckbox(e)} />
-                                {this.state.inputsAmps[index]}
-                            </Col>
-                        ))
-                    }
+                ))}
 
-                </Row>
+                <Col className="col-md-2 mt-2 d-flex align-items-end">
+                    <Button icon="pi pi-minus" rounded raised severity="danger" aria-label="Adicionar" title="Remover AWG/Quantidade" size="sm" onClick={removeInputs} />
+                </Col>
+            </Row>
+            <Row>
+                {motor.fio.espiras.map((esp, index) => (
 
-                <Row>
-                    <Col className="col-md-3">
-                        <Label>Tensão <span>*</span></Label>
-                        <Input className="form-control" name="tensao" value={this.state.tensao} disabled bsSize="sm" />
+                    <Col className="col-md-2" key={index}>
+                        <Label>Espiras<span>*</span></Label>
+                        <Input className="form-control" type="number" value={esp} id={`esp${index + 1}`} onChange={(e) => handleChangeESP(e, index)} bsSize="sm" />
                     </Col>
-                    <Col className="col-md-5">
-                        <Label>Ligação <span>*</span></Label>
-                        <Input name="ligacao" value={this.state.ligacao} onChange={this.handleInputChange} type="text" className="form-control" bsSize="sm" />
-                    </Col>
-                    <Col className="col-md-4">
-                        <Label>Empresa <span>*</span></Label>
-                        <select name="empresa" value={this.state.empresa} onChange={this.handleInputChange} className="form-select form-select-sm" >
-                            <option value="ARCELOR">Arcelor</option>
-                            <option value="RIVELLI">Rivelli</option>
-                            <option value="DOWCORNING">Dow Corning</option>
-                            <option value="PARTICULAR">Particular</option>
-                        </select>
-                    </Col>
-                </Row>
-                <Row>
-                    <Col className="d-flex justify-content-end mt-2">
-                        <Button onClick={this.create} label="Cadastrar" icon="pi pi-check" size="sm" />
-                    </Col>
-                </Row>
 
-            </Card>
+                ))}
+                <Col className="col-2 mt-2 d-flex align-items-end">
+                    <Button className="me-1" icon="pi pi-plus" rounded raised severity="info" title="Adicionar Espiras" onClick={addInputsESP} size="sm" />
+                    <Button className="ms-1" icon="pi pi-minus" rounded raised severity="danger" title="Remover Espiras" onClick={removeInputsESP} size="sm" />
+                </Col>
 
-        )
+            </Row>
+            <Row className="mt-2">
+                {checkboxVolts.map((item, index) => (
+                    <Col key={item}>
+                        <Label>Voltagem<span>*</span></Label>
+                        <Checkbox label={`${item}v`} name={item} value={item} onChange={(e) => handleCheckbox(e)} />
+                        {inputsAmps[index]}
+                    </Col>
+                ))}
 
-    }
+            </Row>
+
+            <Row>
+                <Col className="col-md-3">
+                    <Label>Tensão<span>*</span></Label>
+                    <Input className="form-control" name="tensao" value={motor.tensao} disabled bsSize="sm" />
+                </Col>
+                <Col className="col-md-5">
+                    <Label>Ligação<span>*</span></Label>
+                    <Input name="ligacao" value={motor.ligacao} onChange={handleInputChange} type="text" className="form-control" bsSize="sm" />
+                </Col>
+                <Col className="col-md-4">
+                    <Label>Empresa<span>*</span></Label>
+                    <select name="empresa" value={motor.empresa} onChange={handleInputChange} className="form-select form-select-sm">
+                        <option value="ARCELOR">Arcelor</option>
+                        <option value="RIVELLI">Rivelli</option>
+                        <option value="DOWCORNING">Dow Corning</option>
+                        <option value="PARTICULAR">Particular</option>
+                    </select>
+                </Col>
+            </Row>
+            <Row>
+                <Col className="d-flex justify-content-end mt-2">
+                    <Button onClick={create} label="Cadastrar" icon="pi pi-check" size="sm" />
+                    <Toast ref={toast} />
+                </Col>
+            </Row>
+
+        </Card>
+    )
 
 }
-MotorRegister.contextType = AuthContext;
+export default MotorRegister;

@@ -1,21 +1,32 @@
 import React, { Component, useContext, useState } from "react";
 import { Card } from 'primereact/card';
-import {UserService} from '../app/service/user/userService';
+import UserService from '../app/service/user/userService';
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from '../main/authProvider';
 import { Button } from "primereact/button";
 import { Row, Col, Input, Label } from "reactstrap";
-import  useToast  from "../components/toast";
+import useToast from "../components/toast";
+import { Toast } from "primereact/toast";
+import { loginValidate } from "./user/userAttributes";
 
 export function Login(props) {
     const authContext = useContext(AuthContext);
     const navigate = useNavigate();
-    const { showMessageError } = useToast();
-
+    const { showMessageError, toast } = useToast();
     const [login, setLogin] = useState('');
     const [password, setPassword] = useState('');
 
     const enter = () => {
+        const user = { login, password };
+
+        try {
+            loginValidate(user);
+        } catch (error) {
+            const msgs = error.mensagens;
+            showMessageError(msgs);
+            return false;
+        }
+
         props.service.authenticate({
             login: login,
             password: password
@@ -57,6 +68,7 @@ export function Login(props) {
                     </Row>
 
                 </Card>
+                <Toast ref={toast} />
             </Col>
         </Row>
     )

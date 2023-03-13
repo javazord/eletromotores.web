@@ -4,8 +4,7 @@ import { Button } from "primereact/button";
 import React, { useEffect, useState } from 'react';
 import { Row, Col, Input } from 'reactstrap';
 import { Validate } from './userAttributes';
-import { useToast } from "../../components/toast";
-const { showMessageAlert, showMessageError, showMessageSuccess } = useToast();
+import useToast from '../../components/toast';
 
 const UserRegister = () => {
 
@@ -17,7 +16,7 @@ const UserRegister = () => {
     loading: false,
     reset: false
   });
-
+  const toast = useToast();
   const service = new UserService();
 
   const create = () => {
@@ -28,18 +27,18 @@ const UserRegister = () => {
       Validate(usuario);
     } catch (error) {
       const msgs = error.mensagens;
-      msgs.forEach(msg => showMessageAlert(msg));
+      msgs.forEach(msg => toast.showMessageAlert(msg));
       return false;
     }
     load()
     service.save(usuario)
       .then(response => {
-        showMessageSuccess('Usuário cadastrado com sucesso!')
+        toast.showMessageSuccess('Usuário cadastrado com sucesso!')
         resetState();
 
       }).catch(erro => {
         console.log(erro)
-        showMessageError(erro.response.data)
+        toast.showMessageError(erro.response.data)
       })
   }
 

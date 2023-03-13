@@ -1,5 +1,5 @@
-import React from "react";
-import MotorService from "../../app/service/motor/motorService";
+import React, { useContext, useState } from "react";
+import { MotorService } from "../../app/service/motor/motorService";
 import { Card } from 'primereact/card';
 import MotorTable from "./motorTable";
 import ViewMotorDialog from "./viewMotorDialog";
@@ -7,187 +7,174 @@ import { Button } from 'primereact/button';
 import EditMotorDialog from "./editMotorDialog";
 import { AuthContext } from "../../main/authProvider";
 import { Col, Row, Input, Label } from "reactstrap";
-import { useToast } from "../../components/toast";
-const { showMessageAlert, showMessageError, showMessageSuccess } = useToast();
+import useToast from '../../components/toast';
+import { Toast } from "primereact/toast";
 
+const MotorSearch = () => {
+    const [motores, setMotores] = useState([]);
+    const [motor, setMotor] = useState({
+        fio: {
+            awgs: [],
+            quantidades: [],
+            espiras: [],
+            peso: '',
+        },
+        voltagens: [],
+        amperagens: [],
+        usuario: {},
+        marca: '',
+        modelo: '',
+        ranhuras: '',
+        comprimento: '',
+        medidaExterna: '',
+        potencia: '',
+    });
+    const [showConfirmDialog, setShowConfirmDialog] = useState(false);
+    const [editConfirmDialog, setEditConfirmDialog] = useState(false);
+    const {authUser} = useContext(AuthContext);
+    const { showMessageSuccess, showMessageAlert, showMessageError, toast } = useToast();
+    const service = new MotorService();
 
-export default class MotorSearch extends React.Component {
+    const buttonSearch = () => {
+        const motorFilter = {
+            marca: motor.marca,
+            ranhuras: motor.ranhuras,
+            comprimento: motor.comprimento,
+            medidaExterna: motor.medidaExterna,
+            potencia: motor.potencia,
+        };
+        console.log(motor)
+        service
+            .search(motorFilter)
+            .then((response) => {
+                const list = response.data;
+                if (list.length < 1) {
+                    showMessageAlert('Nenhum resultado encontrado.');
+                }
 
-    state = {
-        motores: [],
-        motor: {
+                setMotores(list);
+            })
+            .catch((erro) => {
+                console.log(erro);
+            });
+    };
+
+    const resetState = () => {
+        setMotor({
             fio: {
                 awgs: [],
                 quantidades: [],
                 espiras: [],
-                peso: 0
+                peso: '',
             },
             voltagens: [],
             amperagens: [],
             usuario: {},
             marca: '',
             modelo: '',
-            ranhuras: 0,
-            comprimento: 0,
-            medidaExterna: 0,
-            potencia: 0,
-        },
-        showConfirmDialog: false,
-        editConfirmDialog: false
-    }
+            ranhuras: '',
+            comprimento: '',
+            medidaExterna: '',
+            potencia: '',
+        });
+        setShowConfirmDialog(false);
+        setEditConfirmDialog(false);
+    };
 
-    constructor() {
-        super();
-        this.service = new MotorService();
-    }
-
-    buttonSearch = () => {
-        const { motor } = this.state;
-        const motorFilter = {
-            marca: motor.marca,
-            ranhuras: motor.ranhuras,
-            comprimento: motor.comprimento,
-            medidaExterna: motor.medidaExterna,
-            potencia: motor.potencia
-        };
-        
-        this.service.search(motorFilter)
-            .then(response => {
-                const list = response.data;
-                if (list.length < 1) {
-                    showMessageAlert("Nenhum resultado encontrado.")
-                }
-
-                this.setState({ motores: list })
-            }).catch(erro => {
-                console.log(erro)
-            })
-
-    }
-
-    resetState = () => {
-        this.setState({
-            motor: {
-                fio: {
-                    awgs: [],
-                    quantidades: [],
-                    espiras: [],
-                    peso: 0
-                },
-                voltagens: [],
-                amperagens: [],
-                usuario: {},
-                marca: '',
-                modelo: '',
-                ranhuras: 0,
-                comprimento: 0,
-                medidaExterna: 0,
-                potencia: 0,
-            },
-            showConfirmDialog: false,
-            editConfirmDialog: false
-        })
-    }
-
-    handleInputChange = (event) => {
+    const handleInputChange = (event) => {
         const { name, value } = event.target;
-        const { motor } = this.state;
         if (name.includes('fio.')) {
             const [field, subField] = name.split('.');
-            this.setState({
-                motor: {
-                    ...motor,
-                    fio: {
-                        ...motor.fio,
-                        [field]: {
-                            ...motor.fio[field],
-                            [subField]: value,
-                        },
+            setMotor((prevMotor) => ({
+                ...prevMotor,
+                fio: {
+                    ...prevMotor.fio,
+                    [field]: {
+                        ...prevMotor.fio[field],
+                        [subField]: value,
                     },
                 },
-            });
+            }));
         } else {
-            this.setState({ motor: { ...motor, [name]: value } });
+            setMotor((prevMotor) => ({ ...prevMotor, [name]: value }));
         }
     };
 
-    //modal para ver dados do motor
-    view = (motor) => {
-        this.setState({ showConfirmDialog: true, motor: motor })
-    }
+    const view = (motor) => {
+        setShowConfirmDialog(true);
+        setMotor(motor);
+    };
 
-    edit = (motor) => {
-        this.setState({ editConfirmDialog: true, motor: motor })
-    }
+    const edit = (motor) => {
+        setEditConfirmDialog(true);
+        setMotor(motor);
+    };
 
-    delete = (motor) => {
+    const onDelete = (motor) => {
         try {
-            this.service.deletar(motor.id)
-            .then(response => {
-                const motores = this.state.motores;
-                console.log(motores)
-                const index = motores.indexOf(motor)
-                motores.splice(index, 1)
-                this.setState({motores: motores})
-                console.log(motores)
-                showMessageSuccess("Motor deletado com sucesso!")
-            })
+            service.deletar(motor.id).then((response) => {
+                const index = motores.indexOf(motor);
+                setMotores((prevMotores) => [
+                    ...prevMotores.slice(0, index),
+                    ...prevMotores.slice(index + 1),
+                ]);
+                showMessageSuccess('Motor deletado com sucesso!');
+            });
         } catch (error) {
-            showMessageError("Ocorreu um erro ao deletar o motor")
+            showMessageError('Ocorreu um erro ao deletar o motor');
         }
-    }
+    };
 
-    onHide = () => {
-        this.resetState();
+    const onHide = () => {
+        resetState();
     };
 
     //modal para cancelar a atualização de dados
-    cancel = () => {
-        this.setState({ showConfirmDialog: false })
+    const cancel = () => {
+        setShowConfirmDialog(false)
     }
 
-    render() {
-        return (
-            <>
-                <Card title="Pesquisar">
-                    <Row className="d-flex align-items-end">
-                        <Col>
-                            <Label>Marca</Label>
-                            <Input name="marca" value={this.state.marca} onChange={this.handleInputChange} type="text" className="form-control mt-1" id="inputLogin" />
-                        </Col>
-                        <Col>
-                            <Label>Ranhuras</Label>
-                            <Input name="ranhuras" value={this.state.ranhuras} onChange={this.handleInputChange} type="number" className="form-control mt-1" id="inputLogin" />
-                        </Col>
-                        <Col>
-                            <Label>Potência</Label>
-                            <Input name="potencia" value={this.state.potencia} onChange={this.handleInputChange} type="number" className="form-control mt-1" id="inputLogin" />
-                        </Col>
-                        <Col>
-                            <Label>Comprimento</Label>
-                            <Input name="comprimento" value={this.state.comprimento} onChange={this.handleInputChange} type="number" className="form-control mt-1" id="inputLogin" />
-                        </Col>
-                        <Col >
-                            <Label>M. Externa</Label>
-                            <Input name="medidaExterna" value={this.state.medidaExterna} onChange={this.handleInputChange} type="number" className="form-control mt-1" id="inputLogin" />
-                        </Col>
+    return (
+        <>
+            <Card title="Pesquisar">
+                <Row className="d-flex align-items-end">
+                    <Col>
+                        <Label>Marca</Label>
+                        <Input name="marca" value={motor.marca} onChange={handleInputChange} type="text" className="form-control mt-1" />
+                    </Col>
+                    <Col>
+                        <Label>Ranhuras</Label>
+                        <Input name="ranhuras" value={motor.ranhuras} onChange={handleInputChange} type="number" className="form-control mt-1" />
+                    </Col>
+                    <Col>
+                        <Label>Potência</Label>
+                        <Input name="potencia" value={motor.potencia} onChange={handleInputChange} type="number" className="form-control mt-1" />
+                    </Col>
+                    <Col>
+                        <Label>Comprimento</Label>
+                        <Input name="comprimento" value={motor.comprimento} onChange={handleInputChange} type="number" className="form-control mt-1" />
+                    </Col>
+                    <Col >
+                        <Label>M. Externa</Label>
+                        <Input name="medidaExterna" value={motor.medidaExterna} onChange={handleInputChange} type="number" className="form-control mt-1" />
+                    </Col>
 
-                        <Col className="">
-                            <Button onClick={this.buttonSearch} className="btn btn-primary" icon="pi pi-search" size="sm" label="Buscar" />
-                        </Col>
-                    </Row>
-                    <br />
+                    <Col className="">
+                        <Button onClick={buttonSearch} className="btn btn-primary" icon="pi pi-search" size="sm" label="Buscar" />
+                    </Col>
+                </Row>
+                <br />
 
-                    <MotorTable motores={this.state.motores} view={this.view} edit={this.edit} delete={this.delete} context={this.context} />
+                <MotorTable motores={motores} view={view} edit={edit} delete={onDelete} context={authUser} />
 
-                </Card>
+            </Card>
 
-                <ViewMotorDialog motor={this.state.motor} visible={this.state.showConfirmDialog} onHide={this.onHide} />
+            <ViewMotorDialog motor={motor} visible={showConfirmDialog} onHide={onHide} />
 
-                <EditMotorDialog motor={this.state.motor} visible={this.state.editConfirmDialog} onHide={this.onHide} />
-            </>
-        )
-    }
+            <EditMotorDialog motor={motor} visible={editConfirmDialog} onHide={onHide} />
+            <Toast ref={toast} />
+        </>
+    )
 
 }
-MotorSearch.contextType = AuthContext;
+export default MotorSearch;
