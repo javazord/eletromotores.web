@@ -18,6 +18,8 @@ function Rotas(props) {
             <Routes>
                 <Route exact path="/" element={<RotaAutenticada autenticationUser={!props.autenticationUser} redirectTo={"/home"}> <Login /> </RotaAutenticada>} />
 
+                <Route exact path="/update-password" />
+
                 <Route exact path="/home" element={<RotaAutenticada autenticationUser={props.autenticationUser} redirectTo={"/"}> <Home /> </RotaAutenticada>} />
 
                 <Route exact path="/buscar-colaboradores" element={<RotaAutenticada autenticationUser={props.autenticationUser} redirectTo={"/"}> <UserSearch /> </RotaAutenticada>} />

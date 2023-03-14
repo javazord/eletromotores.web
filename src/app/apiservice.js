@@ -40,6 +40,10 @@ class ApiService {
         return httpClient.get(request)
     }
 
+    getLogin(url) {
+        const request = `${this.apiUrl}${url}`
+        return httpClient.get(request)
+    }
 
 }
 export default ApiService

@@ -7,19 +7,60 @@ import { Button } from "primereact/button";
 import { Row, Col, Input, Label } from "reactstrap";
 import useToast from "../components/toast";
 import { Toast } from "primereact/toast";
-import { loginValidate } from "./user/userAttributes";
+import { loginValidate, Validate } from "./user/userAttributes";
 
 export function Login(props) {
     const authContext = useContext(AuthContext);
     const navigate = useNavigate();
     const { showMessageError, toast } = useToast();
     const [login, setLogin] = useState('');
+    const [user, setUser] = useState({
+        id: '',
+        login: '',
+        role: '',
+        condition: 0,
+        repeatPassword: ''
+    })
     const [password, setPassword] = useState('');
-    const [inputSenha, setInputSenha] = useState('');
+    const [repeatPassword, setRepeatPassword] = useState('');
+    const [showPasswordInputs, setShowPasswordInputs] = useState(false);
+    const [showAuthInputs, setShowAuthInputs] = useState(true);
 
-    const enter = () => {
-        const user = { login, password };
+    const renderPasswordInputs = () => {
+        if (showPasswordInputs) {
+            return (
+                <>
+                    <Row>
+                        <Col>
+                            <Label>Nova Senha</Label>
+                            <Input type="password" value={user.password} name="password" onChange={handleInputChange} className="form-control" />
+                        </Col>
+                    </Row>
 
+                    <Row>
+                        <Col>
+                            <Label>Confirme a nova senha</Label>
+                            <Input
+                                type="password"
+                                value={user.repeatPassword}
+                                name="repeatPassword"
+                                onChange={handleInputChange}
+                                className="form-control"
+                            />
+                        </Col>
+                    </Row>
+                </>
+            );
+        }
+    };
+
+    const handleInputChange = (event) => {
+        setUser({ ...user, [event.target.name]: event.target.value })
+    }
+
+    const autenticar = () => {
+
+        console.log(user)
         try {
             loginValidate(user);
         } catch (error) {
@@ -28,22 +69,41 @@ export function Login(props) {
             return false;
         }
 
-        props.service.blankPassword({user})
-        .then(response => {
-            console.log(response.data);
-        }).catch(erro =>{
-            console.log(erro)
-        })
+        if (showAuthInputs) {
 
-        props.service.authenticate({
-            login: login,
-            password: password
-        }).then(response => {
-            authContext.beginSession(response.data)
-            navigate('/home')
-        }).catch(erro => {
-            showMessageError(erro.response.data)
-        })
+            props.service.authenticate({
+                login: user.login,
+                password: user.password
+            }).then(response => {
+                try {
+                    if (response.data.result) {
+                        setShowAuthInputs(false)
+                        setShowPasswordInputs(true);
+                        setUser(response.data.user)
+                        console.log(response.data.user)
+                    }
+                } finally {
+                    authContext.beginSession(response.data)
+                    navigate('/home')
+                }
+
+            }).catch(erro => {
+                showMessageError(erro.response.data)
+            })
+
+        }
+        if (showPasswordInputs) {
+            console.log(user)
+            try {
+                Validate(user);
+            } catch (error) {
+                const msgs = error.mensagens;
+                showMessageError(msgs);
+                return false;
+            }
+            console.log('passou aqui')
+        }
+
     }
 
     const header = (
@@ -55,23 +115,27 @@ export function Login(props) {
             <Col style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
                 <Card title="Autenticar" header={header} style={{ width: "500px", height: "630px" }}>
 
-                    <Row>
-                        <Col>
-                            <Label>Login</Label>
-                            <Input type="email" value={login} name="login" onChange={e => setLogin(e.target.value)} className="form-control" />
-                        </Col>
-                    </Row>
+                    {showAuthInputs && ( // renderizar os inputs de login e senha apenas se showAuthInputs for true
+                        <>
+                            <Row>
+                                <Col>
+                                    <Label>Login</Label>
+                                    <Input type="email" value={user.login} name="login" onChange={handleInputChange} className="form-control" />
+                                </Col>
+                            </Row>
 
-                    <Row>
-                        <Col>
-                            <Label>Senha</Label>
-                            <Input type="password" value={password} name="password" onChange={e => setPassword(e.target.value)} className="form-control" />
-                        </Col>
-                    </Row>
-
+                            <Row>
+                                <Col>
+                                    <Label>Senha</Label>
+                                    <Input type="password" value={user.password} name="password" onChange={handleInputChange} className="form-control" />
+                                </Col>
+                            </Row>
+                        </>
+                    )}
+                    {renderPasswordInputs()}
                     <Row>
                         <Col className="col-md-12 mt-3">
-                            <Button className="col-md-12" onClick={enter} label="Entrar" size="sm"></Button>
+                            <Button className="col-md-12" onClick={autenticar} label="Entrar" size="sm"></Button>
                         </Col>
                     </Row>
 

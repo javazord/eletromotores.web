@@ -20,14 +20,15 @@ export default class UserService extends ApiService{
 
     search(userFilter){
         let params = `?login=${userFilter.login}`
-
+        
         params = `${params}&condition=${userFilter.condition}`
                 
         return this.get(params)
     }
 
-    blankPassword(usuario){
-        return this.get('/update-password', usuario)
+    blankPassword(user){
+        let params = `?login=${user.login}`
+        return this.getLogin('/update-password', params)
     }
     
 }
