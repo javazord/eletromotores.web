@@ -1,4 +1,4 @@
-import React, { Component, useContext, useState } from "react";
+import React, { Component, useContext, useEffect, useState } from "react";
 import { Card } from 'primereact/card';
 import UserService from '../app/service/user/userService';
 import { useNavigate } from "react-router-dom";
@@ -12,17 +12,15 @@ import { loginValidate, Validate } from "./user/userAttributes";
 export function Login(props) {
     const authContext = useContext(AuthContext);
     const navigate = useNavigate();
-    const { showMessageError, toast } = useToast();
-    const [login, setLogin] = useState('');
+    const { showMessageSuccess, showMessageError, toast } = useToast();
     const [user, setUser] = useState({
         id: '',
         login: '',
         role: '',
+        password: '',
         condition: 0,
         repeatPassword: ''
     })
-    const [password, setPassword] = useState('');
-    const [repeatPassword, setRepeatPassword] = useState('');
     const [showPasswordInputs, setShowPasswordInputs] = useState(false);
     const [showAuthInputs, setShowAuthInputs] = useState(true);
 
@@ -60,29 +58,27 @@ export function Login(props) {
 
     const autenticar = () => {
 
-        console.log(user)
-        try {
-            loginValidate(user);
-        } catch (error) {
-            const msgs = error.mensagens;
-            showMessageError(msgs);
-            return false;
-        }
-
         if (showAuthInputs) {
+
+            try {
+                loginValidate(user);
+            } catch (error) {
+                const msgs = error.mensagens;
+                showMessageError(msgs);
+                return false;
+            }
 
             props.service.authenticate({
                 login: user.login,
                 password: user.password
             }).then(response => {
-                try {
-                    if (response.data.result) {
-                        setShowAuthInputs(false)
-                        setShowPasswordInputs(true);
-                        setUser(response.data.user)
-                        console.log(response.data.user)
-                    }
-                } finally {
+
+                if (response.data.result) {
+                    setShowAuthInputs(false)
+                    setShowPasswordInputs(true);
+                    setUser(response.data.user)
+                }
+                else {
                     authContext.beginSession(response.data)
                     navigate('/home')
                 }
@@ -92,16 +88,24 @@ export function Login(props) {
             })
 
         }
+
         if (showPasswordInputs) {
-            console.log(user)
             try {
                 Validate(user);
+                props.service.update(user)
+                .then( response => {
+                    showMessageSuccess('Senha atualizada com sucesso')
+
+                    console.log(user)
+                }).catch( erro => {
+                    console.log(erro)
+                })
             } catch (error) {
                 const msgs = error.mensagens;
                 showMessageError(msgs);
                 return false;
             }
-            console.log('passou aqui')
+
         }
 
     }
