@@ -21,7 +21,9 @@ export default props => {
             <Column field="login" header="Login" align={"center"}></Column>
             <Column field={Role} header="Função" align={"center"}></Column>
             <Column field={Condition} header="Condição" align={"center"}></Column>
-            <Column body={button} header="Ação" align={"center"}></Column>
+            <Render render={props.context.role == "Administrador"}>
+                <Column body={button} header="Ação" align={"center"}></Column>
+            </Render>
         </DataTable>
     );
 

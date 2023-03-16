@@ -24,6 +24,7 @@ export default props => {
                 <Column field="id" header="Id" align={"center"}></Column>
                 <Column field="marca" header="Marca" align={"center"}></Column>
                 <Column field="modelo" header="Modelo" align={"center"}></Column>
+                <Column field="potencia" header="Potencia" align={"center"}></Column>
                 <Column field={Tensao} header="Tensão" align={"center"}></Column>
                 <Column field="rotacao" header="Rotação" align={"center"}></Column>
                 <Column field="ranhuras" header="Ranhuras" align={"center"}></Column>

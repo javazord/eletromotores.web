@@ -296,7 +296,7 @@ const MotorRegister = () => {
                 ))}
 
                 <Col className="col-md-2 mt-2 d-flex align-items-end">
-                    <Button icon="pi pi-plus" rounded raised severity="info" aria-label="Adicionar" title="Adicionar AWG/Quantidade" size="sm" onClick={addInputs} />
+                    <Button icon="pi pi-plus" rounded raised severity="info" tooltip="Adicionar AWG/Quantidade" size="sm" onClick={addInputs} />
                 </Col>
             </Row>
 
@@ -311,7 +311,7 @@ const MotorRegister = () => {
                 ))}
 
                 <Col className="col-md-2 mt-2 d-flex align-items-end">
-                    <Button icon="pi pi-minus" rounded raised severity="danger" aria-label="Adicionar" title="Remover AWG/Quantidade" size="sm" onClick={removeInputs} />
+                    <Button icon="pi pi-minus" rounded raised severity="danger" tooltip="Remover AWG/Quantidade" size="sm" onClick={removeInputs} />
                 </Col>
             </Row>
             <Row>
@@ -324,8 +324,8 @@ const MotorRegister = () => {
 
                 ))}
                 <Col className="col-2 mt-2 d-flex align-items-end">
-                    <Button className="me-1" icon="pi pi-plus" rounded raised severity="info" title="Adicionar Espiras" onClick={addInputsESP} size="sm" />
-                    <Button className="ms-1" icon="pi pi-minus" rounded raised severity="danger" title="Remover Espiras" onClick={removeInputsESP} size="sm" />
+                    <Button className="me-1" icon="pi pi-plus" rounded raised severity="info" tooltip="Adicionar Espiras" onClick={addInputsESP} size="sm" />
+                    <Button className="ms-1" icon="pi pi-minus" rounded raised severity="danger" tooltip="Remover Espiras" onClick={removeInputsESP} size="sm" />
                 </Col>
 
             </Row>

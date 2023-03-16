@@ -91,7 +91,7 @@ export default function EditMotorDialog(props) {
                 </Col>
                 <Col>
                     <Label>Comprimento</Label>
-                    <Input name="medidaInterna" value={motor.medidaInterna} type="number" min="1" max="100" className="form-control" onChange={handleOnChange} />
+                    <Input name="comprimento" value={motor.comprimento} type="number" min="1" max="100" className="form-control" onChange={handleOnChange} />
                 </Col>
                 <Col>
                     <Label>Medida Externa</Label>

@@ -31,27 +31,17 @@ const MotorSearch = () => {
     });
     const [showConfirmDialog, setShowConfirmDialog] = useState(false);
     const [editConfirmDialog, setEditConfirmDialog] = useState(false);
-    const {authUser} = useContext(AuthContext);
+    const [loading, setLoading] = useState(false);
+    const { authUser } = useContext(AuthContext);
     const { showMessageSuccess, showMessageAlert, showMessageError, toast } = useToast();
     const service = new MotorService();
 
     const buttonSearch = () => {
-        const motorFilter = {
-            marca: motor.marca,
-            ranhuras: motor.ranhuras,
-            comprimento: motor.comprimento,
-            medidaExterna: motor.medidaExterna,
-            potencia: motor.potencia,
-        };
-        console.log(motor)
         service
-            .search(motorFilter)
+            .search(motor)
             .then((response) => {
                 const list = response.data;
-                if (list.length < 1) {
-                    showMessageAlert('Nenhum resultado encontrado.');
-                }
-
+                load(list);
                 setMotores(list);
             })
             .catch((erro) => {
@@ -100,6 +90,16 @@ const MotorSearch = () => {
         }
     };
 
+    const load = (lista) => {
+        setLoading(true);
+        setTimeout(() => {
+            setLoading(false);
+            if (lista < 1) {
+                showMessageAlert('Nenhum resultado encontrado.');
+            }
+        }, 2000);
+    }
+
     const view = (motor) => {
         setShowConfirmDialog(true);
         setMotor(motor);
@@ -129,11 +129,6 @@ const MotorSearch = () => {
         resetState();
     };
 
-    //modal para cancelar a atualização de dados
-    const cancel = () => {
-        setShowConfirmDialog(false)
-    }
-
     return (
         <>
             <Card title="Pesquisar">
@@ -160,7 +155,7 @@ const MotorSearch = () => {
                     </Col>
 
                     <Col className="">
-                        <Button onClick={buttonSearch} className="btn btn-primary" icon="pi pi-search" size="sm" label="Buscar" />
+                        <Button onClick={buttonSearch} className="btn btn-primary" icon="pi pi-search" size="sm" label="Buscar" loading={loading}/>
                     </Col>
                 </Row>
                 <br />

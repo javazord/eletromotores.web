@@ -4,76 +4,56 @@ import { Button } from "primereact/button";
 import React, { useEffect, useState } from 'react';
 import { Row, Col, Input } from 'reactstrap';
 import { Validate } from './userAttributes';
-import useToast from '../../components/toast';
+import useToast from "../../components/toast";
+import { Toast } from "primereact/toast";
 
-const UserRegister = () => {
+export function UserRegister() {
 
   const [state, setState] = useState({
     login: '',
     password: '',
     repeatPassword: '',
-    role: 'USER',
-    loading: false,
-    reset: false
+    role: 'USER'
   });
-  const toast = useToast();
+  const { showMessageSuccess, showMessageAlert, showMessageError, toast } = useToast();
+  const [loading, setLoading] = useState(false);
   const service = new UserService();
 
   const create = () => {
-    const { login, password, repeatPassword, role } = state;
-    const usuario = { login, password, repeatPassword, role }
 
     try {
-      Validate(usuario);
+      Validate(state);
     } catch (error) {
       const msgs = error.mensagens;
-      msgs.forEach(msg => toast.showMessageAlert(msg));
+      showMessageAlert(msgs);
       return false;
     }
-    load()
-    service.save(usuario)
+    setLoading(true);
+    service.save(state)
       .then(response => {
-        toast.showMessageSuccess('Usuário cadastrado com sucesso!')
+        load();
         resetState();
-
       }).catch(erro => {
         console.log(erro)
-        toast.showMessageError(erro.response.data)
+        showMessageError(erro.response.data)
       })
   }
 
   const resetState = () => {
-    setState(prevState => ({
-      ...prevState,
+    setState({
       login: '',
       password: '',
       repeatPassword: '',
-      role: 'USER',
-      loading: false
-    }));
+      role: 'USER'
+    });
   };
-
-  useEffect(() => {
-    if (state.reset) {
-      setState(prevState => ({
-        ...prevState,
-        reset: false // setando o estado reset para false
-      }));
-      document.querySelectorAll('input').forEach(input => {
-        input.value = '';
-      });
-      document.querySelectorAll('select').forEach(select => {
-        select.value = 'USER';
-      });
-    }
-  }, [state.reset]);
 
   const load = () => {
-    setState({ ...state, loading: true });
     setTimeout(() => {
-      setState({ ...state, loading: false });
-    }, 500);
-  };
+      setLoading(false);
+      showMessageSuccess('Usuário cadastrado com sucesso!');
+  }, 2000);
+  }
 
   const handleInputChange = (event) => {
     setState({ ...state, [event.target.name]: event.target.value })
@@ -81,33 +61,36 @@ const UserRegister = () => {
 
   const footer = (
     <div className="d-flex justify-content-end">
-      <Button label="Cadastrar" icon="pi pi-check" onClick={create} loading={state.loading} size="sm" />
+      <Button label="Cadastrar" icon="pi pi-check" onClick={create} loading={loading} size="sm" />
     </div>
   );
 
   return (
-    <Row >
-      <Col className="col-md-7 mx-auto">
-        <Card title={"Cadastrar Colaborador"} footer={footer} >
-          <Row>
-            <Col >
-              <Input name="login" value={state.login} onChange={handleInputChange} className="form-control m-1" placeholder="Login" />
+    <>
+      <Row >
+        <Col className="col-md-7 mx-auto">
+          <Card title={"Cadastrar Colaborador"} footer={footer} >
+            <Row>
+              <Col >
+                <Input name="login" value={state.login} onChange={handleInputChange} className="form-control m-1" placeholder="Login" />
 
-              <select name="role" value={state.role} onChange={handleInputChange} className="form-select m-1" >
-                <option value="USER">Usuario</option>
-                <option value="ADMIN">Administrador</option>
-              </select>
-            </Col>
-            <Col>
-              <Input name="password" value={state.password} onChange={handleInputChange} type="password" className="form-control m-1" placeholder="Senha" />
+                <select name="role" value={state.role} onChange={handleInputChange} className="form-select m-1" >
+                  <option value="USER">Usuario</option>
+                  <option value="ADMIN">Administrador</option>
+                </select>
+              </Col>
+              <Col>
+                <Input name="password" value={state.password} onChange={handleInputChange} type="password" className="form-control m-1" placeholder="Senha" />
 
-              <Input name="repeatPassword" value={state.repeatPassword} onChange={handleInputChange} type="password" className="form-control m-1" placeholder="Repetir senha" />
+                <Input name="repeatPassword" value={state.repeatPassword} onChange={handleInputChange} type="password" className="form-control m-1" placeholder="Repetir senha" />
 
-            </Col>
-          </Row>
-        </Card>
-      </Col>
-    </Row>
+              </Col>
+            </Row>
+          </Card>
+        </Col>
+      </Row>
+      <Toast ref={toast} />
+    </>
   )
 }
 

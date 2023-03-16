@@ -31,7 +31,7 @@ export function Login(props) {
                     <Row>
                         <Col>
                             <Label>Nova Senha</Label>
-                            <Input type="password" value={user.password} name="password" onChange={handleInputChange} className="form-control" />
+                            <Input type="password" value={user.password || ''} name="password" onChange={handleInputChange} className="form-control" />
                         </Col>
                     </Row>
 
@@ -40,7 +40,7 @@ export function Login(props) {
                             <Label>Confirme a nova senha</Label>
                             <Input
                                 type="password"
-                                value={user.repeatPassword}
+                                value={user.repeatPassword || ''}
                                 name="repeatPassword"
                                 onChange={handleInputChange}
                                 className="form-control"
@@ -93,13 +93,14 @@ export function Login(props) {
             try {
                 Validate(user);
                 props.service.update(user)
-                .then( response => {
-                    showMessageSuccess('Senha atualizada com sucesso')
-
-                    console.log(user)
-                }).catch( erro => {
-                    console.log(erro)
-                })
+                    .then(response => {
+                        showMessageSuccess('Senha atualizada com sucesso')
+                        setShowPasswordInputs(false)
+                        setShowAuthInputs(true)
+                        setUser({})
+                    }).catch(erro => {
+                        console.log(erro)
+                    })
             } catch (error) {
                 const msgs = error.mensagens;
                 showMessageError(msgs);
@@ -131,7 +132,7 @@ export function Login(props) {
                             <Row>
                                 <Col>
                                     <Label>Senha</Label>
-                                    <Input type="password" value={user.password} name="password" onChange={handleInputChange} className="form-control" />
+                                    <Input type="password" value={user.password || ''} name="password" onChange={handleInputChange} className="form-control" />
                                 </Col>
                             </Row>
                         </>

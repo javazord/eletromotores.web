@@ -4,6 +4,7 @@ import Render from '../grid/render';
 import { AuthConsumer } from "../../main/authProvider";
 
 export function MenuBar(props) {
+    console.log(props)
     const items = [
         {
             label: 'Home',
@@ -14,33 +15,34 @@ export function MenuBar(props) {
             label: 'Usuário',
             icon: 'pi pi-fw pi-user',
             items: [
-                {
+                props.authUser && props.authUser.role == "Administrador" ? {
                     label: 'Novo',
                     icon: 'pi pi-fw pi-user-plus',
-                    url: '/cadastro-colaboradores'
-                },
+                    url: '/cadastro-colaboradores',
+                } : null,
                 {
                     label: 'Pesquisar',
                     icon: 'pi pi-fw pi-users',
-                    url: '/buscar-colaboradores'
-                }
-            ]
+                    url: '/buscar-colaboradores',
+                },
+            ].filter(item => item !== null),
+
         },
         {
             label: 'Motor',
             icon: 'pi pi-fw pi-bolt',
             items: [
-                {
+                props.authUser && props.authUser.role == "Administrador" ? {
                     label: 'Novo',
                     icon: 'pi pi-fw pi-cog',
                     url: '/cadastro-motores'
-                },
+                } : null,
                 {
                     label: 'Pesquisar',
                     icon: 'pi pi-fw pi-search',
                     url: '/buscar-motores'
                 }
-            ]
+            ].filter(item => item !== null),
         },
         {
             label: 'Sair',
@@ -51,7 +53,7 @@ export function MenuBar(props) {
     ];
 
     const start = (
-        <a href='/home' style={{color: 'black', textDecoration: 'none' }}>
+        <a href='/home' style={{ color: 'black', textDecoration: 'none' }}>
             <div style={{ display: 'flex', alignItems: 'center' }}>
                 <img alt="logo" src="https://cdn-icons-png.flaticon.com/512/2362/2362738.png" height="40" className="mr-2" />
                 <span style={{ fontSize: '1.3rem' }} className="m-1" > Eletromotores</span>

@@ -51,7 +51,7 @@ export default function ViewMotorDialog(props) {
                 </Col>
                 <Col>
                     <Label>Comprimento</Label>
-                    <Input name="medidaInterna" value={motor.medidaInterna} type="number" min="1" max="100" className="form-control" disabled />
+                    <Input name="comprimento" value={motor.comprimento} type="number" min="1" max="100" className="form-control" disabled />
                 </Col>
                 <Col>
                     <Label>Medida Externa</Label>

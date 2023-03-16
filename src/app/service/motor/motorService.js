@@ -27,8 +27,8 @@ export class MotorService extends ApiService{
         if (motorFilter.ranhuras) {
             params = `${params}&ranhuras=${motorFilter.ranhuras}`
         }
-        if (motorFilter.medidaInterna) {
-            params = `${params}&medidaInterna=${motorFilter.medidaInterna}`
+        if (motorFilter.comprimento) {
+            params = `${params}&comprimento=${motorFilter.comprimento}`
         }
         if (motorFilter.medidaExterna) {
             params = `${params}&medidaExterna=${motorFilter.medidaExterna}`
