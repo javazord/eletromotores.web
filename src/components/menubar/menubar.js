@@ -4,7 +4,6 @@ import Render from '../grid/render';
 import { AuthConsumer } from "../../main/authProvider";
 
 export function MenuBar(props) {
-    console.log(props)
     const items = [
         {
             label: 'Home',

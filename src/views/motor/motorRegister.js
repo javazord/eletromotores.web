@@ -25,19 +25,27 @@ const MotorRegister = () => {
         empresa: '',
         tensao: '',
         fio: {
-            awgs: [""],
-            quantidades: [""],
-            espiras: [""],
+            awgs: [0],
+            quantidades: [0],
+            espiras: [0],
             peso: 0,
         },
         voltagens: [],
         amperagens: [],
+        passo: [],
         usuario: {},
     });
-    const [checkboxVolts, setCheckboxVolts] = useState([127, 220, 380, 440, 760])
+    const [checkboxVolts, setCheckboxVolts] = useState([
+        { volts: 127, checked: false },
+        { volts: 220, checked: false },
+        { volts: 380, checked: false },
+        { volts: 440, checked: false },
+        { volts: 760, checked: false },
+    ]);
     const [inputsAmps, setInputsAmps] = useState([])
-    const [indexAWG, setIndexAWG] = useState([1])
-    const [indexESP, setIndexESP] = useState([1])
+    const [indexAmp, setIndexAmp] = useState(1)
+    const [indexAWG, setIndexAWG] = useState(1)
+    const [indexESP, setIndexESP] = useState(1)
     const { showMessageSuccess, showMessageAlert, showMessageError, toast } = useToast();
     const { authUser } = useContext(AuthContext);
     const service = new MotorService();
@@ -47,139 +55,190 @@ const MotorRegister = () => {
     }
 
     const handleInputChangePeso = (event) => {
-        const { name, value } = event.target;
-        setMotor({
-            ...motor,
-            fio: {
-                ...motor.fio,
-                [name]: value,
-            }
-        });
+        setMotor({ ...motor, fio: { ...motor.fio, peso: event.target.value } });
     }
 
-    const addInputsESP = (e) => {
-        if (indexESP <= 5) {
-            e.preventDefault();
-
-            motor.fio.espiras.push("")
-            const espiras = [...motor.fio.espiras, ""]
-            setMotor({ espiras: espiras, indexESP: indexESP + 1 });
-
+    const addInputsESP = () => {
+        if (indexESP < 5) {
+            setMotor(prevMotor => {
+                const newEspiras = [...prevMotor.fio.espiras, 0];
+                return {
+                    ...prevMotor,
+                    fio: {
+                        ...prevMotor.fio,
+                        espiras: newEspiras
+                    }
+                };
+            });
+            setIndexESP(prevIndex => prevIndex + 1)
         }
     }
-
-    const addInputs = (e) => {
-        if (indexAWG <= 5) {
-            e.preventDefault();
-
-            motor.fio.awgs.push("")
-            motor.fio.quantidades.push("")
-            setMotor({ awgs: [...motor.fio.awgs, ""], quantidades: [...motor.fio.quantidades, ""], indexAWG: indexAWG + 1 });
-
-        }
-
-    };
 
     const removeInputsESP = () => {
-        motor.fio.espiras.pop()
-        const espiras = [...motor.fio.espiras, ""]
-        setMotor({ espiras: espiras, indexESP: indexESP - 1 })
+        const newESP = motor.fio.espiras.slice(1);
+        if (indexESP > 1) {
+            setMotor(prevMotor => ({
+                ...prevMotor,
+                fio: {
+                    ...prevMotor.fio,
+                    espiras: newESP,
+                },
+            }));
+            setIndexESP(prevIndex => prevIndex - 1)
+        }
+
     }
 
+    const addInputs = () => {
+        if (indexAWG < 5) {
+            setMotor(prevMotor => {
+                const newAWG = [...prevMotor.fio.awgs, 0];
+                const newQTD = [...prevMotor.fio.quantidades, 0];
+                return {
+                    ...prevMotor,
+                    fio: {
+                        ...prevMotor.fio,
+                        awgs: newAWG,
+                        quantidades: newQTD
+                    }
+                };
+            });
+            setIndexAWG(prevIndex => prevIndex + 1)
+        }
+    };
+
     const removeInputs = () => {
-        motor.fio.awgs.pop()
-        motor.fio.quantidades.pop()
-        const awgs = [...motor.fio.awgs, ""]
-        const quantidades = [...motor.fio.quantidades, ""]
-        setMotor({ awgs: awgs, quantidades: quantidades, indexAWG: indexAWG - 1 })
+        const newAWG = motor.fio.awgs.slice(1)
+        const newQTD = motor.fio.quantidades.slice(1)
+        if (indexAWG > 1) {
+            setMotor(prevMotor => {
+                return {
+                    ...prevMotor,
+                    fio: {
+                        ...prevMotor.fio,
+                        awgs: newAWG,
+                        quantidades: newQTD
+                    }
+                };
+            });
+            setIndexAWG(prevIndex => prevIndex - 1)
+        }
     };
 
     //pega o valor do input
     const handleChangeAWG = (e, index) => {
-        //numero max estipulado é 5
-
-        if (index <= 5) {
-            e.preventDefault();
-
-            motor.fio.awgs[index] = e.target.value;
-            setMotor([...motor.fio.awgs])
-        }
+        const newAwgs = [...motor.fio.awgs];
+        if (index <= 4) {
+            newAwgs[index] = e.target.value;
+            setMotor({
+                ...motor,
+                fio: {
+                    ...motor.fio,
+                    awgs: newAwgs,
+                },
+            });
+        };
     }
 
     //pega o valor do input
     const handleChangeQTD = (e, index) => {
-        //numero max estipulado é 5
-        if (index <= 5) {
-            e.preventDefault();
-
-            motor.fio.quantidades[index] = e.target.value;
-            setMotor([...motor.fio.quantidades])
-        }
-
-    }
-
-    const handleChangeAMP = (e, index) => {
-        motor.amperagens[index] = e.target.value;
-        setMotor([...motor.amperagens]);
+        const newQtds = [...motor.fio.quantidades];
+        if (index <= 4) {
+            newQtds[index] = e.target.value;
+            setMotor({
+                ...motor,
+                fio: {
+                    ...motor.fio,
+                    quantidades: newQtds,
+                },
+            });
+        };
     }
 
     const handleChangeESP = (e, index) => {
-        motor.fio.espiras[index] = e.target.value;
-        setMotor([...motor.fio.espiras]);
-    }
-
-    const handleCheckbox = (e) => {
-        const { value, checked } = e.target;
-        let amperagens = motor.amperagens;
-        let updatedList;
-
-        if (checked && !motor.voltagens.includes(value)) {
-            updatedList = [...motor.voltagens, value];
-        } else if (!checked) {
-            const index = motor.voltagens.findIndex(val => val === value);
-            updatedList = [...motor.voltagens.slice(0, index), ...motor.voltagens.slice(index + 1)];
-        } else {
-            updatedList = motor.voltagens;
-        }
-
-        setMotor({ voltagens: updatedList }, () => {
-            validateCheckbox(updatedList.map(str => parseInt(str, 10)));
+        const newEsp = [...motor.fio.espiras];
+        newEsp[index] = e.target.value;
+        setMotor({
+            ...motor,
+            fio: {
+                ...motor.fio,
+                espiras: newEsp
+            },
         });
-
-
-        if (checked) {
-            const index = inputsAmps.length + 1;
-            inputsAmps.push(
-                <><Label>Amperagem</Label>
-                    <Input className="form-control" type="number" onChange={(e) => handleChangeAMP(e, index)} bsSize="sm" /></>
-            );
-        } else {
-            const index = checkboxVolts.indexOf(value);
-            if (index > -1) {
-                checkboxVolts.splice(index, 1);
-                inputsAmps.splice(index, 1);
-                //index = index - 1;
-
-            }
-            inputsAmps.pop()
-        }
-        setMotor({ amperagens })
-        setCheckboxVolts({ checkboxVolts })
-        setInputsAmps({ inputsAmps })
     }
 
-    const validateCheckbox = (updatedList) => {
+    const validateCheckbox = () => {
+        const updatedList = motor.voltagens.slice();
 
-        if (updatedList.includes(220) && updatedList.includes(380) && updatedList.includes(440) && updatedList.includes(760)) {
-            updatedList.includes(127) ? setMotor({ tensao: "" }) : setMotor({ tensao: "TRIFASICO" })
-
+        if (
+            updatedList.includes(220) &&
+            updatedList.includes(380) &&
+            updatedList.includes(440) &&
+            updatedList.includes(760)
+        ) {
+            updatedList.includes(127)
+                ? setMotor({ ...motor, tensao: "" })
+                : setMotor({ ...motor, tensao: "TRIFASICO" });
         } else if (updatedList.includes(127) && updatedList.includes(220)) {
-            updatedList.includes(380) || updatedList.includes(440) || updatedList.includes(760) ? setMotor({ tensao: "" }) : setMotor({ tensao: "MONOFASICO" })
-
+            updatedList.includes(380) ||
+                updatedList.includes(440) ||
+                updatedList.includes(760)
+                ? setMotor({ ...motor, tensao: "" })
+                : setMotor({ ...motor, tensao: "MONOFASICO" });
         } else {
-            setMotor({ tensao: "" })
+            setMotor({ ...motor, tensao: "" });
         }
-    }
+    };
+
+    const handleCheckboxChange = (index) => {
+        const updatedCheckboxVolts = checkboxVolts.map((checkbox, i) => {
+            if (i === index) {
+                checkbox.checked = !checkbox.checked;
+            }
+            return checkbox;
+        });
+        setCheckboxVolts(updatedCheckboxVolts);
+
+        const updatedVoltagens = [...motor.voltagens];
+        const updatedAmperagens = motor.amperagens.filter(
+            (amperagem) => amperagem.volts !== checkboxVolts[index].volts
+        );
+
+        if (checkboxVolts[index].checked) {
+            setMotor((prevMotor) => ({
+                ...prevMotor,
+                amperagens: [...updatedAmperagens, 0],
+                voltagens: [...updatedVoltagens, checkboxVolts[index].volts],
+            }));
+        } else {
+            setMotor((prevMotor) => ({
+                ...prevMotor,
+                amperagens: updatedAmperagens,
+                voltagens: updatedVoltagens.filter(
+                    (voltagem) => voltagem !== checkboxVolts[index].volts
+                ),
+            }));
+        }
+    };
+
+    useEffect(() => {
+        validateCheckbox();
+    }, [motor.voltagens]);
+
+    const handleAmperagemChange = (index, value) => {
+        const updatedAmperagens = motor.amperagens.map((amperagem, i) => {
+            if (i === index) {
+                amperagem = value;
+            }
+            return amperagem;
+        });
+        setMotor((prevMotor) => {
+            return {
+                ...prevMotor,
+                amperagens: updatedAmperagens,
+            };
+        });
+    };
 
     const resetState = () => {
         setMotor({
@@ -330,14 +389,17 @@ const MotorRegister = () => {
 
             </Row>
             <Row className="mt-2">
-                {checkboxVolts.map((item, index) => (
-                    <Col key={item}>
+                {checkboxVolts.map((checkbox, index) => (
+                    <div className="col-md-2" key={index}>
                         <Label>Voltagem<span>*</span></Label>
-                        <Checkbox label={`${item}v`} name={item} value={item} onChange={(e) => handleCheckbox(e)} />
-                        {inputsAmps[index]}
-                    </Col>
-                ))}
+                        <Checkbox label={`${checkbox.volts}v`} checked={checkbox.checked} onChange={() => handleCheckboxChange(index)} />
+                        {checkbox.checked && (
+                            <><Label>Amperagem</Label>
+                            <Input type="number" onChange={(e) => handleAmperagemChange(index, e.target.value)} bsSize="sm" /></>
+                        )}
+                    </div>
 
+                ))}
             </Row>
 
             <Row>
@@ -352,9 +414,11 @@ const MotorRegister = () => {
                 <Col className="col-md-4">
                     <Label>Empresa<span>*</span></Label>
                     <select name="empresa" value={motor.empresa} onChange={handleInputChange} className="form-select form-select-sm">
-                        <option value="ARCELOR">Arcelor</option>
+                        <option value="ARCELOR" selected>Arcelor</option>
                         <option value="RIVELLI">Rivelli</option>
+                        <option value="Detecta">Detecta</option>
                         <option value="DOWCORNING">Dow Corning</option>
+                        <option value="ELBA">Elba</option>
                         <option value="PARTICULAR">Particular</option>
                     </select>
                 </Col>

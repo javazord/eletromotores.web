@@ -6,13 +6,9 @@ import { Button } from 'primereact/button';
 import Render from "../../components/grid/render";
 
 export default props => {
+    const ADMIN = 'Administrador'
     const button = (rowData) => {
-        return <>
-            <Render render={props.context.role == "Administrador"}>
-                <Button type="button" icon={"pi pi-user-edit"} className="p-button-sm p-button-text" onClick={e => props.edit(rowData)} />
-            </Render>
-
-        </>;
+        return <Button type="button" icon={"pi pi-user-edit"} className="p-button-sm p-button-text" onClick={e => props.edit(rowData)} />
     };
 
     return (
@@ -21,9 +17,10 @@ export default props => {
             <Column field="login" header="Login" align={"center"}></Column>
             <Column field={Role} header="Função" align={"center"}></Column>
             <Column field={Condition} header="Condição" align={"center"}></Column>
-            <Render render={props.context.role == "Administrador"}>
-                <Column body={button} header="Ação" align={"center"}></Column>
-            </Render>
+            {props.context.role === ADMIN && (
+                <Column body={button} header="Ação" align="center" />
+            )}
+
         </DataTable>
     );
 
