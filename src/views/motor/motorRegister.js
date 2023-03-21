@@ -2,7 +2,6 @@ import React, { useContext, useEffect, useState } from "react";
 import { Card } from "primereact/card";
 import { Col, Row } from 'reactstrap';
 import { Button } from 'primereact/button';
-import HandleInputResetValues from '../../components/events/handleInputResetValues';
 import Checkbox from "../../components/grid/checkbox";
 import { AuthContext } from "../../main/authProvider";
 import { Input, Label } from "reactstrap";
@@ -32,7 +31,7 @@ const MotorRegister = () => {
         },
         voltagens: [],
         amperagens: [],
-        passo: [],
+        passo: [0],
         usuario: {},
     });
     const [checkboxVolts, setCheckboxVolts] = useState([
@@ -42,8 +41,7 @@ const MotorRegister = () => {
         { volts: 440, checked: false },
         { volts: 760, checked: false },
     ]);
-    const [inputsAmps, setInputsAmps] = useState([])
-    const [indexAmp, setIndexAmp] = useState(1)
+    const [indexPasso, setIndexPasso] = useState(1);
     const [indexAWG, setIndexAWG] = useState(1)
     const [indexESP, setIndexESP] = useState(1)
     const { showMessageSuccess, showMessageAlert, showMessageError, toast } = useToast();
@@ -125,6 +123,37 @@ const MotorRegister = () => {
         }
     };
 
+    const addInputsPasso = () => {
+        if (indexPasso < 5) {
+            setMotor(prevMotor => {
+                const newStep = [...prevMotor.passo, 0];
+                return {
+                    ...prevMotor,
+                    fio: {
+                        ...prevMotor.fio
+                    },
+                    passo: newStep
+                };
+            });
+            setIndexPasso(prevIndex => prevIndex + 1)
+        }
+    }
+
+    const removeInputsPasso = () => {
+        const newStep = motor.passo.slice(1);
+        if (indexPasso > 1) {
+            setMotor(prevMotor => ({
+                ...prevMotor,
+                fio: {
+                    ...prevMotor.fio
+                },
+                passo: newStep
+            }));
+            setIndexPasso(prevIndex => prevIndex - 1)
+        }
+
+    }
+
     //pega o valor do input
     const handleChangeAWG = (e, index) => {
         const newAwgs = [...motor.fio.awgs];
@@ -167,6 +196,18 @@ const MotorRegister = () => {
         });
     }
 
+    const handleChangePasso = (e, index) => {
+        const newStep = [...motor.passo];
+        newStep[index] = e.target.value;
+        setMotor({
+            ...motor,
+            fio: {
+                ...motor.fio
+            },
+            passo: newStep
+        });
+    }
+
     const validateCheckbox = () => {
         const updatedList = motor.voltagens.slice();
 
@@ -199,46 +240,52 @@ const MotorRegister = () => {
         });
         setCheckboxVolts(updatedCheckboxVolts);
 
+        const { amperagens, voltagens } = updateAmperagensAndVoltagens(index);
+
+        setMotor((prevMotor) => ({
+            ...prevMotor,
+            amperagens,
+            voltagens,
+        }));
+        console.log(amperagens)
+    };
+
+    const updateAmperagensAndVoltagens = (index) => {
         const updatedVoltagens = [...motor.voltagens];
-        const updatedAmperagens = motor.amperagens.filter(
-            (amperagem) => amperagem.volts !== checkboxVolts[index].volts
-        );
+        const updatedAmperagens = [...motor.amperagens];
 
         if (checkboxVolts[index].checked) {
-            setMotor((prevMotor) => ({
-                ...prevMotor,
-                amperagens: [...updatedAmperagens, 0],
-                voltagens: [...updatedVoltagens, checkboxVolts[index].volts],
-            }));
+            updatedAmperagens.splice(index, 0, 0);
+            updatedVoltagens.push(checkboxVolts[index].volts);
         } else {
-            setMotor((prevMotor) => ({
-                ...prevMotor,
-                amperagens: updatedAmperagens,
-                voltagens: updatedVoltagens.filter(
-                    (voltagem) => voltagem !== checkboxVolts[index].volts
-                ),
-            }));
+            updatedAmperagens.splice(index, 1);
+            const uncheckedVoltsIndex = updatedVoltagens.indexOf(checkboxVolts[index].volts);
+            if (uncheckedVoltsIndex !== -1) {
+                updatedVoltagens.splice(uncheckedVoltsIndex, 1);
+            }
         }
+        return { amperagens: updatedAmperagens, voltagens: updatedVoltagens, };
+
     };
+
+    const handleAmperagemChange = (index, value) => {
+        setMotor(prevMotor => {
+            const amperagens = [...prevMotor.amperagens];
+            amperagens.splice(index, 1, value);
+            console.log(amperagens)
+            return {
+                ...prevMotor,
+                amperagens: amperagens,
+            };
+        });
+
+    };
+
+
 
     useEffect(() => {
         validateCheckbox();
     }, [motor.voltagens]);
-
-    const handleAmperagemChange = (index, value) => {
-        const updatedAmperagens = motor.amperagens.map((amperagem, i) => {
-            if (i === index) {
-                amperagem = value;
-            }
-            return amperagem;
-        });
-        setMotor((prevMotor) => {
-            return {
-                ...prevMotor,
-                amperagens: updatedAmperagens,
-            };
-        });
-    };
 
     const resetState = () => {
         setMotor({
@@ -253,20 +300,22 @@ const MotorRegister = () => {
             empresa: '',
             tensao: '',
             fio: {
-                awgs: [],
-                quantidades: [],
-                espiras: [],
+                awgs: [0],
+                quantidades: [0],
+                espiras: [0],
                 peso: 0,
             },
             voltagens: [],
             amperagens: [],
+            passo: [0],
             usuario: {},
         })
+        setCheckboxVolts(checkboxVolts.map(item => ({ ...item, checked: false })));
     }
 
     const create = () => {
 
-        const { marca, modelo, ranhuras, rotacao, ligacao, potencia, comprimento, medidaExterna, tensao, fio, voltagens, amperagens, empresa } = motor;
+        const { marca, modelo, ranhuras, rotacao, ligacao, potencia, comprimento, medidaExterna, tensao, fio, voltagens, amperagens, passo, empresa } = motor;
 
         const motorInsert = {
             marca,
@@ -287,8 +336,10 @@ const MotorRegister = () => {
             },
             voltagens: voltagens.sort().map(str => { return parseInt(str, 10) }),
             amperagens: amperagens.map(str => { return parseFloat(str, 10) }),
+            passo: passo.sort().map(str => { return parseInt(str, 10) }),
             usuario: authUser.id
         }
+        console.log(motorInsert)
         try {
             validate(motorInsert);
         } catch (error) {
@@ -299,7 +350,6 @@ const MotorRegister = () => {
         service.save(motorInsert)
             .then(response => {
                 showMessageSuccess("Motor registrado com sucesso!")
-                HandleInputResetValues()
                 resetState()
             }).catch(erro => {
                 showMessageError(erro.response.data)
@@ -325,9 +375,6 @@ const MotorRegister = () => {
                     <Label>Rotação</Label>
                     <Input name="rotacao" value={motor.rotacao} onChange={handleInputChange} type="number" className="form-control" bsSize="sm" />
                 </Col>
-            </Row>
-
-            <Row>
                 <Col>
                     <Label>Peso<span>*</span></Label>
                     <Input name="peso" value={motor.fio.peso} onChange={handleInputChangePeso} type="number" className="form-control" bsSize="sm" />
@@ -336,13 +383,30 @@ const MotorRegister = () => {
                     <Label>Potência</Label>
                     <Input name="potencia" value={motor.potencia} onChange={handleInputChange} type="number" className="form-control" bsSize="sm" />
                 </Col>
-                <Col>
+            </Row>
+
+            <Row>
+
+
+                <Col className="col-md-2">
                     <Label>Comprimento<span>*</span></Label>
                     <Input name="comprimento" value={motor.comprimento} onChange={handleInputChange} type="number" min="1" max="100" className="form-control" bsSize="sm" />
                 </Col>
-                <Col>
+                <Col className="col-md-2">
                     <Label>M. Externa<span>*</span></Label>
                     <Input name="medidaExterna" value={motor.medidaExterna} onChange={handleInputChange} type="number" className="form-control" bsSize="sm" />
+                </Col>
+                {motor.passo.map((passo, index) => (
+
+                    <Col className="col-md-1" key={index}>
+                        <Label>Passo<span>*</span></Label>
+                        <Input className="form-control" type="number" value={passo} id={`esp${index + 1}`} onChange={(e) => handleChangePasso(e, index)} bsSize="sm" />
+                    </Col>
+
+                ))}
+                <Col className="col-2 mt-2 d-flex align-items-end">
+                    <Button className="me-1" icon="pi pi-plus" rounded raised severity="info" tooltip="Adicionar Passo" onClick={addInputsPasso} size="sm" />
+                    <Button className="ms-1" icon="pi pi-minus" rounded raised severity="danger" tooltip="Remover Passo" onClick={removeInputsPasso} size="sm" />
                 </Col>
             </Row>
 
@@ -395,7 +459,7 @@ const MotorRegister = () => {
                         <Checkbox label={`${checkbox.volts}v`} checked={checkbox.checked} onChange={() => handleCheckboxChange(index)} />
                         {checkbox.checked && (
                             <><Label>Amperagem</Label>
-                            <Input type="number" onChange={(e) => handleAmperagemChange(index, e.target.value)} bsSize="sm" /></>
+                                <Input type="number" onChange={(e) => handleAmperagemChange(index, e.target.value)} bsSize="sm" /></>
                         )}
                     </div>
 
@@ -414,7 +478,7 @@ const MotorRegister = () => {
                 <Col className="col-md-4">
                     <Label>Empresa<span>*</span></Label>
                     <select name="empresa" value={motor.empresa} onChange={handleInputChange} className="form-select form-select-sm">
-                        <option value="ARCELOR" selected>Arcelor</option>
+                        <option value="ARCELOR" >Arcelor</option>
                         <option value="RIVELLI">Rivelli</option>
                         <option value="Detecta">Detecta</option>
                         <option value="DOWCORNING">Dow Corning</option>

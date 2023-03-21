@@ -57,6 +57,12 @@ export function validate(motor) {
         }
     });
 
+    motor.passo.forEach(passo => {
+        if (!isValidNumber(passo)) {
+            msgs.push('Informe um passo válida')
+        }
+    });
+
     motor.voltagens.forEach(volts => {
         if (!isValidNumber(volts)) {
             msgs.push('Informe uma voltagem válida')

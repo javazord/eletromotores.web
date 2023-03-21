@@ -98,10 +98,10 @@ export default function ViewMotorDialog(props) {
             <Row>
                 <Row>
                     {
-                        motor.voltagens.map((amp, index) => (
+                        motor.voltagens.map((volts, index) => (
                             <Col key={index}>
                                 <Label>Voltagem</Label>
-                                <Input className="form-control" type="number" value={amp} id={`amp${index + 1}`} disabled />
+                                <Input className="form-control" type="number" value={volts} id={`amp${index + 1}`} disabled />
                             </Col>
                         ))
                     }
