@@ -77,6 +77,10 @@ export function validate(motor) {
         msgs.push('Informe a ligação')
     }
 
+    if (!isValidString(motor.empresa)) {
+        msgs.push('Informe uma empresa')
+    }
+
     if (msgs && msgs.length > 0) {
         throw new ValidateError(msgs)
     }

@@ -118,7 +118,7 @@ export function Login(props) {
     return (
         <Row>
             <Col style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                <Card title="Autenticar" header={header} style={{ width: "500px", height: "630px" }}>
+                <Card title="Autenticação" header={header} style={{ width: "500px", height: "630px" }}>
 
                     {showAuthInputs && ( // renderizar os inputs de login e senha apenas se showAuthInputs for true
                         <>

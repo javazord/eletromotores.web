@@ -12,24 +12,6 @@ export default function Home() {
     return (
         <div>
             <h3>Bem Vindo {authUser.login}</h3>
-            <div className="flex-auto">
-                <InputNumber
-                    inputId="horizontal-buttons"
-                    value={count}
-                    onValueChange={(e) => setCount(e.value)}
-                    showButtons
-                    buttonLayout="horizontal"
-                    decrementButtonClassName="p-button-danger custom-button"
-                    incrementButtonClassName="p-button-success custom-button"
-                    incrementButtonIcon="pi pi-plus"
-                    decrementButtonIcon="pi pi-minus"
-                    size={1}
-                    
-                />
-
-
-
-            </div>
 
         </div>
     );

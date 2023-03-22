@@ -9,6 +9,8 @@ import { validate } from "./motorAttributes";
 import { MotorService } from "../../app/service/motor/motorService";
 import useToast from "../../components/toast";
 import { Toast } from "primereact/toast";
+import { InputText } from 'primereact/inputtext';
+
 
 const MotorRegister = () => {
 
@@ -41,6 +43,7 @@ const MotorRegister = () => {
         { volts: 440, checked: false },
         { volts: 760, checked: false },
     ]);
+    const [empresas, setEmpresas] = useState([]);
     const [indexPasso, setIndexPasso] = useState(1);
     const [indexAWG, setIndexAWG] = useState(1)
     const [indexESP, setIndexESP] = useState(1)
@@ -231,59 +234,39 @@ const MotorRegister = () => {
         }
     };
 
-    const handleCheckboxChange = (index) => {
-        const updatedCheckboxVolts = checkboxVolts.map((checkbox, i) => {
-            if (i === index) {
-                checkbox.checked = !checkbox.checked;
-            }
-            return checkbox;
-        });
-        setCheckboxVolts(updatedCheckboxVolts);
+    const handleCheckboxChange = (index, checked) => {
+        const newCheckboxVolts = [...checkboxVolts];
+        newCheckboxVolts[index].checked = checked;
+        setCheckboxVolts(newCheckboxVolts);
+        const newMotor = { ...motor };
+        if (checked) {
 
-        const { amperagens, voltagens } = updateAmperagensAndVoltagens(index);
-
-        setMotor((prevMotor) => ({
-            ...prevMotor,
-            amperagens,
-            voltagens,
-        }));
-        console.log(amperagens)
-    };
-
-    const updateAmperagensAndVoltagens = (index) => {
-        const updatedVoltagens = [...motor.voltagens];
-        const updatedAmperagens = [...motor.amperagens];
-
-        if (checkboxVolts[index].checked) {
-            updatedAmperagens.splice(index, 0, 0);
-            updatedVoltagens.push(checkboxVolts[index].volts);
+            newMotor.voltagens.push(checkboxVolts[index].volts);
+            newMotor.amperagens.splice(index, 0, 0);
         } else {
-            updatedAmperagens.splice(index, 1);
-            const uncheckedVoltsIndex = updatedVoltagens.indexOf(checkboxVolts[index].volts);
-            if (uncheckedVoltsIndex !== -1) {
-                updatedVoltagens.splice(uncheckedVoltsIndex, 1);
-            }
+            const indexToRemove = newMotor.voltagens.indexOf(checkboxVolts[index].volts);
+            newMotor.voltagens.splice(indexToRemove, 1);
+            newMotor.amperagens.splice(indexToRemove, 1);
         }
-        return { amperagens: updatedAmperagens, voltagens: updatedVoltagens, };
 
+        // ordenar ambos os arrays com base na ordem dos valores em `voltagens`
+        const sortedArrays = newMotor.voltagens.map((volts, i) => ({
+            volts,
+            amperagem: newMotor.amperagens[i]
+        })).sort((a, b) => b.amperagem - a.amperagem);
+
+        newMotor.voltagens = sortedArrays.map(item => item.volts);
+        newMotor.amperagens = sortedArrays.map(item => item.amperagem);
+
+        setMotor(newMotor);
+        console.log(motor)
     };
-
-    const handleAmperagemChange = (index, value) => {
-        setMotor(prevMotor => {
-            const amperagens = [...prevMotor.amperagens];
-            amperagens.splice(index, 1, value);
-            console.log(amperagens)
-            return {
-                ...prevMotor,
-                amperagens: amperagens,
-            };
-        });
-
-    };
-
-
 
     useEffect(() => {
+        service.empresas().then(response => {
+            setEmpresas([...response.data]);
+        })
+
         validateCheckbox();
     }, [motor.voltagens]);
 
@@ -359,29 +342,29 @@ const MotorRegister = () => {
     return (
         <Card title={"Cadastrar Motor"}>
             <Row>
-                <Col>
-                    <Label>Marca<span>*</span></Label>
-                    <Input name="marca" value={motor.marca} onChange={handleInputChange} type="text" className="form-control" bsSize="sm" />
+                <Col >
+                    <Label>Marca<span>*</span> </Label>
+                    <Input name="marca" value={motor.marca} onChange={handleInputChange} type="text" bsSize="sm" />
                 </Col>
                 <Col>
-                    <Label>Modelo</Label>
-                    <Input name="modelo" value={motor.modelo} onChange={handleInputChange} type="text" className="form-control" bsSize="sm" />
+                    <Label>Modelo<span>*</span></Label>
+                    <Input name="modelo" value={motor.modelo} onChange={handleInputChange} type="text" bsSize="sm" />
                 </Col>
                 <Col>
                     <Label>Ranhuras<span>*</span></Label>
-                    <Input name="ranhuras" value={motor.ranhuras} onChange={handleInputChange} type="number" className="form-control" bsSize="sm" />
+                    <Input name="ranhuras" value={motor.ranhuras} onChange={handleInputChange} type="number" bsSize="sm" />
                 </Col>
                 <Col>
                     <Label>Rotação</Label>
-                    <Input name="rotacao" value={motor.rotacao} onChange={handleInputChange} type="number" className="form-control" bsSize="sm" />
+                    <Input name="rotacao" value={motor.rotacao} onChange={handleInputChange} type="number" bsSize="sm" />
                 </Col>
                 <Col>
                     <Label>Peso<span>*</span></Label>
-                    <Input name="peso" value={motor.fio.peso} onChange={handleInputChangePeso} type="number" className="form-control" bsSize="sm" />
+                    <Input name="peso" value={motor.fio.peso} onChange={handleInputChangePeso} type="number" bsSize="sm" />
                 </Col>
                 <Col>
                     <Label>Potência</Label>
-                    <Input name="potencia" value={motor.potencia} onChange={handleInputChange} type="number" className="form-control" bsSize="sm" />
+                    <Input name="potencia" value={motor.potencia} onChange={handleInputChange} type="number" bsSize="sm" />
                 </Col>
             </Row>
 
@@ -390,17 +373,17 @@ const MotorRegister = () => {
 
                 <Col className="col-md-2">
                     <Label>Comprimento<span>*</span></Label>
-                    <Input name="comprimento" value={motor.comprimento} onChange={handleInputChange} type="number" min="1" max="100" className="form-control" bsSize="sm" />
+                    <Input name="comprimento" value={motor.comprimento} onChange={handleInputChange} type="number" min="1" bsSize="sm" />
                 </Col>
                 <Col className="col-md-2">
                     <Label>M. Externa<span>*</span></Label>
-                    <Input name="medidaExterna" value={motor.medidaExterna} onChange={handleInputChange} type="number" className="form-control" bsSize="sm" />
+                    <Input name="medidaExterna" value={motor.medidaExterna} onChange={handleInputChange} type="number" bsSize="sm" />
                 </Col>
                 {motor.passo.map((passo, index) => (
 
                     <Col className="col-md-1" key={index}>
                         <Label>Passo<span>*</span></Label>
-                        <Input className="form-control" type="number" value={passo} id={`esp${index + 1}`} onChange={(e) => handleChangePasso(e, index)} bsSize="sm" />
+                        <Input type="number" value={passo} id={`esp${index + 1}`} onChange={(e) => handleChangePasso(e, index)} bsSize="sm" />
                     </Col>
 
                 ))}
@@ -414,7 +397,7 @@ const MotorRegister = () => {
                 {motor.fio.awgs.map((valor, index) => (
                     <Col className="col-md-2" key={index}>
                         <Label>Awg<span>*</span></Label>
-                        <Input className="form-control" type="number" value={valor} onChange={(e) => handleChangeAWG(e, index)} bsSize="sm" />
+                        <Input type="number" value={valor} onChange={(e) => handleChangeAWG(e, index)} bsSize="sm" />
                     </Col>
                 ))}
 
@@ -428,7 +411,7 @@ const MotorRegister = () => {
 
                     <Col className="col-md-2" key={index}>
                         <Label>Quantidade<span>*</span></Label>
-                        <Input className="form-control" type="number" value={qtd} id={`qtd${index + 1}`} onChange={(e) => handleChangeQTD(e, index)} bsSize="sm" />
+                        <Input type="number" value={qtd} id={`qtd${index + 1}`} onChange={(e) => handleChangeQTD(e, index)} bsSize="sm" />
                     </Col>
 
                 ))}
@@ -442,13 +425,13 @@ const MotorRegister = () => {
 
                     <Col className="col-md-2" key={index}>
                         <Label>Espiras<span>*</span></Label>
-                        <Input className="form-control" type="number" value={esp} id={`esp${index + 1}`} onChange={(e) => handleChangeESP(e, index)} bsSize="sm" />
+                        <Input type="number" value={esp} id={`esp${index + 1}`} onChange={(e) => handleChangeESP(e, index)} bsSize="sm" />
                     </Col>
 
                 ))}
                 <Col className="col-2 mt-2 d-flex align-items-end">
-                    <Button className="me-1" icon="pi pi-plus" rounded raised severity="info" tooltip="Adicionar Espiras" onClick={addInputsESP} size="sm" />
-                    <Button className="ms-1" icon="pi pi-minus" rounded raised severity="danger" tooltip="Remover Espiras" onClick={removeInputsESP} size="sm" />
+                    <Button className="me-1" icon="pi pi-plus" rounded raised severity="info" tooltip="Adicionar Espiras" onClick={addInputsESP} size="small" />
+                    <Button className="ms-1" icon="pi pi-minus" rounded raised severity="danger" tooltip="Remover Espiras" onClick={removeInputsESP} size="small" />
                 </Col>
 
             </Row>
@@ -456,39 +439,57 @@ const MotorRegister = () => {
                 {checkboxVolts.map((checkbox, index) => (
                     <div className="col-md-2" key={index}>
                         <Label>Voltagem<span>*</span></Label>
-                        <Checkbox label={`${checkbox.volts}v`} checked={checkbox.checked} onChange={() => handleCheckboxChange(index)} />
-                        {checkbox.checked && (
+                        <Checkbox
+                            label={`${checkbox.volts}v`} checked={checkbox.checked}
+                            onChange={(e) => handleCheckboxChange(index, e.target.checked)}
+                        />
+                        {motor.voltagens.includes(checkbox.volts) && (
                             <><Label>Amperagem</Label>
-                                <Input type="number" onChange={(e) => handleAmperagemChange(index, e.target.value)} bsSize="sm" /></>
+                                <Input
+                                    type="number"
+                                    value={motor.amperagens[motor.voltagens.indexOf(checkbox.volts)]}
+                                    onChange={(e) => {
+                                        const newMotor = { ...motor };
+                                        newMotor.amperagens[motor.voltagens.indexOf(checkbox.volts)] = Number(e.target.value);
+                                        setMotor(newMotor);
+                                    }}
+                                />
+                            </>
                         )}
                     </div>
-
                 ))}
+
             </Row>
 
             <Row>
                 <Col className="col-md-3">
                     <Label>Tensão<span>*</span></Label>
-                    <Input className="form-control" name="tensao" value={motor.tensao} disabled bsSize="sm" />
+                    <Input name="tensao" value={motor.tensao} disabled bsSize="sm" />
                 </Col>
                 <Col className="col-md-5">
                     <Label>Ligação<span>*</span></Label>
-                    <Input name="ligacao" value={motor.ligacao} onChange={handleInputChange} type="text" className="form-control" bsSize="sm" />
+                    <Input name="ligacao" value={motor.ligacao} onChange={handleInputChange} type="text" bsSize="sm" />
                 </Col>
                 <Col className="col-md-4">
                     <Label>Empresa<span>*</span></Label>
                     <select name="empresa" value={motor.empresa} onChange={handleInputChange} className="form-select form-select-sm">
-                        <option value="ARCELOR" >Arcelor</option>
-                        <option value="RIVELLI">Rivelli</option>
-                        <option value="Detecta">Detecta</option>
-                        <option value="DOWCORNING">Dow Corning</option>
-                        <option value="ELBA">Elba</option>
-                        <option value="PARTICULAR">Particular</option>
+                        <option value="">Selecione uma empresa</option>
+                        {empresas.map((empresa) => (
+                            <option key={empresa.valor} value={empresa.valor}>{empresa.descricao}</option>
+                        ))}
                     </select>
                 </Col>
             </Row>
+            <Col className="d-flex justify-content-start mt-2">
+                <small>
+                    Itens marcados com <label><span>*</span></label> são obrigatórios
+                </small>
+            </Col>
+
             <Row>
+
                 <Col className="d-flex justify-content-end mt-2">
+
                     <Button onClick={create} label="Cadastrar" icon="pi pi-check" size="sm" />
                     <Toast ref={toast} />
                 </Col>

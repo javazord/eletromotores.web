@@ -18,6 +18,10 @@ export class MotorService extends ApiService{
         return this.put(`/${motor.id}`, motor)
     }
 
+    empresas(){
+        return this.get(`/empresas`)
+    }
+
     search(motorFilter){
         let params = `?marca=${motorFilter.marca}`
 
