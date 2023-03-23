@@ -43,6 +43,7 @@ const MotorRegister = () => {
         { volts: 440, checked: false },
         { volts: 760, checked: false },
     ]);
+    const [loading, setLoading] = useState(false);
     const [empresas, setEmpresas] = useState([]);
     const [indexPasso, setIndexPasso] = useState(1);
     const [indexAWG, setIndexAWG] = useState(1)
@@ -259,7 +260,6 @@ const MotorRegister = () => {
         newMotor.amperagens = sortedArrays.map(item => item.amperagem);
 
         setMotor(newMotor);
-        console.log(motor)
     };
 
     useEffect(() => {
@@ -296,6 +296,13 @@ const MotorRegister = () => {
         setCheckboxVolts(checkboxVolts.map(item => ({ ...item, checked: false })));
     }
 
+    const load = () => {
+        setTimeout(() => {
+            setLoading(false);
+            showMessageSuccess('Motor cadastrado com sucesso!');
+        }, 2000);
+    }
+
     const create = () => {
 
         const { marca, modelo, ranhuras, rotacao, ligacao, potencia, comprimento, medidaExterna, tensao, fio, voltagens, amperagens, passo, empresa } = motor;
@@ -322,7 +329,6 @@ const MotorRegister = () => {
             passo: passo.sort().map(str => { return parseInt(str, 10) }),
             usuario: authUser.id
         }
-        console.log(motorInsert)
         try {
             validate(motorInsert);
         } catch (error) {
@@ -330,10 +336,11 @@ const MotorRegister = () => {
             showMessageAlert(msgs);
             return false;
         }
+        setLoading(true);
         service.save(motorInsert)
             .then(response => {
-                showMessageSuccess("Motor registrado com sucesso!")
-                resetState()
+                load();
+                resetState();
             }).catch(erro => {
                 showMessageError(erro.response.data)
             })
@@ -347,7 +354,7 @@ const MotorRegister = () => {
                     <Input name="marca" value={motor.marca} onChange={handleInputChange} type="text" bsSize="sm" />
                 </Col>
                 <Col>
-                    <Label>Modelo<span>*</span></Label>
+                    <Label>Modelo</Label>
                     <Input name="modelo" value={motor.modelo} onChange={handleInputChange} type="text" bsSize="sm" />
                 </Col>
                 <Col>
@@ -490,7 +497,7 @@ const MotorRegister = () => {
 
                 <Col className="d-flex justify-content-end mt-2">
 
-                    <Button onClick={create} label="Cadastrar" icon="pi pi-check" size="sm" />
+                    <Button onClick={create} label="Cadastrar" icon="pi pi-check" size="sm" loading={loading}/>
                     <Toast ref={toast} />
                 </Col>
             </Row>

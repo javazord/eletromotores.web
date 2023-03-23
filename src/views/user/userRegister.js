@@ -52,7 +52,7 @@ export function UserRegister() {
     setTimeout(() => {
       setLoading(false);
       showMessageSuccess('Usuário cadastrado com sucesso!');
-  }, 2000);
+    }, 2000);
   }
 
   const handleInputChange = (event) => {
