@@ -7,6 +7,7 @@ import { AuthContext } from "../../main/authProvider";
 import { Input, Label } from "reactstrap";
 import { validate } from "./motorAttributes";
 import { MotorService } from "../../app/service/motor/motorService";
+import { ImagemService } from "../../app/service/imagem/imagemService";
 import useToast from "../../components/toast";
 import { Toast } from "primereact/toast";
 import { InputText } from 'primereact/inputtext';
@@ -50,7 +51,9 @@ const MotorRegister = () => {
     const [indexESP, setIndexESP] = useState(1)
     const { showMessageSuccess, showMessageAlert, showMessageError, toast } = useToast();
     const { authUser } = useContext(AuthContext);
+    const [selectedFile, setSelectedFile] = useState(null);
     const service = new MotorService();
+    const imgService = new ImagemService();
 
     const handleInputChange = (event) => {
         setMotor({ ...motor, [event.target.name]: event.target.value })
@@ -303,6 +306,36 @@ const MotorRegister = () => {
         }, 2000);
     }
 
+    const handleFileChange = (event) => {
+        const file = event.target.files[0];
+        const allowedTypes = ["image/jpeg", "image/png"];
+        if (file && allowedTypes.includes(file.type)) {
+            setSelectedFile(file);
+        } else {
+            setSelectedFile(null);
+            showMessageError("Tipo de arquivo inválido. Selecione uma imagem JPG ou PNG.");
+        }
+    }
+
+    const handleSubmit = (event) => {
+        event.preventDefault();
+
+        if (selectedFile) {
+            const formData = new FormData();
+            formData.append('file', selectedFile);
+            console.log(formData)
+            imgService.save(formData)
+                .then(response => {
+                    showMessageSuccess("Imagem enviada com sucesso!")
+                }).catch(erro => {
+                    console.log(erro)
+                    showMessageError("Não foi salvar a imagem")
+                })
+        } else {
+            showMessageError("Selecione um arquivo antes de enviar.");
+        }
+    }
+
     const create = () => {
 
         const { marca, modelo, ranhuras, rotacao, ligacao, potencia, comprimento, medidaExterna, tensao, fio, voltagens, amperagens, passo, empresa } = motor;
@@ -359,19 +392,19 @@ const MotorRegister = () => {
                 </Col>
                 <Col>
                     <Label>Ranhuras<span>*</span></Label>
-                    <Input name="ranhuras" value={motor.ranhuras} onChange={handleInputChange} type="number" bsSize="sm" />
+                    <Input name="ranhuras" value={motor.ranhuras} onChange={handleInputChange} type="number" min={0} bsSize="sm" />
                 </Col>
                 <Col>
                     <Label>Rotação</Label>
-                    <Input name="rotacao" value={motor.rotacao} onChange={handleInputChange} type="number" bsSize="sm" />
+                    <Input name="rotacao" value={motor.rotacao} onChange={handleInputChange} type="number" min={0} bsSize="sm" />
                 </Col>
                 <Col>
                     <Label>Peso<span>*</span></Label>
-                    <Input name="peso" value={motor.fio.peso} onChange={handleInputChangePeso} type="number" bsSize="sm" />
+                    <Input name="peso" value={motor.fio.peso} onChange={handleInputChangePeso} type="number" min={0} bsSize="sm" />
                 </Col>
                 <Col>
                     <Label>Potência</Label>
-                    <Input name="potencia" value={motor.potencia} onChange={handleInputChange} type="number" bsSize="sm" />
+                    <Input name="potencia" value={motor.potencia} onChange={handleInputChange} type="number" min={0} bsSize="sm" />
                 </Col>
             </Row>
 
@@ -380,17 +413,17 @@ const MotorRegister = () => {
 
                 <Col className="col-md-2">
                     <Label>Comprimento<span>*</span></Label>
-                    <Input name="comprimento" value={motor.comprimento} onChange={handleInputChange} type="number" min="1" bsSize="sm" />
+                    <Input name="comprimento" value={motor.comprimento} onChange={handleInputChange} type="number" min={0} bsSize="sm" />
                 </Col>
                 <Col className="col-md-2">
                     <Label>M. Externa<span>*</span></Label>
-                    <Input name="medidaExterna" value={motor.medidaExterna} onChange={handleInputChange} type="number" bsSize="sm" />
+                    <Input name="medidaExterna" value={motor.medidaExterna} onChange={handleInputChange} type="number" min={0} bsSize="sm" />
                 </Col>
                 {motor.passo.map((passo, index) => (
 
                     <Col className="col-md-1" key={index}>
                         <Label>Passo<span>*</span></Label>
-                        <Input type="number" value={passo} id={`esp${index + 1}`} onChange={(e) => handleChangePasso(e, index)} bsSize="sm" />
+                        <Input type="number" value={passo} id={`passo${index + 1}`} onChange={(e) => handleChangePasso(e, index)} min={0} bsSize="sm" />
                     </Col>
 
                 ))}
@@ -404,7 +437,7 @@ const MotorRegister = () => {
                 {motor.fio.awgs.map((valor, index) => (
                     <Col className="col-md-2" key={index}>
                         <Label>Awg<span>*</span></Label>
-                        <Input type="number" value={valor} onChange={(e) => handleChangeAWG(e, index)} bsSize="sm" />
+                        <Input type="number" value={valor} onChange={(e) => handleChangeAWG(e, index)} min={0} bsSize="sm" />
                     </Col>
                 ))}
 
@@ -418,7 +451,7 @@ const MotorRegister = () => {
 
                     <Col className="col-md-2" key={index}>
                         <Label>Quantidade<span>*</span></Label>
-                        <Input type="number" value={qtd} id={`qtd${index + 1}`} onChange={(e) => handleChangeQTD(e, index)} bsSize="sm" />
+                        <Input type="number" value={qtd} id={`qtd${index + 1}`} onChange={(e) => handleChangeQTD(e, index)} min={0} bsSize="sm" />
                     </Col>
 
                 ))}
@@ -432,7 +465,7 @@ const MotorRegister = () => {
 
                     <Col className="col-md-2" key={index}>
                         <Label>Espiras<span>*</span></Label>
-                        <Input type="number" value={esp} id={`esp${index + 1}`} onChange={(e) => handleChangeESP(e, index)} bsSize="sm" />
+                        <Input type="number" value={esp} id={`esp${index + 1}`} onChange={(e) => handleChangeESP(e, index)} min={0} bsSize="sm" />
                     </Col>
 
                 ))}
@@ -455,6 +488,7 @@ const MotorRegister = () => {
                                 <Input
                                     type="number"
                                     value={motor.amperagens[motor.voltagens.indexOf(checkbox.volts)]}
+                                    min={0}
                                     onChange={(e) => {
                                         const newMotor = { ...motor };
                                         newMotor.amperagens[motor.voltagens.indexOf(checkbox.volts)] = Number(e.target.value);
@@ -471,11 +505,11 @@ const MotorRegister = () => {
             <Row>
                 <Col className="col-md-3">
                     <Label>Tensão<span>*</span></Label>
-                    <Input name="tensao" value={motor.tensao} disabled bsSize="sm" />
+                    <Input name="tensao" value={motor.tensao} disabled min={0} bsSize="sm" />
                 </Col>
                 <Col className="col-md-5">
                     <Label>Ligação<span>*</span></Label>
-                    <Input name="ligacao" value={motor.ligacao} onChange={handleInputChange} type="text" bsSize="sm" />
+                    <Input name="ligacao" value={motor.ligacao} onChange={handleInputChange} type="text" min={0} bsSize="sm" />
                 </Col>
                 <Col className="col-md-4">
                     <Label>Empresa<span>*</span></Label>
@@ -487,6 +521,10 @@ const MotorRegister = () => {
                     </select>
                 </Col>
             </Row>
+            <Col>
+                <input type={"file"} accept={".jpg, .png"} onChange={handleFileChange} />
+                <button type="submit" onClick={handleSubmit}>Enviar</button>
+            </Col>
             <Col className="d-flex justify-content-start mt-2">
                 <small>
                     Itens marcados com <label><span>*</span></label> são obrigatórios
@@ -497,7 +535,7 @@ const MotorRegister = () => {
 
                 <Col className="d-flex justify-content-end mt-2">
 
-                    <Button onClick={create} label="Cadastrar" icon="pi pi-check" size="sm" loading={loading}/>
+                    <Button onClick={create} label="Cadastrar" icon="pi pi-check" size="sm" loading={loading} />
                     <Toast ref={toast} />
                 </Col>
             </Row>

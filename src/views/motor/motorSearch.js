@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { MotorService } from "../../app/service/motor/motorService";
 import { Card } from 'primereact/card';
 import MotorTable from "./motorTable";
@@ -9,10 +9,21 @@ import { AuthContext } from "../../main/authProvider";
 import { Col, Row, Input, Label } from "reactstrap";
 import useToast from '../../components/toast';
 import { Toast } from "primereact/toast";
+import { Dialog } from "primereact/dialog";
 
 const MotorSearch = () => {
     const [motores, setMotores] = useState([]);
     const [motor, setMotor] = useState({
+        rotacao: '',
+        modelo: '',
+        ranhuras: '',
+        marca: '',
+        ligacao: '',
+        potencia: '',
+        comprimento: '',
+        medidaExterna: '',
+        empresa: '',
+        tensao: '',
         fio: {
             awgs: [],
             quantidades: [],
@@ -21,20 +32,20 @@ const MotorSearch = () => {
         },
         voltagens: [],
         amperagens: [],
+        passo: [],
         usuario: {},
-        marca: '',
-        modelo: '',
-        ranhuras: '',
-        comprimento: '',
-        medidaExterna: '',
-        potencia: '',
     });
     const [showConfirmDialog, setShowConfirmDialog] = useState(false);
     const [editConfirmDialog, setEditConfirmDialog] = useState(false);
+    const [deleteConfirmDialog, setDeleteConfirmDialog] = useState(false);
     const [loading, setLoading] = useState(false);
     const { authUser } = useContext(AuthContext);
     const { showMessageSuccess, showMessageAlert, showMessageError, toast } = useToast();
     const service = new MotorService();
+
+    useEffect(() =>{
+
+    },[motor])
 
     const buttonSearch = () => {
         service
@@ -51,6 +62,16 @@ const MotorSearch = () => {
 
     const resetState = () => {
         setMotor({
+            rotacao: '',
+            modelo: '',
+            ranhuras: '',
+            marca: '',
+            ligacao: '',
+            potencia: '',
+            comprimento: '',
+            medidaExterna: '',
+            empresa: '',
+            tensao: '',
             fio: {
                 awgs: [],
                 quantidades: [],
@@ -59,16 +80,12 @@ const MotorSearch = () => {
             },
             voltagens: [],
             amperagens: [],
+            passo: [],
             usuario: {},
-            marca: '',
-            modelo: '',
-            ranhuras: '',
-            comprimento: '',
-            medidaExterna: '',
-            potencia: '',
         });
         setShowConfirmDialog(false);
         setEditConfirmDialog(false);
+        setDeleteConfirmDialog(false);
     };
 
     const handleInputChange = (event) => {
@@ -110,7 +127,12 @@ const MotorSearch = () => {
         setMotor(motor);
     };
 
-    const onDelete = (motor) => {
+    const deletar = (motor) => {
+        setMotor(motor);
+        setDeleteConfirmDialog(true);
+    }
+
+    const onDelete = () => {
         try {
             service.deletar(motor.id).then((response) => {
                 const index = motores.indexOf(motor);
@@ -123,11 +145,19 @@ const MotorSearch = () => {
         } catch (error) {
             showMessageError('Ocorreu um erro ao deletar o motor');
         }
+        onHide()
     };
 
     const onHide = () => {
         resetState();
     };
+
+    const footerContent = (
+        <div>
+            <Button label="Não" icon="pi pi-times" onClick={onHide} className="p-button-text" autoFocus />
+            <Button label="Sim" icon="pi pi-check" onClick={onDelete} />
+        </div>
+    );
 
     return (
         <>
@@ -155,14 +185,20 @@ const MotorSearch = () => {
                     </Col>
 
                     <Col className="">
-                        <Button onClick={buttonSearch} className="btn btn-primary" icon="pi pi-search" size="sm" label="Buscar" loading={loading}/>
+                        <Button onClick={buttonSearch} className="btn btn-primary" icon="pi pi-search" size="sm" label="Buscar" loading={loading} />
                     </Col>
                 </Row>
                 <br />
 
-                <MotorTable motores={motores} view={view} edit={edit} delete={onDelete} context={authUser} />
+                <MotorTable motores={motores} view={view} edit={edit} delete={deletar} context={authUser} />
 
             </Card>
+
+            <Dialog header={`Deletar motor ${motor.marca}`} visible={deleteConfirmDialog} style={{ width: '50vw' }} onHide={onHide} footer={footerContent}>
+                <p className="m-0">
+                    Deseja deletar o motor de ID {motor.id} ?
+                </p>
+            </Dialog>
 
             <ViewMotorDialog motor={motor} visible={showConfirmDialog} onHide={onHide} />
 
