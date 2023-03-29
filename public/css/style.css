@@ -1,16 +1,12 @@
-div.box {
-  height: 50em;
-  position: relative }
+body{
+background-image: url("https://images4.alphacoders.com/552/552010.png");
+}
+
 div.child  {
-  margin: 0;
   position: absolute;
   top: 50%;
   left: 50%;
-
-
-}
-body{
-background-image: url("https://images4.alphacoders.com/552/552010.png");
+  transform: translate(-50%, -50%);
 }
 
 .page {
@@ -19,6 +15,7 @@ background-image: url("https://images4.alphacoders.com/552/552010.png");
   justify-content: center;
   align-items: center;
 }
+
 label span{
   color: red;
 }

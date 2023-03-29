@@ -317,25 +317,6 @@ const MotorRegister = () => {
         }
     }
 
-    const handleSubmit = (event) => {
-        event.preventDefault();
-
-        if (selectedFile) {
-            const formData = new FormData();
-            formData.append('file', selectedFile);
-            console.log(formData)
-            imgService.save(formData)
-                .then(response => {
-                    showMessageSuccess("Imagem enviada com sucesso!")
-                }).catch(erro => {
-                    console.log(erro)
-                    showMessageError("Não foi salvar a imagem")
-                })
-        } else {
-            showMessageError("Selecione um arquivo antes de enviar.");
-        }
-    }
-
     const create = () => {
 
         const { marca, modelo, ranhuras, rotacao, ligacao, potencia, comprimento, medidaExterna, tensao, fio, voltagens, amperagens, passo, empresa } = motor;
@@ -373,14 +354,30 @@ const MotorRegister = () => {
         service.save(motorInsert)
             .then(response => {
                 load();
+
+                if (selectedFile) {
+                    const formData = new FormData();
+                    formData.append('file', selectedFile);
+                    formData.append('motor', JSON.stringify(response.data));
+                    imgService.save(formData)
+                        .then(response => {
+
+                        }).catch(erro => {
+                            console.log(erro)
+                            showMessageError("Não foi salvar a imagem")
+                        })
+                }
+
                 resetState();
             }).catch(erro => {
                 showMessageError(erro.response.data)
             })
+
+
     }
 
     return (
-        <Card title={"Cadastrar Motor"}>
+        <Card title={"Cadastrar Motor"} style={{ maxWidth: "100%" }}>
             <Row>
                 <Col >
                     <Label>Marca<span>*</span> </Label>
@@ -409,8 +406,6 @@ const MotorRegister = () => {
             </Row>
 
             <Row>
-
-
                 <Col className="col-md-2">
                     <Label>Comprimento<span>*</span></Label>
                     <Input name="comprimento" value={motor.comprimento} onChange={handleInputChange} type="number" min={0} bsSize="sm" />
@@ -521,10 +516,13 @@ const MotorRegister = () => {
                     </select>
                 </Col>
             </Row>
-            <Col>
-                <input type={"file"} accept={".jpg, .png"} onChange={handleFileChange} />
-                <button type="submit" onClick={handleSubmit}>Enviar</button>
-            </Col>
+            <Row>
+                <Col className="col-md-6 mt-2">
+                    <Label>Imagem</Label>
+                    <Input type={"file"} accept={".jpg, .png"} onChange={handleFileChange} bsSize="sm" />
+                </Col>
+            </Row>
+
             <Col className="d-flex justify-content-start mt-2">
                 <small>
                     Itens marcados com <label><span>*</span></label> são obrigatórios

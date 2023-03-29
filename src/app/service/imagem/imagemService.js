@@ -6,8 +6,16 @@ export class ImagemService extends ApiService{
         super('api/upload');
     }
 
-    save(file){
-        return this.post('', file)
+    save(formData){
+        return this.post('', formData)
+    }
+
+    search(id){
+        return this.get(`/${id}`)
+    }
+
+    deletar(id){
+        return this.delete(`/${id}`)
     }
 
 }
