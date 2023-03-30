@@ -7,15 +7,16 @@ import { ImagemService } from "../../app/service/imagem/imagemService";
 export default function ViewMotorDialog(props) {
     const { motor, visible, onHide } = props;
     const [imagem, setImagem] = useState();
-    const [showConfimSchema, setShowConfimSchema] = useState(false);
+    const [showSchema, setShowSchema] = useState(false);
     const service = new ImagemService();
-    
-    useEffect (() => {
-        service.search(motor.id)
-        .then(response => {
-            setImagem(response.data)
-        })
-        console.log(motor)
+
+    useEffect(() => {
+        if (motor) {
+            service.search(motor.id)
+                .then(response => {
+                    console.log(response.data)
+                })
+        }
     })
 
     const footer = (
@@ -142,14 +143,14 @@ export default function ViewMotorDialog(props) {
                 <Row>
                     <Label>Esquema </Label>
                     <Col>
-                        <Button label="Visualizar" size="sm" onClick={() => setShowConfimSchema(true)} />
+                        <Button label="Visualizar" size="sm" onClick={() => setShowSchema(true)} />
                     </Col>
                 </Row>
 
             </Dialog>
 
-            <Dialog header="Header" visible={showConfimSchema} style={{ width: '75vw' }} onHide={() => setShowConfimSchema(false)}>
-                {console.log(motor)}
+            <Dialog header="Header" visible={showSchema} style={{ width: '75vw' }} onHide={() => setShowSchema(false)}>
+                teste
             </Dialog>
         </>
     );

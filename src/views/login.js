@@ -97,7 +97,7 @@ export function Login(props) {
                         showMessageSuccess('Senha atualizada com sucesso')
                         setShowPasswordInputs(false)
                         setShowAuthInputs(true)
-                        setUser({})
+                        setUser({login: '', password: ''})
                     }).catch(erro => {
                         console.log(erro)
                     })

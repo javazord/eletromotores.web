@@ -33,7 +33,6 @@ export default function EditMotorDialog(props) {
         service.empresas().then(response => { setEmpresas(response.data) })
         isChecked()
         validateCheckbox()
-        console.log(motor)
         setMotor(props.motor)
     }, [props.motor])
 
