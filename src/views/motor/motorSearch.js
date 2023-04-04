@@ -118,13 +118,13 @@ const MotorSearch = () => {
     }
 
     const view = (motor) => {
-        setShowConfirmDialog(true);
         setMotor(motor);
+        setShowConfirmDialog(true);
     };
 
     const edit = (motor) => {
-        setEditConfirmDialog(true);
         setMotor(motor);
+        setEditConfirmDialog(true);
     };
 
     const deletar = (motor) => {
@@ -200,9 +200,9 @@ const MotorSearch = () => {
                 </p>
             </Dialog>
 
-            <ViewMotorDialog motor={motor} visible={showConfirmDialog} onHide={onHide} />
+            {showConfirmDialog && <ViewMotorDialog motor={motor} visible={showConfirmDialog} onHide={onHide} />}
 
-            <EditMotorDialog motor={motor} visible={editConfirmDialog} onHide={onHide} />
+            {editConfirmDialog && <EditMotorDialog motor={motor} visible={editConfirmDialog} onHide={onHide} />}
             <Toast ref={toast} />
         </>
     )

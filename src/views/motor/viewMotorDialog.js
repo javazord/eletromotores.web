@@ -1,23 +1,55 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Dialog } from "primereact/dialog";
 import { Button } from 'primereact/button';
 import { Col, Row, Input, Label } from "reactstrap";
 import { ImagemService } from "../../app/service/imagem/imagemService";
+import { Image } from 'primereact/image';
+import { Galleria } from 'primereact/galleria';
+import { Lightbox } from 'primereact/lightbox';
+
 
 export default function ViewMotorDialog(props) {
     const { motor, visible, onHide } = props;
     const [imagem, setImagem] = useState();
     const [showSchema, setShowSchema] = useState(false);
     const service = new ImagemService();
+    const galleria = useRef(null);
+    const responsiveOptions = [
+        {
+            breakpoint: '1500px',
+            numVisible: 5
+        },
+        {
+            breakpoint: '1024px',
+            numVisible: 3
+        },
+        {
+            breakpoint: '768px',
+            numVisible: 2
+        },
+        {
+            breakpoint: '560px',
+            numVisible: 1
+        }
+    ];
 
     useEffect(() => {
         if (motor) {
             service.search(motor.id)
                 .then(response => {
+                    setImagem(response.data)
                     console.log(response.data)
                 })
         }
-    })
+    }, [motor])
+
+    const showImage = () => {
+        return <Image src={`data:${imagem.tipo};base64,${imagem.dados}`} loading="lazy" alt={imagem.nome} preview width="250" style={{ display: 'block' }} />
+    }
+
+    const itemTemplate = (item) => {
+        return <img src={`data:${imagem.tipo};base64,${imagem.dados}`} alt={item.alt} style={{ width: '100%', display: 'block' }} />;
+    }
 
     const footer = (
         <Button label="Fechar" className="p-button-secondary mt-2" icon="pi pi-times" onClick={onHide} size="sm" />
@@ -141,17 +173,24 @@ export default function ViewMotorDialog(props) {
                     </Col>
                 </Row>
                 <Row>
-                    <Label>Esquema </Label>
-                    <Col>
-                        <Button label="Visualizar" size="sm" onClick={() => setShowSchema(true)} />
+                    <Col className="mt-2">
+                        <Button label="Visualizar" tooltip="Visualizar esquema" size="sm" onClick={() => galleria.current.show()} />
                     </Col>
                 </Row>
 
             </Dialog>
 
-            <Dialog header="Header" visible={showSchema} style={{ width: '75vw' }} onHide={() => setShowSchema(false)}>
-                teste
-            </Dialog>
+            {imagem && (
+                <Lightbox
+                    style={{ width: '100vw', height: '100vh' }}
+                    className="p-d-flex p-jc-center p-ai-center"
+                    visible={showSchema}
+                    onHide={() => setShowSchema(false)}
+                    images={[{ source: `data:${imagem.tipo};base64,${imagem.dados}`, alt: imagem.nome }]}
+                />
+            )}
+
+
         </>
     );
 }
