@@ -323,27 +323,27 @@ export default function EditMotorDialog(props) {
             <Row>
                 <Col >
                     <Label>Marca<span>*</span> </Label>
-                    <Input name="marca" value={motor.marca} onChange={handleInputChange} type="text" bsSize="sm" />
+                    <Input name="marca" value={motor.marca || ''} onChange={handleInputChange} type="text" bsSize="sm" />
                 </Col>
                 <Col>
                     <Label>Modelo</Label>
-                    <Input name="modelo" value={motor.modelo} onChange={handleInputChange} type="text" bsSize="sm" />
+                    <Input name="modelo" value={motor.modelo || ''} onChange={handleInputChange} type="text" bsSize="sm" />
                 </Col>
                 <Col>
                     <Label>Ranhuras<span>*</span></Label>
-                    <Input name="ranhuras" value={motor.ranhuras} onChange={handleInputChange} type="number" min={0} bsSize="sm" />
+                    <Input name="ranhuras" value={motor.ranhuras || ''} onChange={handleInputChange} type="number" min={0} bsSize="sm" />
                 </Col>
                 <Col>
                     <Label>Rotação</Label>
-                    <Input name="rotacao" value={motor.rotacao} onChange={handleInputChange} type="number" min={0} bsSize="sm" />
+                    <Input name="rotacao" value={motor.rotacao || ''} onChange={handleInputChange} type="number" min={0} bsSize="sm" />
                 </Col>
                 <Col>
                     <Label>Peso<span>*</span></Label>
-                    <Input name="peso" value={motor.fio.peso} onChange={handleInputChangePeso} type="number" min={0} bsSize="sm" />
+                    <Input name="peso" value={motor.fio.peso || ''} onChange={handleInputChangePeso} type="number" min={0} bsSize="sm" />
                 </Col>
                 <Col>
                     <Label>Potência</Label>
-                    <Input name="potencia" value={motor.potencia} onChange={handleInputChange} type="number" min={0} bsSize="sm" />
+                    <Input name="potencia" value={motor.potencia || ''} onChange={handleInputChange} type="number" min={0} bsSize="sm" />
                 </Col>
             </Row>
 
@@ -352,11 +352,11 @@ export default function EditMotorDialog(props) {
 
                 <Col className="col-md-2">
                     <Label>Comprimento<span>*</span></Label>
-                    <Input name="comprimento" value={motor.comprimento} onChange={handleInputChange} type="number" min={0} bsSize="sm" />
+                    <Input name="comprimento" value={motor.comprimento || ''} onChange={handleInputChange} type="number" min={0} bsSize="sm" />
                 </Col>
                 <Col className="col-md-2">
                     <Label>M. Externa<span>*</span></Label>
-                    <Input name="medidaExterna" value={motor.medidaExterna} onChange={handleInputChange} type="number" min={0} bsSize="sm" />
+                    <Input name="medidaExterna" value={motor.medidaExterna || ''} onChange={handleInputChange} type="number" min={0} bsSize="sm" />
                 </Col>
                 {motor.passo.map((passo, index) => (
 
@@ -445,15 +445,15 @@ export default function EditMotorDialog(props) {
             <Row>
                 <Col className="col-md-3">
                     <Label>Tensão<span>*</span></Label>
-                    <Input name="tensao" value={motor.tensao} disabled min={0} bsSize="sm" />
+                    <Input name="tensao" value={motor.tensao || ''} disabled min={0} bsSize="sm" />
                 </Col>
                 <Col className="col-md-5">
                     <Label>Ligação<span>*</span></Label>
-                    <Input name="ligacao" value={motor.ligacao} onChange={handleInputChange} type="text" min={0} bsSize="sm" />
+                    <Input name="ligacao" value={motor.ligacao || ''} onChange={handleInputChange} type="text" min={0} bsSize="sm" />
                 </Col>
                 <Col className="col-md-4">
                     <Label>Empresa<span>*</span></Label>
-                    <select name="empresa" value={motor.empresa} onChange={handleInputChange} className="form-select form-select-sm">
+                    <select name="empresa" value={motor.empresa || ''} onChange={handleInputChange} className="form-select form-select-sm">
                         <option value="">Selecione uma empresa</option>
                         {empresas.map((empresa) => (
                             <option key={empresa.valor} value={empresa.valor}>{empresa.descricao}</option>
