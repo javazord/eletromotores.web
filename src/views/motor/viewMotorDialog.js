@@ -16,7 +16,7 @@ export default function ViewMotorDialog(props) {
         if (motor) {
             service.search(motor.id)
                 .then(response => {
-                    setImagem(response.data)
+                    setImagem(response.data.data)
                 })
         }
     }, [motor])
@@ -24,6 +24,8 @@ export default function ViewMotorDialog(props) {
     const footer = (
         <Button label="Fechar" className="p-button-secondary mt-2" icon="pi pi-times" onClick={onHide} size="sm" />
     )
+
+    const chooseOptions = { icon: 'pi pi-fw pi-images', iconOnly: true, className: 'custom-choose-btn p-button-rounded p-button-outlined' };
 
     return (
 
@@ -143,17 +145,21 @@ export default function ViewMotorDialog(props) {
                     </Col>
                 </Row>
                 <Row>
+                    <Label>Esquema </Label>
                     <Col className="mt-2">
-                        <Button label="Visualizar" tooltip="Visualizar esquema" size="sm" onClick={() => setShowSchema(true)} />
+                        
+                        <Button className='custom-choose-btn p-button-rounded p-button-outlined' icon='pi pi-fw pi-images' tooltip="Visualizar esquema" size="sm" onClick={() => setShowSchema(true)} />
                     </Col>
                 </Row>
             </Dialog>
 
             <Dialog header="Esquema" visible={showSchema} style={{ width: '55vw' }} onHide={() => setShowSchema(false)}>
-                {imagem && (
+                {imagem ? (
                     <div style={{ display: 'flex', justifyContent: 'center' }}>
                         <Image src={`data:${imagem.tipo};base64,${imagem.dados}`} loading="lazy" alt={imagem.nome} preview width="250" />
                     </div>
+                ) : (
+                    <p>Não há imagem anexada.</p>
                 )}
             </Dialog>
 

@@ -206,6 +206,7 @@ const MotorRegister = () => {
     const handleChangePasso = (e, index) => {
         const newStep = [...motor.passo];
         newStep[index] = e.target.value;
+        newStep.sort((a, b) => a - b); // Ordenar o array em ordem crescente
         setMotor({
             ...motor,
             fio: {
@@ -213,6 +214,7 @@ const MotorRegister = () => {
             },
             passo: newStep
         });
+
     }
 
     const validateCheckbox = () => {

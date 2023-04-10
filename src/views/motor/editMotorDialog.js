@@ -34,7 +34,7 @@ export default function EditMotorDialog(props) {
         isChecked()
         validateCheckbox()
         setMotor(props.motor)
-    }, [props.motor])
+    }, [motor])
 
     const handleInputChangePeso = (event) => {
         setMotor({ ...motor, fio: { ...motor.fio, peso: event.target.value } });
@@ -445,7 +445,7 @@ export default function EditMotorDialog(props) {
             <Row>
                 <Col className="col-md-3">
                     <Label>Tensão<span>*</span></Label>
-                    <Input name="tensao" value={motor.tensao || ''} disabled min={0} bsSize="sm" />
+                    <Input name="tensao" value={motor.tensao || ''} disabled type="text" bsSize="sm" />
                 </Col>
                 <Col className="col-md-5">
                     <Label>Ligação<span>*</span></Label>
