@@ -13,6 +13,7 @@ import Checkbox from "../../components/grid/checkbox";
 export default function EditMotorDialog(props) {
 
     const [motor, setMotor] = useState(props.motor);
+    const [initialData, setInitialData] = useState(props.motor);
     const [checkboxVolts, setCheckboxVolts] = useState([
         { volts: 127, checked: false },
         { volts: 220, checked: false },
@@ -31,10 +32,10 @@ export default function EditMotorDialog(props) {
 
     useEffect(() => {
         service.empresas().then(response => { setEmpresas(response.data) })
+        setInitialData(props.motor)
         isChecked()
-        validateCheckbox()
-        setMotor(props.motor)
-    }, [motor])
+        console.log(initialData)
+    }, [props.motor])
 
     const handleInputChangePeso = (event) => {
         setMotor({ ...motor, fio: { ...motor.fio, peso: event.target.value } });
@@ -247,33 +248,8 @@ export default function EditMotorDialog(props) {
         newMotor.amperagens = sortedArrays.map(item => item.amperagem);
 
         setMotor(newMotor);
+        validateCheckbox();
     };
-
-    const resetState = () => {
-        setMotor({
-            rotacao: 0,
-            modelo: '',
-            ranhuras: 0,
-            marca: '',
-            ligacao: '',
-            potencia: 0,
-            comprimento: 0,
-            medidaExterna: 0,
-            empresa: '',
-            tensao: '',
-            fio: {
-                awgs: [0],
-                quantidades: [0],
-                espiras: [0],
-                peso: 0,
-            },
-            voltagens: [],
-            amperagens: [],
-            passo: [0],
-            usuario: {},
-        })
-        setCheckboxVolts(checkboxVolts.map(item => ({ ...item, checked: false })));
-    }
 
     const load = () => {
         setTimeout(() => {
@@ -310,6 +286,19 @@ export default function EditMotorDialog(props) {
         setMotor({ ...motor, [event.target.name]: event.target.value })
     }
 
+    const handleCancel = () => {
+        // redefinir dados para os iniciais
+        setMotor(initialData);
+        setCheckboxVolts(
+            checkboxVolts.map((checkbox) => ({
+                ...checkbox,
+                checked: initialData.voltagens.includes(checkbox.volts),
+            }))
+        );
+        console.log(initialData)
+        onHide();
+    };
+
     return (
 
         <Dialog
@@ -317,7 +306,7 @@ export default function EditMotorDialog(props) {
             visible={visible}
             modal={true}
             style={{ width: '65vw' }}
-            onHide={onHide} // Passa a propriedade onHide para o componente Dialog
+            onHide={handleCancel} // Passa a propriedade onHide para o componente Dialog
             footer={footer}
         >
             <Row>

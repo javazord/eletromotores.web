@@ -170,27 +170,27 @@ const MotorSearch = () => {
                 <Row className="d-flex align-items-end">
                     <Col>
                         <Label>Marca</Label>
-                        <Input name="marca" value={motor.marca} onChange={handleInputChange} type="text" className="form-control mt-1" />
+                        <Input name="marca" value={motor.marca} onChange={handleInputChange} type="text" className="form-control mt-1" bsSize="sm"/>
                     </Col>
                     <Col>
                         <Label>Ranhuras</Label>
-                        <Input name="ranhuras" value={motor.ranhuras} onChange={handleInputChange} type="number" className="form-control mt-1" />
+                        <Input name="ranhuras" value={motor.ranhuras} onChange={handleInputChange} type="number" className="form-control mt-1" bsSize="sm"/>
                     </Col>
                     <Col>
                         <Label>Potência</Label>
-                        <Input name="potencia" value={motor.potencia} onChange={handleInputChange} type="number" className="form-control mt-1" />
+                        <Input name="potencia" value={motor.potencia} onChange={handleInputChange} type="number" className="form-control mt-1" bsSize="sm"/>
                     </Col>
                     <Col>
                         <Label>Comprimento</Label>
-                        <Input name="comprimento" value={motor.comprimento} onChange={handleInputChange} type="number" className="form-control mt-1" />
+                        <Input name="comprimento" value={motor.comprimento} onChange={handleInputChange} type="number" className="form-control mt-1" bsSize="sm"/>
                     </Col>
                     <Col >
                         <Label>M. Externa</Label>
-                        <Input name="medidaExterna" value={motor.medidaExterna} onChange={handleInputChange} type="number" className="form-control mt-1" />
+                        <Input name="medidaExterna" value={motor.medidaExterna} onChange={handleInputChange} type="number" className="form-control mt-1" bsSize="sm"/>
                     </Col>
 
                     <Col className="">
-                        <Button onClick={buttonSearch} className="btn btn-primary" icon="pi pi-search" size="sm" label="Buscar" loading={loading} />
+                        <Button onClick={buttonSearch} className="btn btn-primary" rounded outlined icon="pi pi-search" size="sm" loading={loading} />
                     </Col>
                 </Row>
                 <br />
