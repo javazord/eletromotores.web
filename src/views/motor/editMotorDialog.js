@@ -12,8 +12,8 @@ import Checkbox from "../../components/grid/checkbox";
 
 export default function EditMotorDialog(props) {
 
-    const [motor, setMotor] = useState(props.motor);
-    const [initialData, setInitialData] = useState(props.motor);
+    const [motor, setMotor] = useState({...props.motor});
+    const [initialData, setInitialData] = useState({...props.motor});
     const [checkboxVolts, setCheckboxVolts] = useState([
         { volts: 127, checked: false },
         { volts: 220, checked: false },
@@ -24,18 +24,16 @@ export default function EditMotorDialog(props) {
     const [loading, setLoading] = useState(false);
     const [empresas, setEmpresas] = useState([]);
     const [indexPasso, setIndexPasso] = useState(props.motor.passo.length);
-    const [indexAWG, setIndexAWG] = useState(props.motor.fio.awgs.length)
-    const [indexESP, setIndexESP] = useState(props.motor.fio.espiras.length)
-    const { showMessageSuccess, showMessageAlert, showMessageError, toast } = useToast();
+    const [indexAWG, setIndexAWG] = useState(props.motor.fio.awgs.length);
+    const [indexESP, setIndexESP] = useState(props.motor.fio.espiras.length);
+    const { showMessageSuccess, showMessageError, toast } = useToast();
     const service = new MotorService();
     const { visible, onHide } = props;
 
     useEffect(() => {
         service.empresas().then(response => { setEmpresas(response.data) })
-        setInitialData(props.motor)
         isChecked()
-        console.log(initialData)
-    }, [props.motor])
+    }, [motor])
 
     const handleInputChangePeso = (event) => {
         setMotor({ ...motor, fio: { ...motor.fio, peso: event.target.value } });
@@ -85,8 +83,10 @@ export default function EditMotorDialog(props) {
                         quantidades: newQTD
                     }
                 };
+                console.log(prevMotor)
             });
             setIndexAWG(prevIndex => prevIndex + 1)
+            
         }
     };
 
@@ -106,6 +106,7 @@ export default function EditMotorDialog(props) {
             });
             setIndexAWG(prevIndex => prevIndex - 1)
         }
+        
     };
 
     const addInputsPasso = () => {
@@ -126,7 +127,7 @@ export default function EditMotorDialog(props) {
 
     const removeInputsPasso = () => {
         const newStep = motor.passo.slice(1);
-        if (indexPasso > 1) {
+        if (indexPasso > 2) {
             setMotor(prevMotor => ({
                 ...prevMotor,
                 fio: {
@@ -195,7 +196,7 @@ export default function EditMotorDialog(props) {
 
     const isChecked = () => {
         const updatedCheckboxVolts = checkboxVolts.map((checkboxVolt) => {
-            const isChecked = props.motor.voltagens.includes(checkboxVolt.volts);
+            const isChecked = initialData.voltagens.includes(checkboxVolt.volts);
             return { ...checkboxVolt, checked: isChecked };
         });
         setCheckboxVolts(updatedCheckboxVolts);
@@ -227,28 +228,29 @@ export default function EditMotorDialog(props) {
         const newCheckboxVolts = [...checkboxVolts];
         newCheckboxVolts[index].checked = checked;
         setCheckboxVolts(newCheckboxVolts);
-        const newMotor = { ...motor };
         if (checked) {
 
-            newMotor.voltagens.push(checkboxVolts[index].volts);
-            newMotor.amperagens.splice(index, 0, 0);
+            motor.voltagens.push(checkboxVolts[index].volts);
+            motor.amperagens.splice(index, 0, 0);
         } else {
-            const indexToRemove = newMotor.voltagens.indexOf(checkboxVolts[index].volts);
-            newMotor.voltagens.splice(indexToRemove, 1);
-            newMotor.amperagens.splice(indexToRemove, 1);
+            const indexToRemove = motor.voltagens.indexOf(checkboxVolts[index].volts);
+            motor.voltagens.splice(indexToRemove, 1);
+            motor.amperagens.splice(indexToRemove, 1);
         }
 
         // ordenar ambos os arrays com base na ordem dos valores em `voltagens`
-        const sortedArrays = newMotor.voltagens.map((volts, i) => ({
+        const sortedArrays = motor.voltagens.map((volts, i) => ({
             volts,
-            amperagem: newMotor.amperagens[i]
+            amperagem: motor.amperagens[i]
         })).sort((a, b) => b.amperagem - a.amperagem);
 
-        newMotor.voltagens = sortedArrays.map(item => item.volts);
-        newMotor.amperagens = sortedArrays.map(item => item.amperagem);
+        motor.voltagens = sortedArrays.map(item => item.volts);
+        motor.amperagens = sortedArrays.map(item => item.amperagem);
 
-        setMotor(newMotor);
+        setMotor(motor);
         validateCheckbox();
+        console.log(motor)
+        console.log(initialData)
     };
 
     const load = () => {
@@ -277,27 +279,26 @@ export default function EditMotorDialog(props) {
             })
     }
 
-    const footer = (
-        <><Button label="Atualizar" className="p-button-success" icon="pi pi-check" onClick={update} size="sm" loading={loading} />
-            <Button label="Fechar" className="p-button-secondary" icon="pi pi-times" onClick={onHide} size="sm" /></>
-    )
-
     const handleInputChange = (event) => {
         setMotor({ ...motor, [event.target.name]: event.target.value })
     }
 
     const handleCancel = () => {
         // redefinir dados para os iniciais
-        setMotor(initialData);
         setCheckboxVolts(
             checkboxVolts.map((checkbox) => ({
                 ...checkbox,
                 checked: initialData.voltagens.includes(checkbox.volts),
             }))
         );
-        console.log(initialData)
+        setMotor(initialData);
         onHide();
     };
+
+    const footer = (
+        <><Button label="Atualizar" className="p-button-success" icon="pi pi-check" onClick={update} size="sm" loading={loading} />
+            <Button label="Fechar" className="p-button-secondary" icon="pi pi-times" onClick={handleCancel} size="sm" /></>
+    )
 
     return (
 
@@ -306,7 +307,7 @@ export default function EditMotorDialog(props) {
             visible={visible}
             modal={true}
             style={{ width: '65vw' }}
-            onHide={handleCancel} // Passa a propriedade onHide para o componente Dialog
+            onHide={onHide} // Passa a propriedade onHide para o componente Dialog
             footer={footer}
         >
             <Row>
