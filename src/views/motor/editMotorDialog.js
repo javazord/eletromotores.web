@@ -12,8 +12,8 @@ import Checkbox from "../../components/grid/checkbox";
 
 export default function EditMotorDialog(props) {
 
-    const [motor, setMotor] = useState({...props.motor});
-    const [initialData, setInitialData] = useState({...props.motor});
+    const [motor, setMotor] = useState({ ...props.motor });
+    const [initialData, setInitialData] = useState({ ...props.motor });
     const [checkboxVolts, setCheckboxVolts] = useState([
         { volts: 127, checked: false },
         { volts: 220, checked: false },
@@ -32,6 +32,7 @@ export default function EditMotorDialog(props) {
 
     useEffect(() => {
         service.empresas().then(response => { setEmpresas(response.data) })
+        console.log(motor)
         isChecked()
     }, [motor])
 
@@ -56,7 +57,8 @@ export default function EditMotorDialog(props) {
     }
 
     const removeInputsESP = () => {
-        const newESP = motor.fio.espiras.slice(1);
+        const newESP = [...motor.fio.espiras]
+        newESP.pop()
         if (indexESP > 1) {
             setMotor(prevMotor => ({
                 ...prevMotor,
@@ -86,13 +88,15 @@ export default function EditMotorDialog(props) {
                 console.log(prevMotor)
             });
             setIndexAWG(prevIndex => prevIndex + 1)
-            
+
         }
     };
 
     const removeInputs = () => {
-        const newAWG = motor.fio.awgs.slice(1)
-        const newQTD = motor.fio.quantidades.slice(1)
+        const newAWG = [...motor.fio.awgs]
+        const newQTD = [...motor.fio.quantidades]
+        newAWG.pop();
+        newQTD.pop();
         if (indexAWG > 1) {
             setMotor(prevMotor => {
                 return {
@@ -106,7 +110,7 @@ export default function EditMotorDialog(props) {
             });
             setIndexAWG(prevIndex => prevIndex - 1)
         }
-        
+
     };
 
     const addInputsPasso = () => {
@@ -126,7 +130,8 @@ export default function EditMotorDialog(props) {
     }
 
     const removeInputsPasso = () => {
-        const newStep = motor.passo.slice(1);
+        const newStep = [...motor.passo];
+        newStep.pop();
         if (indexPasso > 2) {
             setMotor(prevMotor => ({
                 ...prevMotor,
@@ -136,6 +141,7 @@ export default function EditMotorDialog(props) {
                 passo: newStep
             }));
             setIndexPasso(prevIndex => prevIndex - 1)
+            console.log(motor)
         }
 
     }
@@ -203,12 +209,10 @@ export default function EditMotorDialog(props) {
     }
 
     const validateCheckbox = () => {
-        const updatedList = motor.voltagens;
+        const updatedList = [...motor.voltagens]
+        
         if (
-            updatedList.includes(220) &&
-            updatedList.includes(380) &&
-            updatedList.includes(440) &&
-            updatedList.includes(760)
+            updatedList.includes(220) && updatedList.includes(380) && updatedList.includes(440) && updatedList.includes(760)
         ) {
             updatedList.includes(127)
                 ? setMotor({ ...motor, tensao: "" })
@@ -222,6 +226,7 @@ export default function EditMotorDialog(props) {
         } else {
             setMotor({ ...motor, tensao: "" });
         }
+
     };
 
     const handleCheckboxChange = (index, checked) => {
@@ -247,10 +252,9 @@ export default function EditMotorDialog(props) {
         motor.voltagens = sortedArrays.map(item => item.volts);
         motor.amperagens = sortedArrays.map(item => item.amperagem);
 
-        setMotor(motor);
         validateCheckbox();
-        console.log(motor)
-        console.log(initialData)
+        setMotor(motor);
+
     };
 
     const load = () => {
