@@ -8,12 +8,13 @@ import { validate } from "./motorAttributes";
 import useToast from "../../components/toast";
 import { Toast } from "primereact/toast";
 import Checkbox from "../../components/grid/checkbox";
+import _ from 'lodash'; // Importe o Lodash
 
 
 export default function EditMotorDialog(props) {
 
-    const [motor, setMotor] = useState({ ...props.motor });
-    const [initialData, setInitialData] = useState({ ...props.motor });
+    const [motor, setMotor] = useState(_.cloneDeep(props.motor)); // Use _.cloneDeep
+    const [initialData, setInitialData] = useState(_.cloneDeep(props.motor));
     const [checkboxVolts, setCheckboxVolts] = useState([
         { volts: 127, checked: false },
         { volts: 220, checked: false },
@@ -32,7 +33,6 @@ export default function EditMotorDialog(props) {
 
     useEffect(() => {
         service.empresas().then(response => { setEmpresas(response.data) })
-        console.log(motor)
         isChecked()
     }, [motor])
 
@@ -208,33 +208,11 @@ export default function EditMotorDialog(props) {
         setCheckboxVolts(updatedCheckboxVolts);
     }
 
-    const validateCheckbox = () => {
-        const updatedList = [...motor.voltagens]
-        
-        if (
-            updatedList.includes(220) && updatedList.includes(380) && updatedList.includes(440) && updatedList.includes(760)
-        ) {
-            updatedList.includes(127)
-                ? setMotor({ ...motor, tensao: "" })
-                : setMotor({ ...motor, tensao: "TRIFASICO" });
-        } else if (updatedList.includes(127) && updatedList.includes(220)) {
-            updatedList.includes(380) ||
-                updatedList.includes(440) ||
-                updatedList.includes(760)
-                ? setMotor({ ...motor, tensao: "" })
-                : setMotor({ ...motor, tensao: "MONOFASICO" });
-        } else {
-            setMotor({ ...motor, tensao: "" });
-        }
-
-    };
-
     const handleCheckboxChange = (index, checked) => {
         const newCheckboxVolts = [...checkboxVolts];
         newCheckboxVolts[index].checked = checked;
         setCheckboxVolts(newCheckboxVolts);
         if (checked) {
-
             motor.voltagens.push(checkboxVolts[index].volts);
             motor.amperagens.splice(index, 0, 0);
         } else {
@@ -252,9 +230,33 @@ export default function EditMotorDialog(props) {
         motor.voltagens = sortedArrays.map(item => item.volts);
         motor.amperagens = sortedArrays.map(item => item.amperagem);
 
-        validateCheckbox();
         setMotor(motor);
+        validateCheckbox();
+    };
 
+    const validateCheckbox = () => {
+        const updatedList = [...motor.voltagens];
+        const hasAllTrifasicVoltages =
+            updatedList.length === 4 &&
+            updatedList.includes(220) &&
+            updatedList.includes(380) &&
+            updatedList.includes(440) &&
+            updatedList.includes(760);
+
+        const hasMonofasicVoltage = updatedList.length === 2 && updatedList.includes(127) && updatedList.includes(220);
+
+        if (hasAllTrifasicVoltages) {
+            setMotor((prevMotor) => ({ ...prevMotor, tensao: updatedList.includes(127) ? '' : 'TRIFASICO' }));
+            console.log('trifasico')
+        } else if (hasMonofasicVoltage) {
+            const hasOtherVoltages = updatedList.some((voltage) => voltage === 380 || voltage === 440 || voltage === 760);
+            setMotor((prevMotor) => ({ ...prevMotor, tensao: hasOtherVoltages ? '' : 'MONOFASICO' }));
+            console.log('monofasico')
+        } else {
+            setMotor((prevMotor) => ({ ...prevMotor, tensao: '' }));
+        }
+        console.log(motor)
+        console.log(checkboxVolts)
     };
 
     const load = () => {
@@ -439,7 +441,7 @@ export default function EditMotorDialog(props) {
             <Row>
                 <Col className="col-md-3">
                     <Label>Tensão<span>*</span></Label>
-                    <Input name="tensao" value={motor.tensao || ''} disabled type="text" bsSize="sm" />
+                    <Input name="tensao" value={motor.tensao} disabled type="text" bsSize="sm" />
                 </Col>
                 <Col className="col-md-5">
                     <Label>Ligação<span>*</span></Label>
