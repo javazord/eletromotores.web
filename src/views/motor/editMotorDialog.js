@@ -16,11 +16,11 @@ export default function EditMotorDialog(props) {
     const [motor, setMotor] = useState(_.cloneDeep(props.motor)); // Use _.cloneDeep
     const [initialData, setInitialData] = useState(_.cloneDeep(props.motor));
     const [checkboxVolts, setCheckboxVolts] = useState([
-        { volts: 127, checked: false },
-        { volts: 220, checked: false },
-        { volts: 380, checked: false },
-        { volts: 440, checked: false },
-        { volts: 760, checked: false },
+        { volts: 127, checked: initialData.voltagens.includes(127) ? true : false },
+        { volts: 220, checked: initialData.voltagens.includes(220) ? true : false },
+        { volts: 380, checked: initialData.voltagens.includes(380) ? true : false },
+        { volts: 440, checked: initialData.voltagens.includes(440) ? true : false },
+        { volts: 760, checked: initialData.voltagens.includes(760) ? true : false },
     ]);
     const [loading, setLoading] = useState(false);
     const [empresas, setEmpresas] = useState([]);
@@ -33,7 +33,6 @@ export default function EditMotorDialog(props) {
 
     useEffect(() => {
         service.empresas().then(response => { setEmpresas(response.data) })
-        isChecked()
     }, [motor])
 
     const handleInputChangePeso = (event) => {
@@ -200,41 +199,40 @@ export default function EditMotorDialog(props) {
         });
     }
 
-    const isChecked = () => {
-        const updatedCheckboxVolts = checkboxVolts.map((checkboxVolt) => {
-            const isChecked = initialData.voltagens.includes(checkboxVolt.volts);
-            return { ...checkboxVolt, checked: isChecked };
-        });
-        setCheckboxVolts(updatedCheckboxVolts);
-    }
-
     const handleCheckboxChange = (index, checked) => {
+
+        
         const newCheckboxVolts = [...checkboxVolts];
         newCheckboxVolts[index].checked = checked;
         setCheckboxVolts(newCheckboxVolts);
+      
+        const updatedMotor = { ...motor }; // Crie uma cópia do estado motor
         if (checked) {
-            motor.voltagens.push(checkboxVolts[index].volts);
-            motor.amperagens.splice(index, 0, 0);
+          updatedMotor.voltagens.push(checkboxVolts[index].volts);
+          updatedMotor.amperagens.splice(index, 0, 0);
         } else {
-            const indexToRemove = motor.voltagens.indexOf(checkboxVolts[index].volts);
-            motor.voltagens.splice(indexToRemove, 1);
-            motor.amperagens.splice(indexToRemove, 1);
+          const indexToRemove = updatedMotor.voltagens.indexOf(checkboxVolts[index].volts);
+          updatedMotor.voltagens.splice(indexToRemove, 1);
+          updatedMotor.amperagens.splice(indexToRemove, 1);
         }
-
+      
         // ordenar ambos os arrays com base na ordem dos valores em `voltagens`
-        const sortedArrays = motor.voltagens.map((volts, i) => ({
-            volts,
-            amperagem: motor.amperagens[i]
+        const sortedArrays = updatedMotor.voltagens.map((volts, i) => ({
+          volts,
+          amperagem: updatedMotor.amperagens[i]
         })).sort((a, b) => b.amperagem - a.amperagem);
-
-        motor.voltagens = sortedArrays.map(item => item.volts);
-        motor.amperagens = sortedArrays.map(item => item.amperagem);
-
-        setMotor(motor);
+      
+        updatedMotor.voltagens = sortedArrays.map(item => item.volts);
+        updatedMotor.amperagens = sortedArrays.map(item => item.amperagem);
+      
+        setMotor(updatedMotor); // Atualize o estado com a nova cópia atualizada do motor
+      
         validateCheckbox();
-    };
+      };
+      
 
     const validateCheckbox = () => {
+
         const updatedList = [...motor.voltagens];
         const hasAllTrifasicVoltages =
             updatedList.length === 4 &&
@@ -244,7 +242,8 @@ export default function EditMotorDialog(props) {
             updatedList.includes(760);
 
         const hasMonofasicVoltage = updatedList.length === 2 && updatedList.includes(127) && updatedList.includes(220);
-
+        console.log(motor)
+        console.log(checkboxVolts)
         if (hasAllTrifasicVoltages) {
             setMotor((prevMotor) => ({ ...prevMotor, tensao: updatedList.includes(127) ? '' : 'TRIFASICO' }));
             console.log('trifasico')
@@ -255,8 +254,7 @@ export default function EditMotorDialog(props) {
         } else {
             setMotor((prevMotor) => ({ ...prevMotor, tensao: '' }));
         }
-        console.log(motor)
-        console.log(checkboxVolts)
+        
     };
 
     const load = () => {
@@ -269,6 +267,7 @@ export default function EditMotorDialog(props) {
     const update = () => {
 
         motor.usuario = motor.usuario.id
+        console.log(motor)
         try {
             validate(motor);
         } catch (error) {

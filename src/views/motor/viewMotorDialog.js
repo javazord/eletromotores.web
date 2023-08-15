@@ -14,7 +14,6 @@ export default function ViewMotorDialog(props) {
 
     useEffect(() => {
         if (motor) {
-            console.log(motor)
             service.search(motor.id)
                 .then(response => {
                     setImagem(response.data.data)
