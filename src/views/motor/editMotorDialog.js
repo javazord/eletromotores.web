@@ -261,7 +261,9 @@ export default function EditMotorDialog(props) {
         setTimeout(() => {
             setLoading(false);
             showMessageSuccess('Motor atualizado com sucesso!');
+            onHide();
         }, 2000);
+        
     }
 
     const update = () => {
