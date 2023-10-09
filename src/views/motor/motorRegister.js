@@ -10,7 +10,6 @@ import { MotorService } from "../../app/service/motor/motorService";
 import { ImagemService } from "../../app/service/imagem/imagemService";
 import useToast from "../../components/toast";
 import { Toast } from "primereact/toast";
-import { InputText } from 'primereact/inputtext';
 
 
 const MotorRegister = () => {
@@ -36,6 +35,7 @@ const MotorRegister = () => {
         amperagens: [],
         passo: [0],
         usuario: {},
+        imagem: {}
     });
     const [checkboxVolts, setCheckboxVolts] = useState([
         { volts: 127, checked: false },
@@ -271,6 +271,7 @@ const MotorRegister = () => {
         })
 
         validateCheckbox();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [motor.voltagens]);
 
     const resetState = () => {
@@ -319,7 +320,21 @@ const MotorRegister = () => {
 
     const create = () => {
 
-        const { marca, modelo, ranhuras, rotacao, ligacao, potencia, comprimento, medidaExterna, tensao, fio, voltagens, amperagens, passo, empresa } = motor;
+        const { marca, modelo, ranhuras, rotacao, ligacao, potencia, comprimento, medidaExterna, tensao, fio, voltagens, amperagens, passo, empresa, imagem } = motor;
+        const image = {}
+        if (selectedFile) {
+            const formData = new FormData();
+            formData.append('file', selectedFile);
+            imgService.save(formData)
+                .then(response => {
+                    console.log(response.data)
+                    image = response.data
+                    motorInsert({image})
+                }).catch(erro => {
+                    console.log(erro)
+                    showMessageError("Não foi possível salvar a imagem")
+                })
+        }
 
         const motorInsert = {
             marca,
@@ -341,8 +356,11 @@ const MotorRegister = () => {
             voltagens: voltagens.sort().map(str => { return parseInt(str, 10) }),
             amperagens: amperagens.map(str => { return parseFloat(str, 10) }),
             passo: passo.sort().map(str => { return parseInt(str, 10) }),
-            usuario: authUser.id
+            usuario: authUser.id,
+            imagem: image
         }
+        
+        console.log(motorInsert)
         try {
             validate(motorInsert);
         } catch (error) {
@@ -351,23 +369,10 @@ const MotorRegister = () => {
             return false;
         }
         setLoading(true);
+
         service.save(motorInsert)
             .then(response => {
                 load();
-
-                if (selectedFile) {
-                    const formData = new FormData();
-                    formData.append('file', selectedFile);
-                    formData.append('motor', JSON.stringify(response.data));
-                    imgService.save(formData)
-                        .then(response => {
-
-                        }).catch(erro => {
-                            console.log(erro)
-                            showMessageError("Não foi salvar a imagem")
-                        })
-                }
-
                 resetState();
             }).catch(erro => {
                 showMessageError(erro.response.data)

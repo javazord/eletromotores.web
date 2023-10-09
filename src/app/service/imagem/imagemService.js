@@ -3,7 +3,7 @@ import ApiService from "../../apiservice";
 export class ImagemService extends ApiService{
 
     constructor(){
-        super('api/upload');
+        super('api/imagem');
     }
 
     save(formData){

@@ -1,11 +1,13 @@
-import React from "react";
+
 import ValidateError from "../../app/exception/validateError";
 
 export function Tensao(props) {
+    // eslint-disable-next-line eqeqeq
     if (props.tensao == "TRIFASICO") {
         return "Trifásico"
     }
 
+    // eslint-disable-next-line eqeqeq
     if (props.tensao == "MONOFASICO") {
         return "Monofásico"
     }
