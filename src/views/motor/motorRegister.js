@@ -321,20 +321,6 @@ const MotorRegister = () => {
     const create = () => {
 
         const { marca, modelo, ranhuras, rotacao, ligacao, potencia, comprimento, medidaExterna, tensao, fio, voltagens, amperagens, passo, empresa, imagem } = motor;
-        const image = {}
-        if (selectedFile) {
-            const formData = new FormData();
-            formData.append('file', selectedFile);
-            imgService.save(formData)
-                .then(response => {
-                    console.log(response.data)
-                    image = response.data
-                    motorInsert({image})
-                }).catch(erro => {
-                    console.log(erro)
-                    showMessageError("Não foi possível salvar a imagem")
-                })
-        }
 
         const motorInsert = {
             marca,
@@ -357,9 +343,22 @@ const MotorRegister = () => {
             amperagens: amperagens.map(str => { return parseFloat(str, 10) }),
             passo: passo.sort().map(str => { return parseInt(str, 10) }),
             usuario: authUser.id,
-            imagem: image
+            imagem
         }
-        
+
+        if (selectedFile) {
+            const formData = new FormData();
+
+            formData.append('file', selectedFile);
+            imgService.save(formData)
+                .then(response => {
+                    setMotor({ imagem: response.data })
+                }).catch(erro => {
+                    console.log(erro)
+                    showMessageError("Não foi possível salvar a imagem")
+                })
+        }
+
         console.log(motorInsert)
         try {
             validate(motorInsert);
