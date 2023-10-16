@@ -35,6 +35,7 @@ const MotorSearch = () => {
         amperagens: [],
         passo: [],
         usuario: {},
+        imagem: {}
     });
     const [imagem, setImagem] = useState();
     const [showConfirmDialog, setShowConfirmDialog] = useState(false);
@@ -50,18 +51,17 @@ const MotorSearch = () => {
 
     }, [motor])
 
-    const buttonSearch = () => {
-        motorService
-            .search(motor)
-            .then((response) => {
-                const list = response.data;
-                load(list);
-                setMotores(list);
-            })
-            .catch((erro) => {
-                console.log(erro);
-            });
+    const buttonSearch = async () => {
+        try {
+            const response = await motorService.search(motor);
+            const list = response.data;
+            load(list);
+            setMotores(list);
+        } catch (error) {
+            console.log(error);
+        }
     };
+
 
     const resetState = () => {
         setMotor({
@@ -170,23 +170,23 @@ const MotorSearch = () => {
                 <Row className="d-flex align-items-end">
                     <Col>
                         <Label>Marca</Label>
-                        <Input name="marca" value={motor.marca} onChange={handleInputChange} type="text" className="form-control mt-1" bsSize="sm"/>
+                        <Input name="marca" value={motor.marca} onChange={handleInputChange} type="text" className="form-control mt-1" bsSize="sm" />
                     </Col>
                     <Col>
                         <Label>Ranhuras</Label>
-                        <Input name="ranhuras" value={motor.ranhuras} onChange={handleInputChange} type="number" className="form-control mt-1" bsSize="sm"/>
+                        <Input name="ranhuras" value={motor.ranhuras} onChange={handleInputChange} type="number" className="form-control mt-1" bsSize="sm" />
                     </Col>
                     <Col>
                         <Label>Potência</Label>
-                        <Input name="potencia" value={motor.potencia} onChange={handleInputChange} type="number" className="form-control mt-1" bsSize="sm"/>
+                        <Input name="potencia" value={motor.potencia} onChange={handleInputChange} type="number" className="form-control mt-1" bsSize="sm" />
                     </Col>
                     <Col>
                         <Label>Comprimento</Label>
-                        <Input name="comprimento" value={motor.comprimento} onChange={handleInputChange} type="number" className="form-control mt-1" bsSize="sm"/>
+                        <Input name="comprimento" value={motor.comprimento} onChange={handleInputChange} type="number" className="form-control mt-1" bsSize="sm" />
                     </Col>
                     <Col >
                         <Label>M. Externa</Label>
-                        <Input name="medidaExterna" value={motor.medidaExterna} onChange={handleInputChange} type="number" className="form-control mt-1" bsSize="sm"/>
+                        <Input name="medidaExterna" value={motor.medidaExterna} onChange={handleInputChange} type="number" className="form-control mt-1" bsSize="sm" />
                     </Col>
 
                     <Col className="">
