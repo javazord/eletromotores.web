@@ -10,7 +10,6 @@ import { Col, Row, Input, Label } from "reactstrap";
 import useToast from '../../components/toast';
 import { Toast } from "primereact/toast";
 import { Dialog } from "primereact/dialog";
-import { ImagemService } from "../../app/service/imagem/imagemService";
 
 const MotorSearch = () => {
     const [motores, setMotores] = useState([]);
@@ -35,33 +34,31 @@ const MotorSearch = () => {
         amperagens: [],
         passo: [],
         usuario: {},
-        imagem: {}
     });
-    const [imagem, setImagem] = useState();
     const [showConfirmDialog, setShowConfirmDialog] = useState(false);
     const [editConfirmDialog, setEditConfirmDialog] = useState(false);
     const [deleteConfirmDialog, setDeleteConfirmDialog] = useState(false);
     const [loading, setLoading] = useState(false);
     const { authUser } = useContext(AuthContext);
     const { showMessageSuccess, showMessageAlert, showMessageError, toast } = useToast();
-    const motorService = new MotorService();
-    const imgService = new ImagemService();
+    const service = new MotorService();
 
-    useEffect(() => {
+    useEffect(() =>{
 
-    }, [motor])
+    },[motor])
 
-    const buttonSearch = async () => {
-        try {
-            const response = await motorService.search(motor);
-            const list = response.data;
-            load(list);
-            setMotores(list);
-        } catch (error) {
-            console.log(error);
-        }
+    const buttonSearch = () => {
+        service
+            .search(motor)
+            .then((response) => {
+                const list = response.data;
+                load(list);
+                setMotores(list);
+            })
+            .catch((erro) => {
+                console.log(erro);
+            });
     };
-
 
     const resetState = () => {
         setMotor({
@@ -137,21 +134,19 @@ const MotorSearch = () => {
 
     const onDelete = () => {
         try {
-            motorService.deletar(motor.id).then((response) => {
+            service.deletar(motor.id).then((response) => {
                 const index = motores.indexOf(motor);
-                setMotores((prevMotores) => [...prevMotores.slice(0, index), ...prevMotores.slice(index + 1),]);
+                setMotores((prevMotores) => [
+                    ...prevMotores.slice(0, index),
+                    ...prevMotores.slice(index + 1),
+                ]);
                 showMessageSuccess('Motor deletado com sucesso!');
-            })
-                .catch(error => {
-                    console.error(error)
-                })
-
+            });
         } catch (error) {
             showMessageError('Ocorreu um erro ao deletar o motor');
         }
         onHide()
     };
-
 
     const onHide = () => {
         resetState();
@@ -170,27 +165,27 @@ const MotorSearch = () => {
                 <Row className="d-flex align-items-end">
                     <Col>
                         <Label>Marca</Label>
-                        <Input name="marca" value={motor.marca} onChange={handleInputChange} type="text" className="form-control mt-1" bsSize="sm" />
+                        <Input name="marca" value={motor.marca} onChange={handleInputChange} type="text" className="form-control mt-1" />
                     </Col>
                     <Col>
                         <Label>Ranhuras</Label>
-                        <Input name="ranhuras" value={motor.ranhuras} onChange={handleInputChange} type="number" className="form-control mt-1" bsSize="sm" />
+                        <Input name="ranhuras" value={motor.ranhuras} onChange={handleInputChange} type="number" className="form-control mt-1" />
                     </Col>
                     <Col>
                         <Label>Potência</Label>
-                        <Input name="potencia" value={motor.potencia} onChange={handleInputChange} type="number" className="form-control mt-1" bsSize="sm" />
+                        <Input name="potencia" value={motor.potencia} onChange={handleInputChange} type="number" className="form-control mt-1" />
                     </Col>
                     <Col>
                         <Label>Comprimento</Label>
-                        <Input name="comprimento" value={motor.comprimento} onChange={handleInputChange} type="number" className="form-control mt-1" bsSize="sm" />
+                        <Input name="comprimento" value={motor.comprimento} onChange={handleInputChange} type="number" className="form-control mt-1" />
                     </Col>
                     <Col >
                         <Label>M. Externa</Label>
-                        <Input name="medidaExterna" value={motor.medidaExterna} onChange={handleInputChange} type="number" className="form-control mt-1" bsSize="sm" />
+                        <Input name="medidaExterna" value={motor.medidaExterna} onChange={handleInputChange} type="number" className="form-control mt-1" />
                     </Col>
 
                     <Col className="">
-                        <Button onClick={buttonSearch} className="btn btn-primary" rounded outlined icon="pi pi-search" size="sm" loading={loading} />
+                        <Button onClick={buttonSearch} className="btn btn-primary" icon="pi pi-search" size="sm" label="Buscar" loading={loading} />
                     </Col>
                 </Row>
                 <br />

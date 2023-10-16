@@ -10,6 +10,7 @@ import { MotorService } from "../../app/service/motor/motorService";
 import { ImagemService } from "../../app/service/imagem/imagemService";
 import useToast from "../../components/toast";
 import { Toast } from "primereact/toast";
+import { InputText } from 'primereact/inputtext';
 
 
 const MotorRegister = () => {
@@ -35,7 +36,6 @@ const MotorRegister = () => {
         amperagens: [],
         passo: [0],
         usuario: {},
-        imagem: {}
     });
     const [checkboxVolts, setCheckboxVolts] = useState([
         { volts: 127, checked: false },
@@ -52,7 +52,7 @@ const MotorRegister = () => {
     const { showMessageSuccess, showMessageAlert, showMessageError, toast } = useToast();
     const { authUser } = useContext(AuthContext);
     const [selectedFile, setSelectedFile] = useState(null);
-    const motorService = new MotorService();
+    const service = new MotorService();
     const imgService = new ImagemService();
 
     const handleInputChange = (event) => {
@@ -206,7 +206,6 @@ const MotorRegister = () => {
     const handleChangePasso = (e, index) => {
         const newStep = [...motor.passo];
         newStep[index] = e.target.value;
-        newStep.sort((a, b) => a - b); // Ordenar o array em ordem crescente
         setMotor({
             ...motor,
             fio: {
@@ -214,27 +213,28 @@ const MotorRegister = () => {
             },
             passo: newStep
         });
-
     }
 
     const validateCheckbox = () => {
-        const updatedList = [...motor.voltagens];
-        const hasAllTrifasicVoltages =
-            updatedList.length === 4 &&
+        const updatedList = motor.voltagens.slice();
+
+        if (
             updatedList.includes(220) &&
             updatedList.includes(380) &&
             updatedList.includes(440) &&
-            updatedList.includes(760);
-
-        const hasMonofasicVoltage = updatedList.length === 2 && updatedList.includes(127) && updatedList.includes(220);
-
-        if (hasAllTrifasicVoltages) {
-            setMotor((prevMotor) => ({ ...prevMotor, tensao: updatedList.includes(127) ? '' : 'TRIFASICO' }));
-        } else if (hasMonofasicVoltage) {
-            const hasOtherVoltages = updatedList.some((voltage) => voltage === 380 || voltage === 440 || voltage === 760);
-            setMotor((prevMotor) => ({ ...prevMotor, tensao: hasOtherVoltages ? '' : 'MONOFASICO' }));
+            updatedList.includes(760)
+        ) {
+            updatedList.includes(127)
+                ? setMotor({ ...motor, tensao: "" })
+                : setMotor({ ...motor, tensao: "TRIFASICO" });
+        } else if (updatedList.includes(127) && updatedList.includes(220)) {
+            updatedList.includes(380) ||
+                updatedList.includes(440) ||
+                updatedList.includes(760)
+                ? setMotor({ ...motor, tensao: "" })
+                : setMotor({ ...motor, tensao: "MONOFASICO" });
         } else {
-            setMotor((prevMotor) => ({ ...prevMotor, tensao: '' }));
+            setMotor({ ...motor, tensao: "" });
         }
     };
 
@@ -266,12 +266,11 @@ const MotorRegister = () => {
     };
 
     useEffect(() => {
-        motorService.empresas().then(response => {
+        service.empresas().then(response => {
             setEmpresas([...response.data]);
         })
 
         validateCheckbox();
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [motor.voltagens]);
 
     const resetState = () => {
@@ -319,9 +318,9 @@ const MotorRegister = () => {
     }
 
     const create = () => {
-        const { marca, modelo, ranhuras, rotacao, ligacao, potencia, comprimento, medidaExterna, tensao, fio, voltagens, amperagens, passo, empresa, imagem } = motor;
-    
-        // Crie o objeto motorInsert
+
+        const { marca, modelo, ranhuras, rotacao, ligacao, potencia, comprimento, medidaExterna, tensao, fio, voltagens, amperagens, passo, empresa } = motor;
+
         const motorInsert = {
             marca,
             modelo,
@@ -342,9 +341,8 @@ const MotorRegister = () => {
             voltagens: voltagens.sort().map(str => { return parseInt(str, 10) }),
             amperagens: amperagens.map(str => { return parseFloat(str, 10) }),
             passo: passo.sort().map(str => { return parseInt(str, 10) }),
-            usuario: authUser.id,
+            usuario: authUser.id
         }
-    
         try {
             validate(motorInsert);
         } catch (error) {
@@ -352,47 +350,31 @@ const MotorRegister = () => {
             showMessageAlert(msgs);
             return false;
         }
-    
         setLoading(true);
-    
-        if (selectedFile) {
-            const formData = new FormData();
-            formData.append('file', selectedFile);
-    
-            // Salve a imagem usando imgService e aguarde a resposta
-            imgService.save(formData)
-                .then(response => {
-                    // Após salvar a imagem com sucesso, defina a imagem no motorInsert
-                    motorInsert.imagem = response.data;
-    
-                    // Agora, você pode salvar o objeto motorInsert
-                    motorService.save(motorInsert)
-                        .then(response => {
-                            load();
-                            resetState();
-                        })
-                        .catch(erro => {
-                            showMessageError(erro.response.data);
-                        });
-                })
-                .catch(erro => {
-                    console.log(erro);
-                    showMessageError("Não foi possível salvar a imagem");
-                });
-        } else {
-            // Se não houver imagem para salvar, salve apenas o objeto motorInsert
-            motorService.save(motorInsert)
-                .then(response => {
-                    load();
-                    resetState();
-                })
-                .catch(erro => {
-                    showMessageError(erro.response.data);
-                });
-        }
-    }
-    
+        service.save(motorInsert)
+            .then(response => {
+                load();
 
+                if (selectedFile) {
+                    const formData = new FormData();
+                    formData.append('file', selectedFile);
+                    formData.append('motor', JSON.stringify(response.data));
+                    imgService.save(formData)
+                        .then(response => {
+
+                        }).catch(erro => {
+                            console.log(erro)
+                            showMessageError("Não foi salvar a imagem")
+                        })
+                }
+
+                resetState();
+            }).catch(erro => {
+                showMessageError(erro.response.data)
+            })
+
+
+    }
 
     return (
         <Card title={"Cadastrar Motor"} style={{ maxWidth: "100%" }}>

@@ -51,7 +51,7 @@ export default function EditUserDialog(props) {
 
     return (
         <>
-            <Dialog header="Atualizar Colaborador"
+            <Dialog header="Editar Colaborador"
                 visible={visible}
                 modal={true}
                 style={{ width: '60vw' }}

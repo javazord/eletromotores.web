@@ -47,7 +47,7 @@ export function MenuBar(props) {
             label: 'Sair',
             icon: 'pi pi-fw pi-power-off',
             url: '/',
-            command: () => props.deslogar()
+            command: props.deslogar
         }
     ];
 
@@ -60,6 +60,13 @@ export function MenuBar(props) {
         </a>
 
     );
+
+    const end = [
+        {
+            label: 'Sair',
+            icon: 'pi pi-fw pi-power-off'
+        }
+    ];
 
     return (
 
