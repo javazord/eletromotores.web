@@ -16,7 +16,6 @@ export default function ViewMotorDialog(props) {
         if (motor) {
             service.search(motor.id)
                 .then(response => {
-                    console.log(response.data)
                     setImagem(response.data)
                 })
         }
@@ -31,6 +30,7 @@ export default function ViewMotorDialog(props) {
     return (
 
         <>
+        
             <Dialog
                 header={`Registrado em ${new Intl.DateTimeFormat('pt-BR').format(motor.registro)}`}
                 visible={visible}

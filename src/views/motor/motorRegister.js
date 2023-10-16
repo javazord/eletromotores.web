@@ -206,6 +206,7 @@ const MotorRegister = () => {
     const handleChangePasso = (e, index) => {
         const newStep = [...motor.passo];
         newStep[index] = e.target.value;
+        newStep.sort((a, b) => a - b); // Ordenar o array em ordem crescente
         setMotor({
             ...motor,
             fio: {
@@ -213,28 +214,27 @@ const MotorRegister = () => {
             },
             passo: newStep
         });
+
     }
 
     const validateCheckbox = () => {
-        const updatedList = motor.voltagens.slice();
-
-        if (
+        const updatedList = [...motor.voltagens];
+        const hasAllTrifasicVoltages =
+            updatedList.length === 4 &&
             updatedList.includes(220) &&
             updatedList.includes(380) &&
             updatedList.includes(440) &&
-            updatedList.includes(760)
-        ) {
-            updatedList.includes(127)
-                ? setMotor({ ...motor, tensao: "" })
-                : setMotor({ ...motor, tensao: "TRIFASICO" });
-        } else if (updatedList.includes(127) && updatedList.includes(220)) {
-            updatedList.includes(380) ||
-                updatedList.includes(440) ||
-                updatedList.includes(760)
-                ? setMotor({ ...motor, tensao: "" })
-                : setMotor({ ...motor, tensao: "MONOFASICO" });
+            updatedList.includes(760);
+
+        const hasMonofasicVoltage = updatedList.length === 2 && updatedList.includes(127) && updatedList.includes(220);
+
+        if (hasAllTrifasicVoltages) {
+            setMotor((prevMotor) => ({ ...prevMotor, tensao: updatedList.includes(127) ? '' : 'TRIFASICO' }));
+        } else if (hasMonofasicVoltage) {
+            const hasOtherVoltages = updatedList.some((voltage) => voltage === 380 || voltage === 440 || voltage === 760);
+            setMotor((prevMotor) => ({ ...prevMotor, tensao: hasOtherVoltages ? '' : 'MONOFASICO' }));
         } else {
-            setMotor({ ...motor, tensao: "" });
+            setMotor((prevMotor) => ({ ...prevMotor, tensao: '' }));
         }
     };
 

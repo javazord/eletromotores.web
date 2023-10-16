@@ -8,33 +8,32 @@ import { validate } from "./motorAttributes";
 import useToast from "../../components/toast";
 import { Toast } from "primereact/toast";
 import Checkbox from "../../components/grid/checkbox";
+import _ from 'lodash'; // Importe o Lodash
 
 
 export default function EditMotorDialog(props) {
 
-    const [motor, setMotor] = useState(props.motor);
+    const [motor, setMotor] = useState(_.cloneDeep(props.motor)); // Use _.cloneDeep
+    const [initialData, setInitialData] = useState(_.cloneDeep(props.motor));
     const [checkboxVolts, setCheckboxVolts] = useState([
-        { volts: 127, checked: false },
-        { volts: 220, checked: false },
-        { volts: 380, checked: false },
-        { volts: 440, checked: false },
-        { volts: 760, checked: false },
+        { volts: 127, checked: initialData.voltagens.includes(127) ? true : false },
+        { volts: 220, checked: initialData.voltagens.includes(220) ? true : false },
+        { volts: 380, checked: initialData.voltagens.includes(380) ? true : false },
+        { volts: 440, checked: initialData.voltagens.includes(440) ? true : false },
+        { volts: 760, checked: initialData.voltagens.includes(760) ? true : false },
     ]);
     const [loading, setLoading] = useState(false);
     const [empresas, setEmpresas] = useState([]);
     const [indexPasso, setIndexPasso] = useState(props.motor.passo.length);
-    const [indexAWG, setIndexAWG] = useState(props.motor.fio.awgs.length)
-    const [indexESP, setIndexESP] = useState(props.motor.fio.espiras.length)
-    const { showMessageSuccess, showMessageAlert, showMessageError, toast } = useToast();
+    const [indexAWG, setIndexAWG] = useState(props.motor.fio.awgs.length);
+    const [indexESP, setIndexESP] = useState(props.motor.fio.espiras.length);
+    const { showMessageSuccess, showMessageError, toast } = useToast();
     const service = new MotorService();
     const { visible, onHide } = props;
 
     useEffect(() => {
         service.empresas().then(response => { setEmpresas(response.data) })
-        isChecked()
-        validateCheckbox()
-        setMotor(props.motor)
-    }, [props.motor])
+    }, [motor])
 
     const handleInputChangePeso = (event) => {
         setMotor({ ...motor, fio: { ...motor.fio, peso: event.target.value } });
@@ -57,7 +56,8 @@ export default function EditMotorDialog(props) {
     }
 
     const removeInputsESP = () => {
-        const newESP = motor.fio.espiras.slice(1);
+        const newESP = [...motor.fio.espiras]
+        newESP.pop()
         if (indexESP > 1) {
             setMotor(prevMotor => ({
                 ...prevMotor,
@@ -84,14 +84,18 @@ export default function EditMotorDialog(props) {
                         quantidades: newQTD
                     }
                 };
+                console.log(prevMotor)
             });
             setIndexAWG(prevIndex => prevIndex + 1)
+
         }
     };
 
     const removeInputs = () => {
-        const newAWG = motor.fio.awgs.slice(1)
-        const newQTD = motor.fio.quantidades.slice(1)
+        const newAWG = [...motor.fio.awgs]
+        const newQTD = [...motor.fio.quantidades]
+        newAWG.pop();
+        newQTD.pop();
         if (indexAWG > 1) {
             setMotor(prevMotor => {
                 return {
@@ -105,6 +109,7 @@ export default function EditMotorDialog(props) {
             });
             setIndexAWG(prevIndex => prevIndex - 1)
         }
+
     };
 
     const addInputsPasso = () => {
@@ -124,8 +129,9 @@ export default function EditMotorDialog(props) {
     }
 
     const removeInputsPasso = () => {
-        const newStep = motor.passo.slice(1);
-        if (indexPasso > 1) {
+        const newStep = [...motor.passo];
+        newStep.pop();
+        if (indexPasso > 2) {
             setMotor(prevMotor => ({
                 ...prevMotor,
                 fio: {
@@ -134,6 +140,7 @@ export default function EditMotorDialog(props) {
                 passo: newStep
             }));
             setIndexPasso(prevIndex => prevIndex - 1)
+            console.log(motor)
         }
 
     }
@@ -192,88 +199,63 @@ export default function EditMotorDialog(props) {
         });
     }
 
-    const isChecked = () => {
-        const updatedCheckboxVolts = checkboxVolts.map((checkboxVolt) => {
-            const isChecked = props.motor.voltagens.includes(checkboxVolt.volts);
-            return { ...checkboxVolt, checked: isChecked };
-        });
-        setCheckboxVolts(updatedCheckboxVolts);
-    }
-
-    const validateCheckbox = () => {
-        const updatedList = motor.voltagens;
-        if (
-            updatedList.includes(220) &&
-            updatedList.includes(380) &&
-            updatedList.includes(440) &&
-            updatedList.includes(760)
-        ) {
-            updatedList.includes(127)
-                ? setMotor({ ...motor, tensao: "" })
-                : setMotor({ ...motor, tensao: "TRIFASICO" });
-        } else if (updatedList.includes(127) && updatedList.includes(220)) {
-            updatedList.includes(380) ||
-                updatedList.includes(440) ||
-                updatedList.includes(760)
-                ? setMotor({ ...motor, tensao: "" })
-                : setMotor({ ...motor, tensao: "MONOFASICO" });
-        } else {
-            setMotor({ ...motor, tensao: "" });
-        }
-    };
-
     const handleCheckboxChange = (index, checked) => {
+
+        
         const newCheckboxVolts = [...checkboxVolts];
         newCheckboxVolts[index].checked = checked;
         setCheckboxVolts(newCheckboxVolts);
-        const newMotor = { ...motor };
+      
+        const updatedMotor = { ...motor }; // Crie uma cópia do estado motor
         if (checked) {
-
-            newMotor.voltagens.push(checkboxVolts[index].volts);
-            newMotor.amperagens.splice(index, 0, 0);
+          updatedMotor.voltagens.push(checkboxVolts[index].volts);
+          updatedMotor.amperagens.splice(index, 0, 0);
         } else {
-            const indexToRemove = newMotor.voltagens.indexOf(checkboxVolts[index].volts);
-            newMotor.voltagens.splice(indexToRemove, 1);
-            newMotor.amperagens.splice(indexToRemove, 1);
+          const indexToRemove = updatedMotor.voltagens.indexOf(checkboxVolts[index].volts);
+          updatedMotor.voltagens.splice(indexToRemove, 1);
+          updatedMotor.amperagens.splice(indexToRemove, 1);
         }
-
+      
         // ordenar ambos os arrays com base na ordem dos valores em `voltagens`
-        const sortedArrays = newMotor.voltagens.map((volts, i) => ({
-            volts,
-            amperagem: newMotor.amperagens[i]
+        const sortedArrays = updatedMotor.voltagens.map((volts, i) => ({
+          volts,
+          amperagem: updatedMotor.amperagens[i]
         })).sort((a, b) => b.amperagem - a.amperagem);
+      
+        updatedMotor.voltagens = sortedArrays.map(item => item.volts);
+        updatedMotor.amperagens = sortedArrays.map(item => item.amperagem);
+      
+        setMotor(updatedMotor); // Atualize o estado com a nova cópia atualizada do motor
+      
+        validateCheckbox();
+      };
+      
 
-        newMotor.voltagens = sortedArrays.map(item => item.volts);
-        newMotor.amperagens = sortedArrays.map(item => item.amperagem);
+    const validateCheckbox = () => {
 
-        setMotor(newMotor);
+        const updatedList = [...motor.voltagens];
+        const hasAllTrifasicVoltages =
+            updatedList.length === 4 &&
+            updatedList.includes(220) &&
+            updatedList.includes(380) &&
+            updatedList.includes(440) &&
+            updatedList.includes(760);
+
+        const hasMonofasicVoltage = updatedList.length === 2 && updatedList.includes(127) && updatedList.includes(220);
+        console.log(motor)
+        console.log(checkboxVolts)
+        if (hasAllTrifasicVoltages) {
+            setMotor((prevMotor) => ({ ...prevMotor, tensao: updatedList.includes(127) ? '' : 'TRIFASICO' }));
+            console.log('trifasico')
+        } else if (hasMonofasicVoltage) {
+            const hasOtherVoltages = updatedList.some((voltage) => voltage === 380 || voltage === 440 || voltage === 760);
+            setMotor((prevMotor) => ({ ...prevMotor, tensao: hasOtherVoltages ? '' : 'MONOFASICO' }));
+            console.log('monofasico')
+        } else {
+            setMotor((prevMotor) => ({ ...prevMotor, tensao: '' }));
+        }
+        
     };
-
-    const resetState = () => {
-        setMotor({
-            rotacao: 0,
-            modelo: '',
-            ranhuras: 0,
-            marca: '',
-            ligacao: '',
-            potencia: 0,
-            comprimento: 0,
-            medidaExterna: 0,
-            empresa: '',
-            tensao: '',
-            fio: {
-                awgs: [0],
-                quantidades: [0],
-                espiras: [0],
-                peso: 0,
-            },
-            voltagens: [],
-            amperagens: [],
-            passo: [0],
-            usuario: {},
-        })
-        setCheckboxVolts(checkboxVolts.map(item => ({ ...item, checked: false })));
-    }
 
     const load = () => {
         setTimeout(() => {
@@ -285,6 +267,7 @@ export default function EditMotorDialog(props) {
     const update = () => {
 
         motor.usuario = motor.usuario.id
+        console.log(motor)
         try {
             validate(motor);
         } catch (error) {
@@ -301,14 +284,26 @@ export default function EditMotorDialog(props) {
             })
     }
 
-    const footer = (
-        <><Button label="Atualizar" className="p-button-success" icon="pi pi-check" onClick={update} size="sm" loading={loading} />
-            <Button label="Fechar" className="p-button-secondary" icon="pi pi-times" onClick={onHide} size="sm" /></>
-    )
-
     const handleInputChange = (event) => {
         setMotor({ ...motor, [event.target.name]: event.target.value })
     }
+
+    const handleCancel = () => {
+        // redefinir dados para os iniciais
+        setCheckboxVolts(
+            checkboxVolts.map((checkbox) => ({
+                ...checkbox,
+                checked: initialData.voltagens.includes(checkbox.volts),
+            }))
+        );
+        setMotor(initialData);
+        onHide();
+    };
+
+    const footer = (
+        <><Button label="Atualizar" className="p-button-success" icon="pi pi-check" onClick={update} size="sm" loading={loading} />
+            <Button label="Fechar" className="p-button-secondary" icon="pi pi-times" onClick={handleCancel} size="sm" /></>
+    )
 
     return (
 
@@ -323,27 +318,27 @@ export default function EditMotorDialog(props) {
             <Row>
                 <Col >
                     <Label>Marca<span>*</span> </Label>
-                    <Input name="marca" value={motor.marca} onChange={handleInputChange} type="text" bsSize="sm" />
+                    <Input name="marca" value={motor.marca || ''} onChange={handleInputChange} type="text" bsSize="sm" />
                 </Col>
                 <Col>
                     <Label>Modelo</Label>
-                    <Input name="modelo" value={motor.modelo} onChange={handleInputChange} type="text" bsSize="sm" />
+                    <Input name="modelo" value={motor.modelo || ''} onChange={handleInputChange} type="text" bsSize="sm" />
                 </Col>
                 <Col>
                     <Label>Ranhuras<span>*</span></Label>
-                    <Input name="ranhuras" value={motor.ranhuras} onChange={handleInputChange} type="number" min={0} bsSize="sm" />
+                    <Input name="ranhuras" value={motor.ranhuras || ''} onChange={handleInputChange} type="number" min={0} bsSize="sm" />
                 </Col>
                 <Col>
                     <Label>Rotação</Label>
-                    <Input name="rotacao" value={motor.rotacao} onChange={handleInputChange} type="number" min={0} bsSize="sm" />
+                    <Input name="rotacao" value={motor.rotacao || ''} onChange={handleInputChange} type="number" min={0} bsSize="sm" />
                 </Col>
                 <Col>
                     <Label>Peso<span>*</span></Label>
-                    <Input name="peso" value={motor.fio.peso} onChange={handleInputChangePeso} type="number" min={0} bsSize="sm" />
+                    <Input name="peso" value={motor.fio.peso || ''} onChange={handleInputChangePeso} type="number" min={0} bsSize="sm" />
                 </Col>
                 <Col>
                     <Label>Potência</Label>
-                    <Input name="potencia" value={motor.potencia} onChange={handleInputChange} type="number" min={0} bsSize="sm" />
+                    <Input name="potencia" value={motor.potencia || ''} onChange={handleInputChange} type="number" min={0} bsSize="sm" />
                 </Col>
             </Row>
 
@@ -352,11 +347,11 @@ export default function EditMotorDialog(props) {
 
                 <Col className="col-md-2">
                     <Label>Comprimento<span>*</span></Label>
-                    <Input name="comprimento" value={motor.comprimento} onChange={handleInputChange} type="number" min={0} bsSize="sm" />
+                    <Input name="comprimento" value={motor.comprimento || ''} onChange={handleInputChange} type="number" min={0} bsSize="sm" />
                 </Col>
                 <Col className="col-md-2">
                     <Label>M. Externa<span>*</span></Label>
-                    <Input name="medidaExterna" value={motor.medidaExterna} onChange={handleInputChange} type="number" min={0} bsSize="sm" />
+                    <Input name="medidaExterna" value={motor.medidaExterna || ''} onChange={handleInputChange} type="number" min={0} bsSize="sm" />
                 </Col>
                 {motor.passo.map((passo, index) => (
 
@@ -445,15 +440,15 @@ export default function EditMotorDialog(props) {
             <Row>
                 <Col className="col-md-3">
                     <Label>Tensão<span>*</span></Label>
-                    <Input name="tensao" value={motor.tensao} disabled min={0} bsSize="sm" />
+                    <Input name="tensao" value={motor.tensao} disabled type="text" bsSize="sm" />
                 </Col>
                 <Col className="col-md-5">
                     <Label>Ligação<span>*</span></Label>
-                    <Input name="ligacao" value={motor.ligacao} onChange={handleInputChange} type="text" min={0} bsSize="sm" />
+                    <Input name="ligacao" value={motor.ligacao || ''} onChange={handleInputChange} type="text" min={0} bsSize="sm" />
                 </Col>
                 <Col className="col-md-4">
                     <Label>Empresa<span>*</span></Label>
-                    <select name="empresa" value={motor.empresa} onChange={handleInputChange} className="form-select form-select-sm">
+                    <select name="empresa" value={motor.empresa || ''} onChange={handleInputChange} className="form-select form-select-sm">
                         <option value="">Selecione uma empresa</option>
                         {empresas.map((empresa) => (
                             <option key={empresa.valor} value={empresa.valor}>{empresa.descricao}</option>
