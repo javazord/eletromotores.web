@@ -4,10 +4,12 @@ import { Dialog } from "primereact/dialog";
 import { Button } from 'primereact/button';
 import { useEffect } from "react";
 import { MotorService } from '../../app/service/motor/motorService';
+import { ImagemService } from '../../app/service/imagem/imagemService';
 import { validate } from "./motorAttributes";
 import useToast from "../../components/toast";
 import { Toast } from "primereact/toast";
 import Checkbox from "../../components/grid/checkbox";
+import { Image } from 'primereact/image';
 import _ from 'lodash'; // Importe o Lodash
 
 
@@ -28,11 +30,20 @@ export default function EditMotorDialog(props) {
     const [indexAWG, setIndexAWG] = useState(props.motor.fio.awgs.length);
     const [indexESP, setIndexESP] = useState(props.motor.fio.espiras.length);
     const { showMessageSuccess, showMessageError, toast } = useToast();
-    const service = new MotorService();
+    const motorService = new MotorService();
     const { visible, onHide } = props;
+    const [imagem, setImagem] = useState();
+    const [showSchema, setShowSchema] = useState(false);
+    const imgService = new ImagemService();
 
     useEffect(() => {
-        service.empresas().then(response => { setEmpresas(response.data) })
+        motorService.empresas().then(response => { setEmpresas(response.data) })
+        if (motor) {
+            motorService.search(motor.id)
+                .then(response => {
+                    setImagem(response.data)
+                })
+        }
     }, [motor])
 
     const handleInputChangePeso = (event) => {
@@ -201,35 +212,35 @@ export default function EditMotorDialog(props) {
 
     const handleCheckboxChange = (index, checked) => {
 
-        
+
         const newCheckboxVolts = [...checkboxVolts];
         newCheckboxVolts[index].checked = checked;
         setCheckboxVolts(newCheckboxVolts);
-      
+
         const updatedMotor = { ...motor }; // Crie uma cópia do estado motor
         if (checked) {
-          updatedMotor.voltagens.push(checkboxVolts[index].volts);
-          updatedMotor.amperagens.splice(index, 0, 0);
+            updatedMotor.voltagens.push(checkboxVolts[index].volts);
+            updatedMotor.amperagens.splice(index, 0, 0);
         } else {
-          const indexToRemove = updatedMotor.voltagens.indexOf(checkboxVolts[index].volts);
-          updatedMotor.voltagens.splice(indexToRemove, 1);
-          updatedMotor.amperagens.splice(indexToRemove, 1);
+            const indexToRemove = updatedMotor.voltagens.indexOf(checkboxVolts[index].volts);
+            updatedMotor.voltagens.splice(indexToRemove, 1);
+            updatedMotor.amperagens.splice(indexToRemove, 1);
         }
-      
+
         // ordenar ambos os arrays com base na ordem dos valores em `voltagens`
         const sortedArrays = updatedMotor.voltagens.map((volts, i) => ({
-          volts,
-          amperagem: updatedMotor.amperagens[i]
+            volts,
+            amperagem: updatedMotor.amperagens[i]
         })).sort((a, b) => b.amperagem - a.amperagem);
-      
+
         updatedMotor.voltagens = sortedArrays.map(item => item.volts);
         updatedMotor.amperagens = sortedArrays.map(item => item.amperagem);
-      
+
         setMotor(updatedMotor); // Atualize o estado com a nova cópia atualizada do motor
-      
+
         validateCheckbox();
-      };
-      
+    };
+
 
     const validateCheckbox = () => {
 
@@ -254,7 +265,7 @@ export default function EditMotorDialog(props) {
         } else {
             setMotor((prevMotor) => ({ ...prevMotor, tensao: '' }));
         }
-        
+
     };
 
     const load = () => {
@@ -275,7 +286,7 @@ export default function EditMotorDialog(props) {
             msgs.forEach(msg => toast.showMessageAlert(msg));
             return false;
         }
-        service.update(motor)
+        motorService.update(motor)
             .then(response => {
                 load();
             }).catch(erro => {
@@ -307,7 +318,7 @@ export default function EditMotorDialog(props) {
 
     return (
 
-        <Dialog
+        <><Dialog
             header={`Atualizar Motor `}
             visible={visible}
             modal={true}
@@ -316,7 +327,7 @@ export default function EditMotorDialog(props) {
             footer={footer}
         >
             <Row>
-                <Col >
+                <Col>
                     <Label>Marca<span>*</span> </Label>
                     <Input name="marca" value={motor.marca || ''} onChange={handleInputChange} type="text" bsSize="sm" />
                 </Col>
@@ -415,8 +426,7 @@ export default function EditMotorDialog(props) {
                         <Label>Voltagem<span>*</span></Label>
                         <Checkbox
                             label={`${checkbox.volts}v`} checked={checkbox.checked}
-                            onChange={(e) => handleCheckboxChange(index, e.target.checked)}
-                        />
+                            onChange={(e) => handleCheckboxChange(index, e.target.checked)} />
                         {motor.voltagens.includes(checkbox.volts) && (
                             <><Label>Amperagem</Label>
                                 <Input
@@ -428,8 +438,7 @@ export default function EditMotorDialog(props) {
                                         const newMotor = { ...motor };
                                         newMotor.amperagens[motor.voltagens.indexOf(checkbox.volts)] = Number(e.target.value);
                                         setMotor(newMotor);
-                                    }}
-                                />
+                                    }} />
                             </>
                         )}
                     </div>
@@ -455,6 +464,13 @@ export default function EditMotorDialog(props) {
                         ))}
                     </select>
                 </Col>
+                <Row>
+                    <Label>Esquema </Label>
+                    <Col className="mt-2">
+
+                        <Button className='custom-choose-btn p-button-rounded p-button-outlined' icon='pi pi-fw pi-images' tooltip="Visualizar esquema" size="sm" onClick={() => setShowSchema(true)} />
+                    </Col>
+                </Row>
             </Row>
             <Col className="d-flex justify-content-start mt-2">
                 <small>
@@ -467,6 +483,14 @@ export default function EditMotorDialog(props) {
 
             </Row>
 
-        </Dialog>
+        </Dialog><Dialog header="Esquema" visible={showSchema} style={{ width: '55vw' }} onHide={() => setShowSchema(false)}>
+                {imagem ? (
+                    <div style={{ display: 'flex', justifyContent: 'center' }}>
+                        <Image src={`data:${imagem.tipo};base64,${imagem.dados}`} loading="lazy" alt={imagem.nome} preview width="250" />
+                    </div>
+                ) : (
+                    <p>Não há imagem anexada.</p>
+                )}
+            </Dialog></>
     );
 }
