@@ -26,6 +26,7 @@ export default function EditMotorDialog(props) {
     ]);
     const [loading, setLoading] = useState(false);
     const [empresas, setEmpresas] = useState([]);
+    const [totalSize, setTotalSize] = useState(0);
     const [indexPasso, setIndexPasso] = useState(props.motor.passo.length);
     const [indexAWG, setIndexAWG] = useState(props.motor.fio.awgs.length);
     const [indexESP, setIndexESP] = useState(props.motor.fio.espiras.length);
@@ -95,7 +96,6 @@ export default function EditMotorDialog(props) {
                         quantidades: newQTD
                     }
                 };
-                console.log(prevMotor)
             });
             setIndexAWG(prevIndex => prevIndex + 1)
 
@@ -274,6 +274,11 @@ export default function EditMotorDialog(props) {
             showMessageSuccess('Motor atualizado com sucesso!');
         }, 2000);
     }
+
+    const onTemplateClear = () => {
+        setTotalSize(0);
+        setImagem(null)
+    };
 
     const update = () => {
 
@@ -457,7 +462,7 @@ export default function EditMotorDialog(props) {
                 </Col>
                 <Col className="col-md-4">
                     <Label>Empresa<span>*</span></Label>
-                    <select name="empresa" value={motor.empresa || ''} onChange={handleInputChange} className="form-select form-select-sm">
+                    <select name="empresa" value={motor.empresa} onChange={handleInputChange} className="form-select form-select-sm">
                         <option value="">Selecione uma empresa</option>
                         {empresas.map((empresa) => (
                             <option key={empresa.valor} value={empresa.valor}>{empresa.descricao}</option>
@@ -469,6 +474,7 @@ export default function EditMotorDialog(props) {
                     <Col className="mt-2">
 
                         <Button className='custom-choose-btn p-button-rounded p-button-outlined' icon='pi pi-fw pi-images' tooltip="Visualizar esquema" size="sm" onClick={() => setShowSchema(true)} />
+                        <Button icon='pi pi-fw pi-times' iconOnly={true} className='custom-cancel-btn p-button-danger p-button-rounded p-button-outlined' onClick={() =>  onTemplateClear()}/>
                     </Col>
                 </Row>
             </Row>
@@ -480,7 +486,6 @@ export default function EditMotorDialog(props) {
 
             <Row>
                 <Toast ref={toast} />
-
             </Row>
 
         </Dialog><Dialog header="Esquema" visible={showSchema} style={{ width: '55vw' }} onHide={() => setShowSchema(false)}>
