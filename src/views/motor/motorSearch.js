@@ -43,7 +43,7 @@ const MotorSearch = () => {
     const [loading, setLoading] = useState(false);
     const { authUser } = useContext(AuthContext);
     const { showMessageSuccess, showMessageAlert, showMessageError, toast } = useToast();
-    const service = new MotorService();
+    const motorService = new MotorService();
     const imgService = new ImagemService();
 
     useEffect(() => {
@@ -51,7 +51,7 @@ const MotorSearch = () => {
     }, [motor])
 
     const buttonSearch = () => {
-        service
+        motorService
             .search(motor)
             .then((response) => {
                 const list = response.data;
@@ -137,7 +137,7 @@ const MotorSearch = () => {
 
     const onDelete = () => {
         try {
-            service.deletar(motor.id).then((response) => {
+            motorService.deletar(motor.id).then((response) => {
                 const index = motores.indexOf(motor);
                 setMotores((prevMotores) => [...prevMotores.slice(0, index), ...prevMotores.slice(index + 1),]);
                 showMessageSuccess('Motor deletado com sucesso!');

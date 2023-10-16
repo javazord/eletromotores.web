@@ -52,7 +52,7 @@ const MotorRegister = () => {
     const { showMessageSuccess, showMessageAlert, showMessageError, toast } = useToast();
     const { authUser } = useContext(AuthContext);
     const [selectedFile, setSelectedFile] = useState(null);
-    const service = new MotorService();
+    const motorService = new MotorService();
     const imgService = new ImagemService();
 
     const handleInputChange = (event) => {
@@ -266,7 +266,7 @@ const MotorRegister = () => {
     };
 
     useEffect(() => {
-        service.empresas().then(response => {
+        motorService.empresas().then(response => {
             setEmpresas([...response.data]);
         })
 
@@ -319,9 +319,9 @@ const MotorRegister = () => {
     }
 
     const create = () => {
-
         const { marca, modelo, ranhuras, rotacao, ligacao, potencia, comprimento, medidaExterna, tensao, fio, voltagens, amperagens, passo, empresa, imagem } = motor;
-
+    
+        // Crie o objeto motorInsert
         const motorInsert = {
             marca,
             modelo,
@@ -343,23 +343,8 @@ const MotorRegister = () => {
             amperagens: amperagens.map(str => { return parseFloat(str, 10) }),
             passo: passo.sort().map(str => { return parseInt(str, 10) }),
             usuario: authUser.id,
-            imagem
         }
-
-        if (selectedFile) {
-            const formData = new FormData();
-
-            formData.append('file', selectedFile);
-            imgService.save(formData)
-                .then(response => {
-                    setMotor({ imagem: response.data })
-                }).catch(erro => {
-                    console.log(erro)
-                    showMessageError("Não foi possível salvar a imagem")
-                })
-        }
-
-        console.log(motorInsert)
+    
         try {
             validate(motorInsert);
         } catch (error) {
@@ -367,18 +352,47 @@ const MotorRegister = () => {
             showMessageAlert(msgs);
             return false;
         }
+    
         setLoading(true);
-
-        service.save(motorInsert)
-            .then(response => {
-                load();
-                resetState();
-            }).catch(erro => {
-                showMessageError(erro.response.data)
-            })
-
-
+    
+        if (selectedFile) {
+            const formData = new FormData();
+            formData.append('file', selectedFile);
+    
+            // Salve a imagem usando imgService e aguarde a resposta
+            imgService.save(formData)
+                .then(response => {
+                    // Após salvar a imagem com sucesso, defina a imagem no motorInsert
+                    motorInsert.imagem = response.data;
+    
+                    // Agora, você pode salvar o objeto motorInsert
+                    motorService.save(motorInsert)
+                        .then(response => {
+                            load();
+                            resetState();
+                        })
+                        .catch(erro => {
+                            showMessageError(erro.response.data);
+                        });
+                })
+                .catch(erro => {
+                    console.log(erro);
+                    showMessageError("Não foi possível salvar a imagem");
+                });
+        } else {
+            // Se não houver imagem para salvar, salve apenas o objeto motorInsert
+            motorService.save(motorInsert)
+                .then(response => {
+                    load();
+                    resetState();
+                })
+                .catch(erro => {
+                    showMessageError(erro.response.data);
+                });
+        }
     }
+    
+
 
     return (
         <Card title={"Cadastrar Motor"} style={{ maxWidth: "100%" }}>

@@ -8,17 +8,17 @@ import { Image } from 'primereact/image';
 
 export default function ViewMotorDialog(props) {
     const { motor, visible, onHide } = props;
-    const [imagem, setImagem] = useState();
+    //const [imagem, setImagem] = useState();
     const [showSchema, setShowSchema] = useState(false);
     const service = new ImagemService();
 
     useEffect(() => {
-        if (motor) {
-            service.search(motor.id)
-                .then(response => {
-                    setImagem(response.data.data)
-                })
-        }
+        //if (motor) {
+        //    service.search(motor.id)
+        //        .then(response => {
+        //            setImagem(response.data.data)
+        //       })
+        //}
     }, [motor])
 
     const footer = (
@@ -155,9 +155,9 @@ export default function ViewMotorDialog(props) {
             </Dialog>
 
             <Dialog header="Esquema" visible={showSchema} style={{ width: '55vw' }} onHide={() => setShowSchema(false)}>
-                {imagem ? (
+                {motor.imagem ? (
                     <div style={{ display: 'flex', justifyContent: 'center' }}>
-                        <Image src={`data:${imagem.tipo};base64,${imagem.dados}`} loading="lazy" alt={imagem.nome} preview width="250" />
+                        <Image src={`data:${motor.imagem.tipo};base64,${motor.imagem.dados}`} loading="lazy" alt={motor.imagem.nome} preview width="250" />
                     </div>
                 ) : (
                     <p>Não há imagem anexada.</p>
