@@ -39,7 +39,7 @@ export default function EditMotorDialog(props) {
     useEffect(() => {
         motorService.empresas().then(response => { setEmpresas(response.data) })
         if (motor) {
-            motorService.search(motor.id)
+            imgService.search(motor.id)
                 .then(response => {
                     setImagem(response.data)
                 })
