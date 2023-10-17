@@ -518,7 +518,7 @@ const MotorRegister = () => {
             </Row>
             <Row>
                 <Col className="col-md-6 mt-2">
-                    <Label>Imagem</Label>
+                    <Label>Esquema</Label>
                     <Input type={"file"} accept={".jpg, .png"} onChange={handleFileChange} bsSize="sm" />
                 </Col>
             </Row>

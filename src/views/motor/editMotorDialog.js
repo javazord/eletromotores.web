@@ -27,6 +27,7 @@ export default function EditMotorDialog(props) {
     const [loading, setLoading] = useState(false);
     const [empresas, setEmpresas] = useState([]);
     const [totalSize, setTotalSize] = useState(0);
+    const [selectedFile, setSelectedFile] = useState(null);
     const [indexPasso, setIndexPasso] = useState(props.motor.passo.length);
     const [indexAWG, setIndexAWG] = useState(props.motor.fio.awgs.length);
     const [indexESP, setIndexESP] = useState(props.motor.fio.espiras.length);
@@ -42,7 +43,9 @@ export default function EditMotorDialog(props) {
         if (motor) {
             imgService.search(motor.id)
                 .then(response => {
+                    
                     setImagem(response.data)
+                    setSelectedFile(response.data)
                 })
         }
     }, [motor])
@@ -280,6 +283,17 @@ export default function EditMotorDialog(props) {
         setImagem(null)
     };
 
+    const handleFileChange = (event) => {
+        const file = event.target.files[0];
+        const allowedTypes = ["image/jpeg", "image/png"];
+        if (file && allowedTypes.includes(file.type)) {
+            setSelectedFile(file);
+        } else {
+            setSelectedFile(null);
+            showMessageError("Tipo de arquivo inválido. Selecione uma imagem JPG ou PNG.");
+        }
+    }
+
     const update = () => {
 
         motor.usuario = motor.usuario.id
@@ -469,14 +483,24 @@ export default function EditMotorDialog(props) {
                         ))}
                     </select>
                 </Col>
-                <Row>
-                    <Label>Esquema </Label>
-                    <Col className="mt-2">
 
+                <Row>
+                    <Row>
+                        <Col className="col-md-6 mt-2">
+                            <Label>Esquema</Label>
+                            <Input type={"file"} accept={".jpg, .png"} onChange={handleFileChange} bsSize="sm" />
+
+                        </Col>
+                        <Col className="mt-2 d-flex align-items-end">
+                            <Button icon='pi pi-fw pi-times' iconOnly={true} className='custom-cancel-btn p-button-danger p-button-rounded p-button-outlined' onClick={() => onTemplateClear()} tooltip="Limpar imagem" />
+                        </Col>
+
+                    </Row>
+                    <Col className="mt-2">
                         <Button className='custom-choose-btn p-button-rounded p-button-outlined' icon='pi pi-fw pi-images' tooltip="Visualizar esquema" size="sm" onClick={() => setShowSchema(true)} />
-                        <Button icon='pi pi-fw pi-times' iconOnly={true} className='custom-cancel-btn p-button-danger p-button-rounded p-button-outlined' onClick={() =>  onTemplateClear()}/>
                     </Col>
                 </Row>
+
             </Row>
             <Col className="d-flex justify-content-start mt-2">
                 <small>
