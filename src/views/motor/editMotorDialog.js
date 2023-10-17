@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+/* eslint-disable no-undef */
+import React, { useState, useRef } from "react";
 import { Row, Col, Input, Label } from "reactstrap";
 import { Dialog } from "primereact/dialog";
 import { Button } from 'primereact/button';
@@ -37,13 +38,14 @@ export default function EditMotorDialog(props) {
     const [imagem, setImagem] = useState();
     const [showSchema, setShowSchema] = useState(false);
     const imgService = new ImagemService();
+    const fileInputRef = useRef(null);
 
     useEffect(() => {
         motorService.empresas().then(response => { setEmpresas(response.data) })
         if (motor) {
             imgService.search(motor.id)
                 .then(response => {
-                    
+
                     setImagem(response.data)
                     setSelectedFile(response.data)
                 })
@@ -279,8 +281,7 @@ export default function EditMotorDialog(props) {
     }
 
     const onTemplateClear = () => {
-        setTotalSize(0);
-        setImagem(null)
+        setSelectedFile(null)
     };
 
     const handleFileChange = (event) => {
@@ -297,7 +298,6 @@ export default function EditMotorDialog(props) {
     const update = () => {
 
         motor.usuario = motor.usuario.id
-        console.log(motor)
         try {
             validate(motor);
         } catch (error) {
@@ -305,9 +305,25 @@ export default function EditMotorDialog(props) {
             msgs.forEach(msg => toast.showMessageAlert(msg));
             return false;
         }
+
+
         motorService.update(motor)
             .then(response => {
                 load();
+                if (selectedFile) {
+                    const formData = new FormData();
+                    formData.append('file', selectedFile);
+                    formData.append('motor', JSON.stringify(response.data));
+                }
+
+                imgService.update(imagem.id, formData)
+                    .then(response => {
+                        console.log(response.data)
+                    }).catch(erro => {
+                        console.log(erro)
+                        showMessageError("Não foi possível salvar a imagem")
+                    })
+
             }).catch(erro => {
                 console.log(erro)
                 showMessageError(erro.response.data)
@@ -492,7 +508,7 @@ export default function EditMotorDialog(props) {
 
                         </Col>
                         <Col className="mt-2 d-flex align-items-end">
-                            <Button icon='pi pi-fw pi-times' iconOnly={true} className='custom-cancel-btn p-button-danger p-button-rounded p-button-outlined' onClick={() => onTemplateClear()} tooltip="Limpar imagem" />
+                            <Button icon='pi pi-fw pi-times' iconOnly={true} className='custom-cancel-btn p-button-danger p-button-rounded p-button-outlined' onClick={onTemplateClear} tooltip="Limpar imagem" />
                         </Col>
 
                     </Row>
