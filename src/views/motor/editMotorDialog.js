@@ -314,15 +314,15 @@ export default function EditMotorDialog(props) {
                     const formData = new FormData();
                     formData.append('file', selectedFile);
                     formData.append('motor', JSON.stringify(response.data));
-                }
 
-                imgService.update(imagem.id, formData)
+                    imgService.update(imagem.id, formData)
                     .then(response => {
                         console.log(response.data)
                     }).catch(erro => {
                         console.log(erro)
                         showMessageError("Não foi possível salvar a imagem")
                     })
+                } 
 
             }).catch(erro => {
                 console.log(erro)

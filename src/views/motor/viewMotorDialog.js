@@ -10,12 +10,11 @@ export default function ViewMotorDialog(props) {
     const { motor, visible, onHide } = props;
     const [imagem, setImagem] = useState();
     const [showSchema, setShowSchema] = useState(false);
-    const service = new ImagemService();
+    const imgService = new ImagemService();
 
     useEffect(() => {
         if (motor) {
-            console.log(motor)
-            service.search(motor.id)
+            imgService.search(motor.id)
                 .then(response => {
                     setImagem(response.data)
                 })
@@ -31,7 +30,7 @@ export default function ViewMotorDialog(props) {
     return (
 
         <>
-        
+
             <Dialog
                 header={`Registrado em ${new Intl.DateTimeFormat('pt-BR').format(motor.registro)}`}
                 visible={visible}
@@ -149,19 +148,19 @@ export default function ViewMotorDialog(props) {
                 <Row>
                     <Label>Esquema </Label>
                     <Col className="mt-2">
-                        
+
                         <Button className='custom-choose-btn p-button-rounded p-button-outlined' icon='pi pi-fw pi-images' tooltip="Visualizar esquema" size="sm" onClick={() => setShowSchema(true)} />
                     </Col>
                 </Row>
             </Dialog>
 
             <Dialog header="Esquema" visible={showSchema} style={{ width: '55vw' }} onHide={() => setShowSchema(false)}>
-                {imagem ? (
+                {typeof imagem === 'object' ? (
                     <div style={{ display: 'flex', justifyContent: 'center' }}>
                         <Image src={`data:${imagem.tipo};base64,${imagem.dados}`} loading="lazy" alt={imagem.nome} preview width="250" />
                     </div>
                 ) : (
-                    <p>Não há imagem anexada.</p>
+                    <p>{imagem}</p>
                 )}
             </Dialog>
 
