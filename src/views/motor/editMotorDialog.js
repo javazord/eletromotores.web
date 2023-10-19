@@ -27,7 +27,6 @@ export default function EditMotorDialog(props) {
     ]);
     const [loading, setLoading] = useState(false);
     const [empresas, setEmpresas] = useState([]);
-    const [totalSize, setTotalSize] = useState(0);
     const [selectedFile, setSelectedFile] = useState(null);
     const [indexPasso, setIndexPasso] = useState(props.motor.passo.length);
     const [indexAWG, setIndexAWG] = useState(props.motor.fio.awgs.length);
@@ -310,22 +309,20 @@ export default function EditMotorDialog(props) {
         motorService.update(motor)
             .then(response => {
                 load();
-                console.log(selectedFile)
+                
                 if (selectedFile) {
                     const formData = new FormData();
                     formData.append('file', selectedFile);
                     formData.append('motor', JSON.stringify(response.data));
-                    console.log(formData)
 
-                    if (imagem.id) {
-                        imgService.update(imagem.id, formData)
-                            .then(response => {
-                                console.log(response.data)
-                            }).catch(erro => {
-                                console.log(erro)
-                                showMessageError("Não foi possível salvar a imagem")
-                            })
-                    }
+                    imgService.update(motor.id, formData)
+                        .then(response => {
+                            console.log(response.data)
+                        }).catch(erro => {
+                            console.log(erro)
+                            showMessageError("Não foi possível salvar a imagem")
+                        })
+
 
                 }
 
@@ -513,7 +510,7 @@ export default function EditMotorDialog(props) {
 
                         </Col>
                         <Col className="mt-2 d-flex align-items-end">
-                            <Button icon='pi pi-fw pi-times' iconOnly={true} className='custom-cancel-btn p-button-danger p-button-rounded p-button-outlined' onClick={onTemplateClear} tooltip="Limpar imagem" />
+                            <Button icon='pi pi-fw pi-times' className='custom-cancel-btn p-button-danger p-button-rounded p-button-outlined' onClick={onTemplateClear} tooltip="Limpar imagem" />
                         </Col>
 
                     </Row>
