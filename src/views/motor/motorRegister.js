@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useState, useRef } from "react";
 import { Card } from "primereact/card";
 import { Col, Row } from 'reactstrap';
 import { Button } from 'primereact/button';
@@ -52,7 +52,8 @@ const MotorRegister = () => {
     const { showMessageSuccess, showMessageAlert, showMessageError, toast } = useToast();
     const { authUser } = useContext(AuthContext);
     const [selectedFile, setSelectedFile] = useState(null);
-    const service = new MotorService();
+    const fileInputRef = useRef(null);
+    const motorService = new MotorService();
     const imgService = new ImagemService();
 
     const handleInputChange = (event) => {
@@ -206,7 +207,6 @@ const MotorRegister = () => {
     const handleChangePasso = (e, index) => {
         const newStep = [...motor.passo];
         newStep[index] = e.target.value;
-        newStep.sort((a, b) => a - b); // Ordenar o array em ordem crescente
         setMotor({
             ...motor,
             fio: {
@@ -266,7 +266,7 @@ const MotorRegister = () => {
     };
 
     useEffect(() => {
-        service.empresas().then(response => {
+        motorService.empresas().then(response => {
             setEmpresas([...response.data]);
         })
 
@@ -296,6 +296,10 @@ const MotorRegister = () => {
             passo: [0],
             usuario: {},
         })
+        setSelectedFile(null);
+        if (fileInputRef.current) {
+            fileInputRef.current.value = "";
+        }
         setCheckboxVolts(checkboxVolts.map(item => ({ ...item, checked: false })));
     }
 
@@ -336,13 +340,14 @@ const MotorRegister = () => {
                 awgs: fio.awgs.map(str => { return parseInt(str, 10) }),
                 quantidades: fio.quantidades.map(str => { return parseInt(str, 10) }),
                 espiras: fio.espiras.map(str => { return parseInt(str, 10) }),
-                peso: parseInt(fio.peso),
+                peso: parseFloat(fio.peso),
             },
             voltagens: voltagens.sort().map(str => { return parseInt(str, 10) }),
             amperagens: amperagens.map(str => { return parseFloat(str, 10) }),
             passo: passo.sort().map(str => { return parseInt(str, 10) }),
             usuario: authUser.id
         }
+
         try {
             validate(motorInsert);
         } catch (error) {
@@ -350,8 +355,9 @@ const MotorRegister = () => {
             showMessageAlert(msgs);
             return false;
         }
+
         setLoading(true);
-        service.save(motorInsert)
+        motorService.save(motorInsert)
             .then(response => {
                 load();
 
@@ -372,8 +378,6 @@ const MotorRegister = () => {
             }).catch(erro => {
                 showMessageError(erro.response.data)
             })
-
-
     }
 
     return (
@@ -516,10 +520,11 @@ const MotorRegister = () => {
                     </select>
                 </Col>
             </Row>
+
             <Row>
                 <Col className="col-md-6 mt-2">
                     <Label>Esquema</Label>
-                    <Input type={"file"} accept={".jpg, .png"} onChange={handleFileChange} bsSize="sm" />
+                    <Input type={"file"} accept={".jpg, .png"} onChange={handleFileChange} bsSize="sm"  />
                 </Col>
             </Row>
 

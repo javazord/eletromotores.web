@@ -58,7 +58,7 @@ export default function ViewMotorDialog(props) {
                     </Col>
                     <Col>
                         <Label>Peso</Label>
-                        <Input id="peso" value={motor.fio.peso || ''} type="number" bsSize="sm" disabled />
+                        <Input id="peso" value={motor.fio.peso.toFixed(3)} type="number" bsSize="sm" disabled />
                     </Col>
                     <Col>
                         <Label>Potência</Label>
@@ -154,7 +154,7 @@ export default function ViewMotorDialog(props) {
                 </Row>
             </Dialog>
 
-            <Dialog header="Esquema" visible={showSchema} style={{ width: '55vw' }} onHide={() => setShowSchema(false)}>
+            <Dialog header="Esquema" visible={showSchema} style={{ width: '35vw' }} onHide={() => setShowSchema(false)}>
                 {typeof imagem === 'object' ? (
                     <div style={{ display: 'flex', justifyContent: 'center' }}>
                         <Image src={`data:${imagem.tipo};base64,${imagem.dados}`} loading="lazy" alt={imagem.nome} preview width="250" />

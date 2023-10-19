@@ -305,11 +305,11 @@ export default function EditMotorDialog(props) {
             return false;
         }
 
-
+        setLoading(true);
         motorService.update(motor)
             .then(response => {
                 load();
-                
+
                 if (selectedFile) {
                     const formData = new FormData();
                     formData.append('file', selectedFile);
@@ -322,8 +322,6 @@ export default function EditMotorDialog(props) {
                             console.log(erro)
                             showMessageError("Não foi possível salvar a imagem")
                         })
-
-
                 }
 
             }).catch(erro => {
@@ -382,7 +380,7 @@ export default function EditMotorDialog(props) {
                 </Col>
                 <Col>
                     <Label>Peso<span>*</span></Label>
-                    <Input name="peso" value={motor.fio.peso || ''} onChange={handleInputChangePeso} type="number" min={0} bsSize="sm" />
+                    <Input name="peso" value={motor.fio.peso ? motor.fio.peso.toFixed(3) : ''} onChange={handleInputChangePeso} type="number" min={0} bsSize="sm" />
                 </Col>
                 <Col>
                     <Label>Potência</Label>
@@ -514,9 +512,6 @@ export default function EditMotorDialog(props) {
                         </Col>
 
                     </Row>
-                    <Col className="mt-2">
-                        <Button className='custom-choose-btn p-button-rounded p-button-outlined' icon='pi pi-fw pi-images' tooltip="Visualizar esquema" size="sm" onClick={() => setShowSchema(true)} />
-                    </Col>
                 </Row>
 
             </Row>
