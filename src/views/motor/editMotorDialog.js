@@ -310,19 +310,24 @@ export default function EditMotorDialog(props) {
         motorService.update(motor)
             .then(response => {
                 load();
+                console.log(selectedFile)
                 if (selectedFile) {
                     const formData = new FormData();
                     formData.append('file', selectedFile);
                     formData.append('motor', JSON.stringify(response.data));
+                    console.log(formData)
 
-                    imgService.update(imagem.id, formData)
-                    .then(response => {
-                        console.log(response.data)
-                    }).catch(erro => {
-                        console.log(erro)
-                        showMessageError("Não foi possível salvar a imagem")
-                    })
-                } 
+                    if (imagem.id) {
+                        imgService.update(imagem.id, formData)
+                            .then(response => {
+                                console.log(response.data)
+                            }).catch(erro => {
+                                console.log(erro)
+                                showMessageError("Não foi possível salvar a imagem")
+                            })
+                    }
+
+                }
 
             }).catch(erro => {
                 console.log(erro)
@@ -529,12 +534,12 @@ export default function EditMotorDialog(props) {
             </Row>
 
         </Dialog><Dialog header="Esquema" visible={showSchema} style={{ width: '55vw' }} onHide={() => setShowSchema(false)}>
-                {imagem ? (
+                {typeof imagem === 'object' ? (
                     <div style={{ display: 'flex', justifyContent: 'center' }}>
                         <Image src={`data:${imagem.tipo};base64,${imagem.dados}`} loading="lazy" alt={imagem.nome} preview width="250" />
                     </div>
                 ) : (
-                    <p>Não há imagem anexada.</p>
+                    <p>{imagem}</p>
                 )}
             </Dialog></>
     );
