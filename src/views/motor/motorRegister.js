@@ -297,16 +297,13 @@ const MotorRegister = () => {
             usuario: {},
         })
         setSelectedFile(null);
-        if (fileInputRef.current) {
-            fileInputRef.current.value = "";
-        }
         setCheckboxVolts(checkboxVolts.map(item => ({ ...item, checked: false })));
     }
 
     const load = () => {
         setTimeout(() => {
             setLoading(false);
-            showMessageSuccess('Motor cadastrado com sucesso!');
+            
         }, 2000);
     }
 
@@ -373,9 +370,11 @@ const MotorRegister = () => {
                             showMessageError("Não foi salvar a imagem")
                         })
                 }
+                showMessageSuccess('Motor cadastrado com sucesso!');
 
                 resetState();
             }).catch(erro => {
+                load();
                 showMessageError(erro.response.data)
             })
     }
