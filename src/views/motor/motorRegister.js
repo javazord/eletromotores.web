@@ -36,6 +36,11 @@ const MotorRegister = () => {
         amperagens: [],
         passo: [0],
         usuario: {},
+        imagem: {
+            dados: null,
+            nome: null,
+            tipo: null
+        }
     });
     const [checkboxVolts, setCheckboxVolts] = useState([
         { volts: 127, checked: false },
@@ -303,7 +308,7 @@ const MotorRegister = () => {
     const load = () => {
         setTimeout(() => {
             setLoading(false);
-            
+
         }, 2000);
     }
 
@@ -318,9 +323,23 @@ const MotorRegister = () => {
         }
     }
 
+    const parseAsIntIfString = (value) => {
+        if (typeof value === 'string') {
+            return parseInt(value, 10);
+        }
+        return value;
+    }
+
+    const parseAsFloatIfString = (value) => {
+        if (typeof value === 'string') {
+            return parseFloat(value);
+        }
+        return value;
+    }
+
     const create = () => {
 
-        const { marca, modelo, ranhuras, rotacao, ligacao, potencia, comprimento, medidaExterna, tensao, fio, voltagens, amperagens, passo, empresa } = motor;
+        const { marca, modelo, ranhuras, rotacao, ligacao, potencia, comprimento, medidaExterna, tensao, fio, voltagens, amperagens, passo, empresa, imagem } = motor;
 
         const motorInsert = {
             marca,
@@ -334,15 +353,16 @@ const MotorRegister = () => {
             tensao,
             empresa,
             fio: {
-                awgs: fio.awgs.map(str => { return parseInt(str, 10) }),
-                quantidades: fio.quantidades.map(str => { return parseInt(str, 10) }),
-                espiras: fio.espiras.map(str => { return parseInt(str, 10) }),
+                awgs: fio.awgs.map(parseAsIntIfString),
+                quantidades: fio.quantidades.map(parseAsIntIfString),
+                espiras: fio.espiras.map(parseAsIntIfString),
                 peso: parseFloat(fio.peso),
             },
-            voltagens: voltagens.sort().map(str => { return parseInt(str, 10) }),
-            amperagens: amperagens.map(str => { return parseFloat(str, 10) }),
-            passo: passo.sort().map(str => { return parseInt(str, 10) }),
-            usuario: authUser.id
+            voltagens: voltagens.sort().map(parseAsIntIfString),
+            amperagens: amperagens.map(parseAsFloatIfString),
+            passo: passo.sort().map(parseAsIntIfString),
+            usuario: authUser.id,
+            imagem
         }
 
         try {
@@ -354,22 +374,30 @@ const MotorRegister = () => {
         }
 
         setLoading(true);
+
+
+        if (selectedFile) {
+            const formData = new FormData();
+            formData.append('file', selectedFile);
+
+            const reader = new FileReader();
+
+            reader.onload = function (event) {
+                const fileData = event.target.result; // Contém o arquivo como uma sequência de bytes (array buffer)
+
+                // Defina os dados do arquivo no objeto Imagem
+                motorInsert.imagem.dados = new Uint8Array(fileData);
+                motorInsert.imagem.nome = selectedFile.name; // Defina o nome do arquivo
+                motorInsert.imagem.tipo = selectedFile.type; // Defina o tipo do arquivo
+            };
+
+            reader.readAsArrayBuffer(selectedFile);
+        }
+
+        console.log(motorInsert)
         motorService.save(motorInsert)
             .then(response => {
                 load();
-
-                if (selectedFile) {
-                    const formData = new FormData();
-                    formData.append('file', selectedFile);
-                    formData.append('motor', JSON.stringify(response.data));
-                    imgService.save(formData)
-                        .then(response => {
-
-                        }).catch(erro => {
-                            console.log(erro)
-                            showMessageError("Não foi salvar a imagem")
-                        })
-                }
                 showMessageSuccess('Motor cadastrado com sucesso!');
 
                 resetState();
@@ -489,10 +517,12 @@ const MotorRegister = () => {
                                     min={0}
                                     onChange={(e) => {
                                         const newMotor = { ...motor };
-                                        newMotor.amperagens[motor.voltagens.indexOf(checkbox.volts)] = Number(e.target.value);
+                                        const value = e.target.value !== '' ? Number(e.target.value) : '';
+                                        newMotor.amperagens[motor.voltagens.indexOf(checkbox.volts)] = value;
                                         setMotor(newMotor);
                                     }}
                                 />
+
                             </>
                         )}
                     </div>
@@ -523,7 +553,7 @@ const MotorRegister = () => {
             <Row>
                 <Col className="col-md-6 mt-2">
                     <Label>Esquema</Label>
-                    <Input type={"file"} accept={".jpg, .png"} onChange={handleFileChange} bsSize="sm"  />
+                    <Input type={"file"} accept={".jpg, .png"} onChange={handleFileChange} bsSize="sm" />
                 </Col>
             </Row>
 

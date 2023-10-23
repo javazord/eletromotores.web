@@ -306,28 +306,30 @@ export default function EditMotorDialog(props) {
         }
 
         setLoading(true);
-        motorService.update(motor)
-            .then(response => {
-                load();
 
-                if (selectedFile) {
-                    const formData = new FormData();
-                    formData.append('file', selectedFile);
-                    formData.append('motor', JSON.stringify(response.data));
 
-                    imgService.update(motor.id, formData)
-                        .then(response => {
-                            console.log(response.data)
-                        }).catch(erro => {
-                            console.log(erro)
-                            showMessageError("Não foi possível salvar a imagem")
-                        })
-                }
 
-            }).catch(erro => {
-                console.log(erro)
-                showMessageError(erro.response.data)
-            })
+        if (selectedFile) {
+            const formData = new FormData();
+            formData.append('file', selectedFile);
+
+            imgService.update(motor.imagem.id, formData)
+                .then(response => {
+                    motor.imagem = response.data
+                }).catch(erro => {
+                    console.log(erro)
+                    showMessageError("Não foi possível atualizar a imagem")
+                })
+        } else {
+            motorService.update(motor)
+                .then(response => {
+                    load();
+                }).catch(erro => {
+                    console.log(erro)
+                    showMessageError(erro.response.data)
+                })
+        }
+
     }
 
     const handleInputChange = (event) => {

@@ -34,6 +34,7 @@ const MotorSearch = () => {
         amperagens: [],
         passo: [],
         usuario: {},
+        imagem: {}
     });
     const [showConfirmDialog, setShowConfirmDialog] = useState(false);
     const [editConfirmDialog, setEditConfirmDialog] = useState(false);
@@ -82,6 +83,7 @@ const MotorSearch = () => {
             amperagens: [],
             passo: [],
             usuario: {},
+            imagem: {}
         });
         setShowConfirmDialog(false);
         setEditConfirmDialog(false);

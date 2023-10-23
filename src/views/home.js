@@ -1,7 +1,6 @@
 import { render } from "@testing-library/react";
 import { AuthContext } from "../main/authProvider";
-import { MotorService } from "../../app/service/motor/motorService";
-import { ImagemService } from "../../app/service/imagem/imagemService";
+
 import React, { useState, useEffect } from 'react';
 import { Button } from 'primereact/button';
 import { Carousel } from 'primereact/carousel';
@@ -10,6 +9,7 @@ import { useContext } from "react";
 
 
 export default function Home() {
+    /*
     const [imagens, setImagens] = useState([]);
     const [motores, setMotores] = useState([]);
     const { authUser } = useContext(AuthContext);
@@ -35,7 +35,7 @@ export default function Home() {
     ];
 
     useEffect(() => {
-        motorService.
+        
     }, []);
 
     const productTemplate = (product) => {
@@ -47,7 +47,7 @@ export default function Home() {
                 <div>
                     <h4 className="mb-1">{}</h4>
                     <h6 className="mt-0 mb-3">${}</h6>
-                    <Tag value={} severity={getSeverity(product)}></Tag>
+                    <Tag value={0} severity={getSeverity(product)}></Tag>
                     <div className="mt-5 flex flex-wrap gap-2 justify-content-center">
                         <Button icon="pi pi-search" className="p-button p-button-rounded" />
                         <Button icon="pi pi-star-fill" className="p-button-success p-button-rounded" />
@@ -62,5 +62,5 @@ export default function Home() {
             <Carousel value={products} numVisible={3} numScroll={3} responsiveOptions={responsiveOptions} className="custom-carousel" circular
             autoplayInterval={3000} itemTemplate={productTemplate} />
         </div>
-    )
+    )*/
 }

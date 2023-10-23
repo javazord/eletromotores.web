@@ -2,23 +2,14 @@ import React, { useEffect, useRef, useState } from "react";
 import { Dialog } from "primereact/dialog";
 import { Button } from 'primereact/button';
 import { Col, Row, Input, Label } from "reactstrap";
-import { ImagemService } from "../../app/service/imagem/imagemService";
 import { Image } from 'primereact/image';
 
 
 export default function ViewMotorDialog(props) {
     const { motor, visible, onHide } = props;
-    const [imagem, setImagem] = useState();
     const [showSchema, setShowSchema] = useState(false);
-    const imgService = new ImagemService();
 
     useEffect(() => {
-        if (motor) {
-            imgService.search(motor.id)
-                .then(response => {
-                    setImagem(response.data)
-                })
-        }
     }, [motor])
 
     const footer = (
@@ -155,12 +146,12 @@ export default function ViewMotorDialog(props) {
             </Dialog>
 
             <Dialog header="Esquema" visible={showSchema} style={{ width: '35vw' }} onHide={() => setShowSchema(false)}>
-                {typeof imagem === 'object' ? (
+                {motor.imagem !== null && typeof motor.imagem === 'object' ? (
                     <div style={{ display: 'flex', justifyContent: 'center' }}>
-                        <Image src={`data:${imagem.tipo};base64,${imagem.dados}`} loading="lazy" alt={imagem.nome} preview width="250" />
+                        <Image src={`data:${motor.imagem.tipo};base64,${motor.imagem.dados}`} loading="lazy" alt={motor.imagem.nome} preview width="250" />
                     </div>
                 ) : (
-                    <p>{imagem}</p>
+                    <p>{"Nenhuma imagem anexada"}</p>
                 )}
             </Dialog>
 
