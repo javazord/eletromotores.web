@@ -6,8 +6,8 @@ export class MotorService extends ApiService{
         super('api/motores');
     }
 
-    save(motor){
-        return this.post('', motor)
+    save(formData){
+        return this.post('', formData)
     }
 
     deletar(id){

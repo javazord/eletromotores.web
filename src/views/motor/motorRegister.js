@@ -376,35 +376,31 @@ const MotorRegister = () => {
         setLoading(true);
 
 
+
+        const formData = new FormData();
         if (selectedFile) {
-            const formData = new FormData();
             formData.append('file', selectedFile);
-
-            const reader = new FileReader();
-
-            reader.onload = function (event) {
-                const fileData = event.target.result; // Contém o arquivo como uma sequência de bytes (array buffer)
-
-                // Defina os dados do arquivo no objeto Imagem
-                motorInsert.imagem.dados = new Uint8Array(fileData);
-                motorInsert.imagem.nome = selectedFile.name; // Defina o nome do arquivo
-                motorInsert.imagem.tipo = selectedFile.type; // Defina o tipo do arquivo
-            };
-
-            reader.readAsArrayBuffer(selectedFile);
+        } else {
+            // Crie um arquivo de imagem vazio (por exemplo, uma imagem transparente de 1x1 pixel)
+            const emptyImage = new File([null], null, { type: null });
+            formData.append('file', emptyImage);
         }
 
-        console.log(motorInsert)
-        motorService.save(motorInsert)
+        // Converte o objeto 'motorInsert' para uma string JSON e o adiciona à solicitação
+        formData.append('motorData', JSON.stringify(motorInsert));
+
+        motorService.save(formData)
             .then(response => {
                 load();
                 showMessageSuccess('Motor cadastrado com sucesso!');
-
                 resetState();
-            }).catch(erro => {
-                load();
-                showMessageError(erro.response.data)
             })
+            .catch(error => {
+                load();
+                showMessageError(error.response.data);
+            });
+
+
     }
 
     return (
@@ -553,7 +549,7 @@ const MotorRegister = () => {
             <Row>
                 <Col className="col-md-6 mt-2">
                     <Label>Esquema</Label>
-                    <Input type={"file"} accept={".jpg, .png"} onChange={handleFileChange} bsSize="sm" />
+                    <Input type={"file"} name="file" id="fileInput" accept={".jpg, .png"} onChange={handleFileChange} bsSize="sm" />
                 </Col>
             </Row>
 
