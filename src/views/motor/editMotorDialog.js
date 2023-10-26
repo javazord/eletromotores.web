@@ -5,7 +5,6 @@ import { Dialog } from "primereact/dialog";
 import { Button } from 'primereact/button';
 import { useEffect } from "react";
 import { MotorService } from '../../app/service/motor/motorService';
-import { ImagemService } from '../../app/service/imagem/imagemService';
 import { validate } from "./motorAttributes";
 import useToast from "../../components/toast";
 import { Toast } from "primereact/toast";

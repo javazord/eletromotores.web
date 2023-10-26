@@ -18,6 +18,10 @@ export class MotorService extends ApiService{
         return this.put('', formData)
     }
 
+    getLastMotors(){
+        return this.get(`/lastmotors`)
+    }
+
     empresas(){
         return this.get(`/empresas`)
     }

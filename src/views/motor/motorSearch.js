@@ -52,9 +52,8 @@ const MotorSearch = () => {
         service
             .search(motor)
             .then((response) => {
-                const list = response.data;
-                load(list);
-                setMotores(list);
+                load(response.data);
+                setMotores(response.data);
             })
             .catch((erro) => {
                 console.log(erro);

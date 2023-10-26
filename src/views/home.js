@@ -1,20 +1,20 @@
 import { render } from "@testing-library/react";
 import { AuthContext } from "../main/authProvider";
-
+import { MotorService } from "../app/service/motor/motorService";
 import React, { useState, useEffect } from 'react';
 import { Button } from 'primereact/button';
 import { Carousel } from 'primereact/carousel';
 import { Tag } from 'primereact/tag';
 import { useContext } from "react";
+import { Image } from 'primereact/image';
+import { data } from "jquery";
 
 
 export default function Home() {
-    /*
-    const [imagens, setImagens] = useState([]);
-    const [motores, setMotores] = useState([]);
+
+    const [lastMotors, setLastMotors] = useState([]);
     const { authUser } = useContext(AuthContext);
     const motorService = new MotorService();
-    const imagemService = new ImagemService();
 
     const responsiveOptions = [
         {
@@ -35,32 +35,43 @@ export default function Home() {
     ];
 
     useEffect(() => {
-        
+        motorService.getLastMotors().then((response) => setLastMotors(response.data))
     }, []);
 
-    const productTemplate = (product) => {
+    const motorsTemplate = (motor) => {
         return (
-            <div className="border-1 surface-border border-round m-2 text-center py-5 px-3">
+            <div className="border-1 surface-border border-round m-2 text-center py-2 px-3">
                 <div className="mb-3">
-                    <img src={`https://primefaces.org/cdn/primereact/images/product/${product.image}`} alt={product.name} className="w-6 shadow-2" />
+                    <Image src={`data:${motor.imagem.tipo};base64,${motor.imagem.dados}`} loading="lazy" alt={motor.imagem.nome} width="100" height="80" preview />
                 </div>
                 <div>
-                    <h4 className="mb-1">{}</h4>
-                    <h6 className="mt-0 mb-3">${}</h6>
-                    <Tag value={0} severity={getSeverity(product)}></Tag>
-                    <div className="mt-5 flex flex-wrap gap-2 justify-content-center">
-                        <Button icon="pi pi-search" className="p-button p-button-rounded" />
-                        <Button icon="pi pi-star-fill" className="p-button-success p-button-rounded" />
-                    </div>
+                    <h4 className="mb-1">{motor.marca}</h4>
+                    <h6 className="mt-0 mb-3">{motor.modelo}</h6>
                 </div>
             </div>
         );
     };
 
     return (
-        <div className="card">
-            <Carousel value={products} numVisible={3} numScroll={3} responsiveOptions={responsiveOptions} className="custom-carousel" circular
-            autoplayInterval={3000} itemTemplate={productTemplate} />
+
+        <><div>
+            <h2>Bem Vindo! {authUser.login}</h2>
         </div>
-    )*/
+            <div className="fixed-block">
+
+                <div>
+                    <p style={{ color: 'white' }}>Últimos Registros</p>
+                    {lastMotors ? (
+                        <div className="card">
+                            <Carousel value={lastMotors} numVisible={3} numScroll={3} responsiveOptions={responsiveOptions} className="custom-carousel" circular
+                                autoplayInterval={3000} itemTemplate={motorsTemplate} />
+                        </div>
+                    ) : (
+                        <p>Carregando...</p>
+                    )}
+                </div>
+
+            </div></>
+    )
+
 }

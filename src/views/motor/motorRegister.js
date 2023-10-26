@@ -7,7 +7,6 @@ import { AuthContext } from "../../main/authProvider";
 import { Input, Label } from "reactstrap";
 import { validate } from "./motorAttributes";
 import { MotorService } from "../../app/service/motor/motorService";
-import { ImagemService } from "../../app/service/imagem/imagemService";
 import useToast from "../../components/toast";
 import { Toast } from "primereact/toast";
 import { InputText } from 'primereact/inputtext';
@@ -59,7 +58,6 @@ const MotorRegister = () => {
     const [selectedFile, setSelectedFile] = useState(null);
     const fileInputRef = useRef(null);
     const motorService = new MotorService();
-    const imgService = new ImagemService();
 
     const handleInputChange = (event) => {
         setMotor({ ...motor, [event.target.name]: event.target.value })
