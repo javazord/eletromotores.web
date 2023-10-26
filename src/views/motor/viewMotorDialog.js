@@ -146,7 +146,7 @@ export default function ViewMotorDialog(props) {
             </Dialog>
 
             <Dialog header="Esquema" visible={showSchema} style={{ width: '35vw' }} onHide={() => setShowSchema(false)}>
-                {motor.imagem !== null && typeof motor.imagem === 'object' ? (
+                {motor.imagem.dados !== null && typeof motor.imagem === 'object' ? (
                     <div style={{ display: 'flex', justifyContent: 'center' }}>
                         <Image src={`data:${motor.imagem.tipo};base64,${motor.imagem.dados}`} loading="lazy" alt={motor.imagem.nome} preview width="250" />
                     </div>

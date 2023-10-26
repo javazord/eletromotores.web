@@ -375,17 +375,16 @@ const MotorRegister = () => {
 
         setLoading(true);
 
-
-
         const formData = new FormData();
         if (selectedFile) {
             formData.append('file', selectedFile);
         } else {
             // Crie um arquivo de imagem vazio (por exemplo, uma imagem transparente de 1x1 pixel)
-            const emptyImage = new File([null], null, { type: null });
+            const emptyImage = new File([new Blob()], 'semimagem.png', { type: 'image/png' });
             formData.append('file', emptyImage);
+            console.log(emptyImage)
         }
-
+        
         // Converte o objeto 'motorInsert' para uma string JSON e o adiciona à solicitação
         formData.append('motorData', JSON.stringify(motorInsert));
 

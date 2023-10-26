@@ -14,8 +14,8 @@ export class MotorService extends ApiService{
         return this.delete(`/${id}`)
     }
 
-    update(motor){
-        return this.put(`/${motor.id}`, motor)
+    update(formData){
+        return this.put('', formData)
     }
 
     empresas(){

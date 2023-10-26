@@ -42,12 +42,6 @@ export default function EditMotorDialog(props) {
     useEffect(() => {
         motorService.empresas().then(response => { setEmpresas(response.data) })
         if (motor) {
-            imgService.search(motor.id)
-                .then(response => {
-
-                    setImagem(response.data)
-                    setSelectedFile(response.data)
-                })
         }
     }, [motor])
 
@@ -203,16 +197,22 @@ export default function EditMotorDialog(props) {
     }
 
     const handleChangePasso = (e, index) => {
+        // 1. Adicione o valor ao final da matriz
         const newStep = [...motor.passo];
         newStep[index] = e.target.value;
+        
+        // 2. Ordene a matriz em ordem crescente
+        newStep.sort((a, b) => a - b);
+      
         setMotor({
-            ...motor,
-            fio: {
-                ...motor.fio
-            },
-            passo: newStep
+          ...motor,
+          fio: {
+            ...motor.fio
+          },
+          passo: newStep
         });
-    }
+      }
+      
 
     const handleCheckboxChange = (index, checked) => {
 
@@ -261,11 +261,9 @@ export default function EditMotorDialog(props) {
         console.log(checkboxVolts)
         if (hasAllTrifasicVoltages) {
             setMotor((prevMotor) => ({ ...prevMotor, tensao: updatedList.includes(127) ? '' : 'TRIFASICO' }));
-            console.log('trifasico')
         } else if (hasMonofasicVoltage) {
             const hasOtherVoltages = updatedList.some((voltage) => voltage === 380 || voltage === 440 || voltage === 760);
             setMotor((prevMotor) => ({ ...prevMotor, tensao: hasOtherVoltages ? '' : 'MONOFASICO' }));
-            console.log('monofasico')
         } else {
             setMotor((prevMotor) => ({ ...prevMotor, tensao: '' }));
         }
@@ -307,28 +305,28 @@ export default function EditMotorDialog(props) {
 
         setLoading(true);
 
-
-
+        const formData = new FormData();
         if (selectedFile) {
-            const formData = new FormData();
             formData.append('file', selectedFile);
-
-            imgService.update(motor.imagem.id, formData)
-                .then(response => {
-                    motor.imagem = response.data
-                }).catch(erro => {
-                    console.log(erro)
-                    showMessageError("Não foi possível atualizar a imagem")
-                })
         } else {
-            motorService.update(motor)
-                .then(response => {
-                    load();
-                }).catch(erro => {
-                    console.log(erro)
-                    showMessageError(erro.response.data)
-                })
+            // Crie um arquivo de imagem vazio (por exemplo, uma imagem transparente de 1x1 pixel)
+            const emptyImage = new File([new Blob()], 'semimagem.png', { type: 'image/png' });
+            formData.append('file', emptyImage);
         }
+        
+        // Converte o objeto 'motorInsert' para uma string JSON e o adiciona à solicitação
+        formData.append('motorData', JSON.stringify(motor));
+
+        motorService.update(formData)
+            .then(response => {
+                load();
+                onHide();
+                showMessageSuccess('Motor atualizado com sucesso!');
+            })
+            .catch(error => {
+                load();
+                showMessageError(error.response.data);
+            });
 
     }
 
@@ -528,9 +526,9 @@ export default function EditMotorDialog(props) {
             </Row>
 
         </Dialog><Dialog header="Esquema" visible={showSchema} style={{ width: '55vw' }} onHide={() => setShowSchema(false)}>
-                {typeof imagem === 'object' ? (
+                {typeof motor.imagem !== null && typeof motor.imagem === 'object' ? (
                     <div style={{ display: 'flex', justifyContent: 'center' }}>
-                        <Image src={`data:${imagem.tipo};base64,${imagem.dados}`} loading="lazy" alt={imagem.nome} preview width="250" />
+                        <Image src={`data:${motor.imagem.tipo};base64,${motor.imagem.dados}`} loading="lazy" alt={motor.imagem.nome} preview width="250" />
                     </div>
                 ) : (
                     <p>{imagem}</p>
