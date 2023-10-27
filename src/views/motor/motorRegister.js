@@ -306,7 +306,7 @@ const MotorRegister = () => {
     const load = () => {
         setTimeout(() => {
             setLoading(false);
-
+            showMessageSuccess('Motor cadastrado com sucesso!');
         }, 2000);
     }
 
@@ -380,7 +380,6 @@ const MotorRegister = () => {
             // Crie um arquivo de imagem vazio (por exemplo, uma imagem transparente de 1x1 pixel)
             const emptyImage = new File([new Blob()], 'semimagem.png', { type: 'image/png' });
             formData.append('file', emptyImage);
-            console.log(emptyImage)
         }
         
         // Converte o objeto 'motorInsert' para uma string JSON e o adiciona à solicitação
@@ -389,7 +388,7 @@ const MotorRegister = () => {
         motorService.save(formData)
             .then(response => {
                 load();
-                showMessageSuccess('Motor cadastrado com sucesso!');
+                
                 resetState();
             })
             .catch(error => {
@@ -401,7 +400,7 @@ const MotorRegister = () => {
     }
 
     return (
-        <Card title={"Cadastrar Motor"} style={{ maxWidth: "100%" }}>
+        <Card title={"Cadastrar Motor"} >
             <Row>
                 <Col >
                     <Label>Marca<span>*</span> </Label>

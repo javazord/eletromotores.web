@@ -26,6 +26,12 @@ export function validate(motor) {
     if (!isValidString(motor.marca)) {
         msgs.push('Informe uma marca')
     }
+    if (motor.marca.length > 10) {
+        msgs.push('A marca pode ter no max 10 digitos')
+    }
+    if (motor.modelo.length > 10) {
+        msgs.push('O modelo pode ter no max 10 digitos')
+    }
     if (!isValidNumber(motor.ranhuras)) {
         msgs.push('Informe um número de ranhuras válido')
     }

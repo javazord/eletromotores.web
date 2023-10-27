@@ -21,7 +21,7 @@ export default props => {
     return (
         <div >
             <DataTable value={props.motores} paginator scrollable stripedRows scrollHeight="400px" rows={10} rowsPerPageOptions={[10, 25, 50]} width="400px" height="400px">
-                <Column field="id" header="Id" align={"center"}></Column>
+                <Column field="id" header="#Id" align={"center"}></Column>
                 <Column field="marca" header="Marca" align={"center"}></Column>
                 <Column field="modelo" header="Modelo" align={"center"}></Column>
                 <Column field="potencia" header="Potencia" align={"center"}></Column>

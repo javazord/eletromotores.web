@@ -35,8 +35,6 @@ export default function EditMotorDialog(props) {
     const { visible, onHide } = props;
     const [imagem, setImagem] = useState();
     const [showSchema, setShowSchema] = useState(false);
-    const imgService = new ImagemService();
-    const fileInputRef = useRef(null);
 
     useEffect(() => {
         motorService.empresas().then(response => { setEmpresas(response.data) })
@@ -273,7 +271,8 @@ export default function EditMotorDialog(props) {
         setTimeout(() => {
             setLoading(false);
             showMessageSuccess('Motor atualizado com sucesso!');
-        }, 2000);
+            onHide();
+        }, 1500);
     }
 
     const onTemplateClear = () => {
@@ -318,9 +317,7 @@ export default function EditMotorDialog(props) {
 
         motorService.update(formData)
             .then(response => {
-                load();
-                onHide();
-                showMessageSuccess('Motor atualizado com sucesso!');
+                load();             
             })
             .catch(error => {
                 load();
@@ -525,7 +522,7 @@ export default function EditMotorDialog(props) {
             </Row>
 
         </Dialog><Dialog header="Esquema" visible={showSchema} style={{ width: '55vw' }} onHide={() => setShowSchema(false)}>
-                {typeof motor.imagem !== null && typeof motor.imagem === 'object' ? (
+                {typeof motor.imagem.dados ? (
                     <div style={{ display: 'flex', justifyContent: 'center' }}>
                         <Image src={`data:${motor.imagem.tipo};base64,${motor.imagem.dados}`} loading="lazy" alt={motor.imagem.nome} preview width="250" />
                     </div>

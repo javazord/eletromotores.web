@@ -26,6 +26,9 @@ export function Validate(user) {
     if (!user.login) {
         msgs.push('Informe um login')
     }
+    if (user.login.length > 10 ) {
+        msgs.push('O login deve ter no máx 10 digitos')
+    }
     if (!user.password) {
         msgs.push('Informe uma senha')
     }

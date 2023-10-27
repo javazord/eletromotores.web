@@ -2,20 +2,6 @@ body{
 background-image: url("https://images4.alphacoders.com/552/552010.png");
 }
 
-div.child  {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-}
-
-.page {
-  height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
 label span{
   color: red;
 }
