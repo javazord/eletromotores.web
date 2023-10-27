@@ -4,7 +4,7 @@ import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 import { Button } from 'primereact/button';
 
-export default props => {
+const UserTable = (props) => {
     const button = (rowData) => {
         return <Button type="button" icon={"pi pi-user-edit"} className="p-button-sm p-button-text" onClick={e => props.edit(rowData)} />
     };
@@ -22,9 +22,9 @@ export default props => {
 
             </DataTable>
         </div>
-
     );
-
 }
+
+export default UserTable;
 
 

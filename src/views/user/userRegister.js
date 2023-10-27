@@ -7,7 +7,7 @@ import { Validate } from './userAttributes';
 import useToast from "../../components/toast";
 import { Toast } from "primereact/toast";
 
-export function UserRegister() {
+const UserRegister = () => {
 
   const [state, setState] = useState({
     login: '',

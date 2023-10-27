@@ -116,33 +116,38 @@ export function Login(props) {
     );
 
     return (
-        <><Card header={header} style={{ width: "500px", height: "600px" }}>
 
-            {showAuthInputs && ( // renderizar os inputs de login e senha apenas se showAuthInputs for true
-                <>
+        <>
+            <div className="d-flex justify-content-center">
+                <Card header={header} style={{ width: "500px"}}>
+
+                    {showAuthInputs && ( // renderizar os inputs de login e senha apenas se showAuthInputs for true
+                        <>
+                            <Row>
+                                <Col>
+                                    <Label>Login</Label>
+                                    <Input type="email" value={user.login} name="login" onChange={handleInputChange} className="form-control" />
+                                </Col>
+                            </Row>
+
+                            <Row>
+                                <Col>
+                                    <Label>Senha</Label>
+                                    <Input type="password" value={user.password || ''} name="password" onChange={handleInputChange} className="form-control" />
+                                </Col>
+                            </Row>
+                        </>
+                    )}
+                    {renderPasswordInputs()}
                     <Row>
-                        <Col>
-                            <Label>Login</Label>
-                            <Input type="email" value={user.login} name="login" onChange={handleInputChange} className="form-control" />
+                        <Col className="col-md-12 mt-3">
+                            <Button className="col-md-12" onClick={autenticar} label="Entrar" size="sm"></Button>
                         </Col>
                     </Row>
 
-                    <Row>
-                        <Col>
-                            <Label>Senha</Label>
-                            <Input type="password" value={user.password || ''} name="password" onChange={handleInputChange} className="form-control" />
-                        </Col>
-                    </Row>
-                </>
-            )}
-            {renderPasswordInputs()}
-            <Row>
-                <Col className="col-md-12 mt-3">
-                    <Button className="col-md-12" onClick={autenticar} label="Entrar" size="sm"></Button>
-                </Col>
-            </Row>
-
-        </Card><Toast ref={toast} /></>
+                </Card><Toast ref={toast} />
+        </div ></>
+        
     )
 }
 
