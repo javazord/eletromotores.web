@@ -10,7 +10,7 @@ import useToast from "../../components/toast";
 import { Toast } from "primereact/toast";
 
 
-const UserSearch = () => {
+export default function UserSearch() {
 
     const [login, setLogin] = useState('');
     const [condition, setCondition] = useState(1);
@@ -100,4 +100,3 @@ const UserSearch = () => {
     )
 }
 
-export default UserSearch;

@@ -1,13 +1,11 @@
 import React from "react"
 
-const Body = (props) => {
+export default function Body(props) {
     return (
-        <div className="container mx-auto" style={{ width: '100%', height: '100vh' }}>
+        <div className="container container-sm container-md container-lg" style={{ width: '100%', height: '100vh', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
             {props.children}
         </div>
+
     )
 }
-
-export default Body;
-
 

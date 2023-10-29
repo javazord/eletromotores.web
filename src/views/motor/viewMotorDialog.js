@@ -5,7 +5,7 @@ import { Col, Row, Input, Label } from "reactstrap";
 import { Image } from 'primereact/image';
 
 
-const ViewMotorDialog = (props) => {
+export default function ViewMotorDialog(props) {
     const { motor, visible, onHide } = props;
     const [showSchema, setShowSchema] = useState(false);
 
@@ -158,5 +158,3 @@ const ViewMotorDialog = (props) => {
         </>
     );
 }
-
-export default ViewMotorDialog;
