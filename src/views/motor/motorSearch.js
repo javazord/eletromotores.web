@@ -195,7 +195,7 @@ const MotorSearch = () => {
 
             </Card>
 
-            <Dialog header={`Deletar motor ${motor.marca}`} visible={deleteConfirmDialog} style={{ width: '50vw' }} onHide={onHide} footer={footerContent}>
+            <Dialog header={`Deletar Motor ${motor.marca}`} visible={deleteConfirmDialog} style={{ width: '50vw' }} onHide={onHide} footer={footerContent}>
                 <p className="m-0">
                     Deseja deletar o motor de ID {motor.id} ?
                 </p>

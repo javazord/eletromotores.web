@@ -20,8 +20,8 @@ export default function UserSearch() {
     const [showConfirmDialog, setShowConfirmDialog] = useState(false);
     const [editConfirmDialog, setEditConfirmDialog] = useState(false);
     const service = new UserService();
-    const {authUser} = useContext(AuthContext);
-    const {showMessageAlert, toast} = useToast();
+    const { authUser } = useContext(AuthContext);
+    const { showMessageAlert, toast } = useToast();
 
     const buttonSearch = () => {
         const userFilter = { login, condition }
@@ -29,7 +29,7 @@ export default function UserSearch() {
             .then(response => {
                 const lista = response.data;
                 if (lista.length < 1) {
-                    
+
                     showMessageAlert("Nenhum colaborador encontrado")
                 } else {
                     const list = lista.map(user => ({
@@ -70,30 +70,34 @@ export default function UserSearch() {
 
     return (
         <>
-            <Card title="Pesquisar">
-                <Row className="d-flex align-items-end">
-                    <Col>
-                        <Label>Login</Label>
-                        <Input name="login" value={login} onChange={e => setLogin(e.target.value)} type="text" className="form-control mt-1" placeholder="Informe o login"  />
-                    </Col>
-                    <Col>
-                        <Label>Condição</Label>
-                        <select name="condition" value={condition} onChange={e => setCondition(e.target.value)} className="form-select mt-1" >
-                            <option value="1">Ativado</option>
-                            <option value="0">Desativado</option>
-                        </select>
-                    </Col>
-                    <Col>
-                        <Button onClick={buttonSearch} className="btn btn-primary" icon="pi pi-search" label="Buscar" size="sm" />
-                        <Toast ref={toast}/>
-                    </Col>
-                </Row>
-                <br />
-                <UserTable users={users} view={view} edit={edit} context={authUser} />
+            <Col className="col-md-8 mx-auto">
 
-                <EditUserDialog user={user} visible={editConfirmDialog} onHide={onHide} />
+                <Card title="Pesquisar">
+                    <Row className="d-flex align-items-end">
+                        <Col>
+                            <Label>Login</Label>
+                            <Input name="login" value={login} onChange={e => setLogin(e.target.value)} type="text" className="form-control mt-1" placeholder="Informe o login" />
+                        </Col>
+                        <Col>
+                            <Label>Condição</Label>
+                            <select name="condition" value={condition} onChange={e => setCondition(e.target.value)} className="form-select mt-1" >
+                                <option value="1">Ativado</option>
+                                <option value="0">Desativado</option>
+                            </select>
+                        </Col>
+                        <Col>
+                            <Button onClick={buttonSearch} className="btn btn-primary" icon="pi pi-search" label="Buscar" size="sm" />
+                            <Toast ref={toast} />
+                        </Col>
+                    </Row>
+                    <br />
+                    <UserTable users={users} view={view} edit={edit} context={authUser} />
 
-            </Card>
+                    <EditUserDialog user={user} visible={editConfirmDialog} onHide={onHide} />
+
+                </Card>
+            </Col>
+
 
         </>
 

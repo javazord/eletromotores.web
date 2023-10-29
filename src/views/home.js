@@ -8,6 +8,8 @@ import { Tag } from 'primereact/tag';
 import { useContext } from "react";
 import { Image } from 'primereact/image';
 import { data } from "jquery";
+import { Col, Row } from "reactstrap";
+import { Card } from 'primereact/card';
 
 
 export default function Home() {
@@ -63,16 +65,15 @@ export default function Home() {
     return (
 
         <>
-            <div  >
+            <Row>
                 <div className="welcome-section">
-                    <h2 style={{ color: 'white' }}>Bem vindo {authUser.login}!</h2>
+                    <h2 className="font-home">Bem vindo {authUser.login}!</h2>
                 </div>
-                <p style={{ color: 'white' }}>Últimos Registros</p>
+                <p className="font-home">Últimos Registros</p>
                 <div className="text-center">
                     {lastMotors.length > 0 ? (
                         <div className="carousel-container">
-
-                            <div className="card">
+                            <Card>
                                 <Carousel
                                     value={lastMotors}
                                     numVisible={3}
@@ -83,13 +84,14 @@ export default function Home() {
                                     autoplayInterval={3000}
                                     itemTemplate={motorsTemplate}
                                 />
-                            </div>
+                            </Card>
                         </div>
                     ) : (
                         <p>Carregando...</p>
                     )}
                 </div>
-            </div>
+            </Row>
+
 
         </>
     )

@@ -139,8 +139,7 @@ export default function ViewMotorDialog(props) {
                 <Row>
                     <Label>Esquema </Label>
                     <Col className="mt-2">
-
-                        <Button className='custom-choose-btn p-button-rounded p-button-outlined' icon='pi pi-fw pi-images' tooltip="Visualizar esquema" size="sm" onClick={() => setShowSchema(true)} />
+                        <Button className='custom-choose-btn p-button-rounded ' icon='pi pi-fw pi-images' tooltip="Visualizar esquema" size="sm" onClick={() => setShowSchema(true)} />
                     </Col>
                 </Row>
             </Dialog>

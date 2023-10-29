@@ -2,6 +2,7 @@ import React from 'react';
 import { Menubar } from 'primereact/menubar';
 import Render from '../grid/render';
 import { AuthConsumer } from "../../main/authProvider";
+import { Container } from 'reactstrap';
 
 export function MenuBar(props) {
     const items = [
@@ -69,7 +70,6 @@ export function MenuBar(props) {
     ];
 
     return (
-
         <Render render={props.autenticationUser}>
             <div className="card">
                 <Menubar model={items} start={start} />

@@ -67,8 +67,7 @@ export function UserRegister() {
 
   return (
     <>
-      <Row >
-        <Col className="col-md-7 mx-auto">
+        <Col className="col-md-8 mx-auto">
           <Card title={"Cadastrar Colaborador"} footer={footer} >
             <Row>
               <Col >
@@ -88,7 +87,6 @@ export function UserRegister() {
             </Row>
           </Card>
         </Col>
-      </Row>
       <Toast ref={toast} />
     </>
   )
