@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Dialog } from "primereact/dialog";
 import { Button } from 'primereact/button';
 import { Col, Row, Input, Label } from "reactstrap";
@@ -15,8 +15,6 @@ export default function ViewMotorDialog(props) {
     const footer = (
         <Button label="Fechar" className="p-button-secondary mt-2" icon="pi pi-times" onClick={onHide} size="sm" />
     )
-
-    const chooseOptions = { icon: 'pi pi-fw pi-images', iconOnly: true, className: 'custom-choose-btn p-button-rounded p-button-outlined' };
 
     return (
 

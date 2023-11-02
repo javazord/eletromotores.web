@@ -1,5 +1,5 @@
 /* eslint-disable no-undef */
-import React, { useState, useRef } from "react";
+import React, { useState, useMemo } from "react";
 import { Row, Col, Input, Label } from "reactstrap";
 import { Dialog } from "primereact/dialog";
 import { Button } from 'primereact/button';
@@ -16,7 +16,7 @@ import _ from 'lodash'; // Importe o Lodash
 export default function EditMotorDialog(props) {
 
     const [motor, setMotor] = useState(_.cloneDeep(props.motor)); // Use _.cloneDeep
-    const [initialData, setInitialData] = useState(_.cloneDeep(props.motor));
+    const [initialData, ] = useState(_.cloneDeep(props.motor));
     const [checkboxVolts, setCheckboxVolts] = useState([
         { volts: 127, checked: initialData.voltagens.includes(127) ? true : false },
         { volts: 220, checked: initialData.voltagens.includes(220) ? true : false },
@@ -31,16 +31,16 @@ export default function EditMotorDialog(props) {
     const [indexAWG, setIndexAWG] = useState(props.motor.fio.awgs.length);
     const [indexESP, setIndexESP] = useState(props.motor.fio.espiras.length);
     const { showMessageSuccess, showMessageError, toast } = useToast();
-    const motorService = new MotorService();
+    const motorService = useMemo(() => new MotorService(), []);
     const { visible, onHide } = props;
-    const [imagem, setImagem] = useState();
+    const [imagem, ] = useState();
     const [showSchema, setShowSchema] = useState(false);
 
     useEffect(() => {
         motorService.empresas().then(response => { setEmpresas(response.data) })
         if (motor) {
         }
-    }, [motor])
+    }, [motor, motorService])
 
     const handleInputChangePeso = (event) => {
         setMotor({ ...motor, fio: { ...motor.fio, peso: event.target.value } });

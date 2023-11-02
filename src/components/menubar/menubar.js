@@ -2,7 +2,6 @@ import React from 'react';
 import { Menubar } from 'primereact/menubar';
 import Render from '../grid/render';
 import { AuthConsumer } from "../../main/authProvider";
-import { Container } from 'reactstrap';
 
 export function MenuBar(props) {
     const items = [
@@ -15,7 +14,7 @@ export function MenuBar(props) {
             label: 'Usuário',
             icon: 'pi pi-fw pi-user',
             items: [
-                props.authUser && props.authUser.role == "Administrador" ? {
+                props.authUser && props.authUser.role === "Administrador" ? {
                     label: 'Novo',
                     icon: 'pi pi-fw pi-user-plus',
                     url: '/cadastro-colaboradores',
@@ -32,7 +31,7 @@ export function MenuBar(props) {
             label: 'Motor',
             icon: 'pi pi-fw pi-bolt',
             items: [
-                props.authUser && props.authUser.role == "Administrador" ? {
+                props.authUser && props.authUser.role === "Administrador" ? {
                     label: 'Novo',
                     icon: 'pi pi-fw pi-cog',
                     url: '/cadastro-motores'
@@ -62,13 +61,6 @@ export function MenuBar(props) {
 
     );
 
-    const end = [
-        {
-            label: 'Sair',
-            icon: 'pi pi-fw pi-power-off'
-        }
-    ];
-
     return (
         <Render render={props.autenticationUser}>
             <div className="card">
@@ -78,7 +70,7 @@ export function MenuBar(props) {
     )
 }
 
-export default () => (
+const MenuBarDefault = () => (
     <AuthConsumer>
         {(context) => (
             <MenuBar autenticationUser={context.authenticated} authUser={context.authUser} deslogar={context.endSession} />
@@ -86,3 +78,4 @@ export default () => (
         )}
     </AuthConsumer>
 )
+export default MenuBarDefault;

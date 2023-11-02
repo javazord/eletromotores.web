@@ -15,9 +15,9 @@ export default function UserSearch() {
     const [login, setLogin] = useState('');
     const [condition, setCondition] = useState(1);
     const [users, setUsers] = useState([]);
-    const [lista, setLista] = useState([]);
+    const [, setLista] = useState([]);
     const [user, setUser] = useState({});
-    const [showConfirmDialog, setShowConfirmDialog] = useState(false);
+    const [, setShowConfirmDialog] = useState(false);
     const [editConfirmDialog, setEditConfirmDialog] = useState(false);
     const service = new UserService();
     const { authUser } = useContext(AuthContext);
