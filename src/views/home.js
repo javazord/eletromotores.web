@@ -1,22 +1,17 @@
-import { render } from "@testing-library/react";
 import { AuthContext } from "../main/authProvider";
 import { MotorService } from "../app/service/motor/motorService";
-import React, { useState, useEffect } from 'react';
-import { Button } from 'primereact/button';
+import React, { useState, useEffect, useMemo } from 'react';
 import { Carousel } from 'primereact/carousel';
-import { Tag } from 'primereact/tag';
 import { useContext } from "react";
 import { Image } from 'primereact/image';
-import { data } from "jquery";
-import { Col, Row } from "reactstrap";
+import { Row } from "reactstrap";
 import { Card } from 'primereact/card';
 
-
-export default function Home() {
+const Home = () => {
 
     const [lastMotors, setLastMotors] = useState([]);
     const { authUser } = useContext(AuthContext);
-    const motorService = new MotorService();
+    const motorService = useMemo(() => new MotorService(), []);
 
     const responsiveOptions = [
         {
@@ -38,7 +33,8 @@ export default function Home() {
 
     useEffect(() => {
         motorService.getLastMotors().then((response) => setLastMotors(response.data));
-    }, []);
+    }, [motorService]);
+     
 
     const motorsTemplate = (motor) => {
         return (
@@ -97,3 +93,4 @@ export default function Home() {
     )
 
 }
+export default Home;

@@ -1,7 +1,7 @@
 import { Card } from 'primereact/card';
 import UserService from "../../app/service/user/userService";
 import { Button } from "primereact/button";
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { Row, Col, Input } from 'reactstrap';
 import { Validate } from './userAttributes';
 import useToast from "../../components/toast";

@@ -1,6 +1,6 @@
 import React from "react";
 
-export default function Checkbox(props) {
+const Checkbox = (props) => {
     return (
         <div className="form-check m-1">
             <input className={`form-check-input ${props.className}`} type="checkbox" name={props.name} value={props.value} onChange={props.onChange} checked={props.checked}/>
@@ -8,3 +8,4 @@ export default function Checkbox(props) {
         </div>
     )
 }
+export default Checkbox;

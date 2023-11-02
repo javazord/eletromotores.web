@@ -2,11 +2,11 @@ import ValidateError from "../../app/exception/validateError"
 
 
 export function Role(props) {
-    if (props.role == "ADMIN") {
+    if (props.role === "ADMIN") {
         return "Administrador"
     }
 
-    if (props.role == "USER") {
+    if (props.role === "USER") {
         return "Usuário"
     }
 }

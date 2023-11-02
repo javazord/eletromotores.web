@@ -3,9 +3,6 @@ import Rotas from './routes';
 import Body from './body';
 import AuthProvider from './authProvider'
 import MenuBar from '../components/menubar/menubar';
-//import 'bootswatch/dist/minty/bootstrap.css'
-//import 'bootswatch/dist/minty/bootstrap.min.css'
-
 import 'primereact/resources/themes/mira/theme.css';
 import 'primereact/resources/primereact.min.css';
 import 'primeicons/primeicons.css';

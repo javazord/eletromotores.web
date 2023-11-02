@@ -1,4 +1,4 @@
-import React, { Component, useContext, useEffect, useState } from "react";
+import React, { useContext, useState } from "react";
 import { Card } from 'primereact/card';
 import UserService from '../app/service/user/userService';
 import { useNavigate } from "react-router-dom";
@@ -9,7 +9,7 @@ import useToast from "../components/toast";
 import { Toast } from "primereact/toast";
 import { loginValidate, Validate } from "./user/userAttributes";
 
-export function Login(props) {
+const Login = (props) => {
     const authContext = useContext(AuthContext);
     const navigate = useNavigate();
     const { showMessageSuccess, showMessageError, toast } = useToast();

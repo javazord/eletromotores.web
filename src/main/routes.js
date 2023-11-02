@@ -1,5 +1,5 @@
 import React from "react";
-import { BrowserRouter as Router, Routes, Route, Navigate, BrowserRouter } from "react-router-dom";
+import { BrowserRouter as  Render, Routes, Route, Navigate, BrowserRouter } from "react-router-dom";
 import Home from "../views/home";
 import Login from "../views/login";
 import UserRegister from "../views/user/userRegister";
@@ -12,7 +12,7 @@ const RotaAutenticada = ({ children, autenticationUser, redirectTo }) => {
     return autenticationUser ? children : <Navigate to={redirectTo} />
 }
 
-function Rotas(props) {
+const Rotas = (props) => {
     return (
         <BrowserRouter>
             <Routes>

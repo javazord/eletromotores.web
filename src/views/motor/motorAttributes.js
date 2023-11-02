@@ -1,12 +1,11 @@
-import React from "react";
 import ValidateError from "../../app/exception/validateError";
 
 export function Tensao(props) {
-    if (props.tensao == "TRIFASICO") {
+    if (props.tensao === "TRIFASICO") {
         return "Trifásico"
     }
 
-    if (props.tensao == "MONOFASICO") {
+    if (props.tensao === "MONOFASICO") {
         return "Monofásico"
     }
 }

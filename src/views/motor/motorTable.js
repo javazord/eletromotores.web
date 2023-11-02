@@ -5,12 +5,12 @@ import { Column } from "primereact/column";
 import { DataTable } from "primereact/datatable";
 import Render from "../../components/grid/render";
 
-export default props => {
+const MotorTable = (props) => {
 
     const button = (rowData) => {
         return <>
             <Button type="button" icon={"pi pi-eye"} className="p-button-sm p-button-text" style={{ color: 'green' }} onClick={e => props.view(rowData)} tooltip="Visualizar" />
-            <Render render={props.context.role == "Administrador"}>
+            <Render render={props.context.role === "Administrador"}>
                 <Button type="button" icon={"pi pi-user-edit"} className="p-button-sm p-button-text" onClick={e => props.edit(rowData)} tooltip="Editar"/>
                 <Button type="button" icon={"pi pi-trash"} className="p-button-sm p-button-text" style={{ color: 'red' }} onClick={e => props.delete(rowData)} tooltip="Deletar"/>
             </Render>
@@ -37,3 +37,4 @@ export default props => {
     );
 
 }
+export default MotorTable;

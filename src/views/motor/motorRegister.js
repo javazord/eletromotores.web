@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState, useRef } from "react";
+import React, { useContext, useEffect, useState, useMemo, useCallback } from "react";
 import { Card } from "primereact/card";
 import { Col, Container, Row } from 'reactstrap';
 import { Button } from 'primereact/button';
@@ -9,7 +9,6 @@ import { validate } from "./motorAttributes";
 import { MotorService } from "../../app/service/motor/motorService";
 import useToast from "../../components/toast";
 import { Toast } from "primereact/toast";
-import { InputText } from 'primereact/inputtext';
 
 
 const MotorRegister = () => {
@@ -56,8 +55,7 @@ const MotorRegister = () => {
     const { showMessageSuccess, showMessageAlert, showMessageError, toast } = useToast();
     const { authUser } = useContext(AuthContext);
     const [selectedFile, setSelectedFile] = useState(null);
-    const fileInputRef = useRef(null);
-    const motorService = new MotorService();
+    const motorService = useMemo(() => new MotorService(), []);
 
     const handleInputChange = (event) => {
         setMotor({ ...motor, [event.target.name]: event.target.value })
@@ -220,7 +218,7 @@ const MotorRegister = () => {
 
     }
 
-    const validateCheckbox = () => {
+    const validateCheckbox = useCallback(() => {
         const updatedList = [...motor.voltagens];
         const hasAllTrifasicVoltages =
             updatedList.length === 4 &&
@@ -239,7 +237,7 @@ const MotorRegister = () => {
         } else {
             setMotor((prevMotor) => ({ ...prevMotor, tensao: '' }));
         }
-    };
+    }, [motor.voltagens]);
 
     const handleCheckboxChange = (index, checked) => {
         const newCheckboxVolts = [...checkboxVolts];
@@ -274,7 +272,7 @@ const MotorRegister = () => {
         })
 
         validateCheckbox();
-    }, [motor.voltagens]);
+    }, [motor.voltagens, motorService, validateCheckbox]);
 
     const resetState = () => {
         setMotor({
