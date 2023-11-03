@@ -1,5 +1,5 @@
 import React from "react";
-import { Tensao } from "./motorAttributes";
+import { Tensao } from "./motorValidation";
 import { Button } from "primereact/button";
 import { Column } from "primereact/column";
 import { DataTable } from "primereact/datatable";

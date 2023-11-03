@@ -5,7 +5,7 @@ import { Dialog } from "primereact/dialog";
 import { Button } from 'primereact/button';
 import { useEffect } from "react";
 import { MotorService } from '../../app/service/motor/motorService';
-import { validate } from "./motorAttributes";
+import { validate } from "./motorValidation";
 import useToast from "../../components/toast";
 import { Toast } from "primereact/toast";
 import Checkbox from "../../components/grid/checkbox";

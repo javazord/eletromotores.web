@@ -1,52 +1,51 @@
 import React, { useContext, useEffect, useState, useMemo, useCallback } from "react";
-import { Card } from "primereact/card";
-import { Col, Container, Row } from 'reactstrap';
-import { Button } from 'primereact/button';
-import Checkbox from "../../components/grid/checkbox";
 import { AuthContext } from "../../main/authProvider";
-import { Input, Label } from "reactstrap";
-import { validate } from "./motorAttributes";
+import { validate } from "./motorValidation";
 import { MotorService } from "../../app/service/motor/motorService";
 import useToast from "../../components/toast";
-import { Toast } from "primereact/toast";
+import MotorForm from "./motorForm";
 
+
+const initialState = {
+    rotacao: 0,
+    modelo: '',
+    ranhuras: 0,
+    marca: '',
+    ligacao: '',
+    potencia: 0,
+    comprimento: 0,
+    medidaExterna: 0,
+    empresa: '',
+    tensao: '',
+    fio: {
+        awgs: [0],
+        quantidades: [0],
+        espiras: [0],
+        peso: 0,
+    },
+    voltagens: [],
+    amperagens: [],
+    passo: [0],
+    usuario: {},
+    imagem: {
+        dados: null,
+        nome: null,
+        tipo: null
+    }
+};
+
+const initialCheckboxVolts = [
+    { volts: 127, checked: false },
+    { volts: 220, checked: false },
+    { volts: 380, checked: false },
+    { volts: 440, checked: false },
+    { volts: 760, checked: false },
+];
 
 const MotorRegister = () => {
 
-    const [motor, setMotor] = useState({
-        rotacao: 0,
-        modelo: '',
-        ranhuras: 0,
-        marca: '',
-        ligacao: '',
-        potencia: 0,
-        comprimento: 0,
-        medidaExterna: 0,
-        empresa: '',
-        tensao: '',
-        fio: {
-            awgs: [0],
-            quantidades: [0],
-            espiras: [0],
-            peso: 0,
-        },
-        voltagens: [],
-        amperagens: [],
-        passo: [0],
-        usuario: {},
-        imagem: {
-            dados: null,
-            nome: null,
-            tipo: null
-        }
-    });
-    const [checkboxVolts, setCheckboxVolts] = useState([
-        { volts: 127, checked: false },
-        { volts: 220, checked: false },
-        { volts: 380, checked: false },
-        { volts: 440, checked: false },
-        { volts: 760, checked: false },
-    ]);
+    const [motor, setMotor] = useState(initialState);
+    const [checkboxVolts, setCheckboxVolts] = useState(initialCheckboxVolts);
     const [loading, setLoading] = useState(false);
     const [empresas, setEmpresas] = useState([]);
     const [indexPasso, setIndexPasso] = useState(1);
@@ -57,9 +56,40 @@ const MotorRegister = () => {
     const [selectedFile, setSelectedFile] = useState(null);
     const motorService = useMemo(() => new MotorService(), []);
 
+
+    const validateCheckbox = useCallback(() => {
+        const updatedList = [...motor.voltagens];
+        const hasAllTrifasicVoltages =
+            updatedList.length === 4 &&
+            updatedList.includes(220) &&
+            updatedList.includes(380) &&
+            updatedList.includes(440) &&
+            updatedList.includes(760);
+
+        const hasMonofasicVoltage = updatedList.length === 2 && updatedList.includes(127) && updatedList.includes(220);
+
+        if (hasAllTrifasicVoltages) {
+            setMotor((prevMotor) => ({ ...prevMotor, tensao: updatedList.includes(127) ? '' : 'TRIFASICO' }));
+        } else if (hasMonofasicVoltage) {
+            const hasOtherVoltages = updatedList.some((voltage) => voltage === 380 || voltage === 440 || voltage === 760);
+            setMotor((prevMotor) => ({ ...prevMotor, tensao: hasOtherVoltages ? '' : 'MONOFASICO' }));
+        } else {
+            setMotor((prevMotor) => ({ ...prevMotor, tensao: '' }));
+        }
+    }, [motor.voltagens]);
+
+    useEffect(() => {
+        motorService.empresas().then(response => {
+            setEmpresas([...response.data]);
+        })
+
+        validateCheckbox();
+    }, [motor.voltagens, motorService, validateCheckbox]);
+
     const handleInputChange = (event) => {
-        setMotor({ ...motor, [event.target.name]: event.target.value })
-    }
+        const { name, value } = event.target;
+        setMotor({ ...motor, [name]: value });
+    };
 
     const handleInputChangePeso = (event) => {
         setMotor({ ...motor, fio: { ...motor.fio, peso: event.target.value } });
@@ -218,27 +248,6 @@ const MotorRegister = () => {
 
     }
 
-    const validateCheckbox = useCallback(() => {
-        const updatedList = [...motor.voltagens];
-        const hasAllTrifasicVoltages =
-            updatedList.length === 4 &&
-            updatedList.includes(220) &&
-            updatedList.includes(380) &&
-            updatedList.includes(440) &&
-            updatedList.includes(760);
-
-        const hasMonofasicVoltage = updatedList.length === 2 && updatedList.includes(127) && updatedList.includes(220);
-
-        if (hasAllTrifasicVoltages) {
-            setMotor((prevMotor) => ({ ...prevMotor, tensao: updatedList.includes(127) ? '' : 'TRIFASICO' }));
-        } else if (hasMonofasicVoltage) {
-            const hasOtherVoltages = updatedList.some((voltage) => voltage === 380 || voltage === 440 || voltage === 760);
-            setMotor((prevMotor) => ({ ...prevMotor, tensao: hasOtherVoltages ? '' : 'MONOFASICO' }));
-        } else {
-            setMotor((prevMotor) => ({ ...prevMotor, tensao: '' }));
-        }
-    }, [motor.voltagens]);
-
     const handleCheckboxChange = (index, checked) => {
         const newCheckboxVolts = [...checkboxVolts];
         newCheckboxVolts[index].checked = checked;
@@ -266,39 +275,10 @@ const MotorRegister = () => {
         setMotor(newMotor);
     };
 
-    useEffect(() => {
-        motorService.empresas().then(response => {
-            setEmpresas([...response.data]);
-        })
-
-        validateCheckbox();
-    }, [motor.voltagens, motorService, validateCheckbox]);
-
     const resetState = () => {
-        setMotor({
-            rotacao: 0,
-            modelo: '',
-            ranhuras: 0,
-            marca: '',
-            ligacao: '',
-            potencia: 0,
-            comprimento: 0,
-            medidaExterna: 0,
-            empresa: '',
-            tensao: '',
-            fio: {
-                awgs: [0],
-                quantidades: [0],
-                espiras: [0],
-                peso: 0,
-            },
-            voltagens: [],
-            amperagens: [],
-            passo: [0],
-            usuario: {},
-        })
+        setMotor(initialState);
         setSelectedFile(null);
-        setCheckboxVolts(checkboxVolts.map(item => ({ ...item, checked: false })));
+        setCheckboxVolts(initialCheckboxVolts);
     }
 
     const load = () => {
@@ -393,186 +373,31 @@ const MotorRegister = () => {
                 load();
                 showMessageError(error.response.data);
             });
-
-
     }
 
     return (
-        <Container>
-            <Row>
-                <Col >
-                    <Card title={"Cadastrar Motor"} style={{ maxHeight: '700px', overflowY: 'auto' }}>
-                        <Row>
-                            <Col >
-                                <Label>Marca<span>*</span> </Label>
-                                <Input name="marca" value={motor.marca} onChange={handleInputChange} type="text" bsSize="sm" />
-                            </Col>
-                            <Col>
-                                <Label>Modelo</Label>
-                                <Input name="modelo" value={motor.modelo} onChange={handleInputChange} type="text" bsSize="sm" />
-                            </Col>
-                            <Col>
-                                <Label>Ranhuras<span>*</span></Label>
-                                <Input name="ranhuras" value={motor.ranhuras} onChange={handleInputChange} type="number" min={0} bsSize="sm" />
-                            </Col>
-                            <Col>
-                                <Label>Rotação</Label>
-                                <Input name="rotacao" value={motor.rotacao} onChange={handleInputChange} type="number" min={0} bsSize="sm" />
-                            </Col>
-                            <Col>
-                                <Label>Peso<span>*</span></Label>
-                                <Input name="peso" value={motor.fio.peso} onChange={handleInputChangePeso} type="number" min={0} bsSize="sm" />
-                            </Col>
-                            <Col>
-                                <Label>Potência</Label>
-                                <Input name="potencia" value={motor.potencia} onChange={handleInputChange} type="number" min={0} bsSize="sm" />
-                            </Col>
-                        </Row>
-
-                        <Row>
-                            <Col className="col-md-2">
-                                <Label>Comprimento<span>*</span></Label>
-                                <Input name="comprimento" value={motor.comprimento} onChange={handleInputChange} type="number" min={0} bsSize="sm" />
-                            </Col>
-                            <Col className="col-md-2">
-                                <Label>M. Externa<span>*</span></Label>
-                                <Input name="medidaExterna" value={motor.medidaExterna} onChange={handleInputChange} type="number" min={0} bsSize="sm" />
-                            </Col>
-                            {motor.passo.map((passo, index) => (
-
-                                <Col className="col-md-1" key={index}>
-                                    <Label>Passo<span>*</span></Label>
-                                    <Input type="number" value={passo} id={`passo${index + 1}`} onChange={(e) => handleChangePasso(e, index)} min={0} bsSize="sm" />
-                                </Col>
-
-                            ))}
-                            <Col className="col-2 mt-2 d-flex align-items-end">
-                                <Button className="me-1" icon="pi pi-plus" rounded raised severity="info" tooltip="Adicionar Passo" onClick={addInputsPasso} size="sm" />
-                                <Button className="ms-1" icon="pi pi-minus" rounded raised severity="danger" tooltip="Remover Passo" onClick={removeInputsPasso} size="sm" />
-                            </Col>
-                        </Row>
-
-                        <Row>
-                            {motor.fio.awgs.map((valor, index) => (
-                                <Col className="col-md-2" key={index}>
-                                    <Label>Awg<span>*</span></Label>
-                                    <Input type="number" value={valor} onChange={(e) => handleChangeAWG(e, index)} min={0} bsSize="sm" />
-                                </Col>
-                            ))}
-
-                            <Col className="col-md-2 mt-2 d-flex align-items-end">
-                                <Button icon="pi pi-plus" rounded raised severity="info" tooltip="Adicionar AWG/Quantidade" size="sm" onClick={addInputs} />
-                            </Col>
-                        </Row>
-
-                        <Row>
-                            {motor.fio.quantidades.map((qtd, index) => (
-
-                                <Col className="col-md-2" key={index}>
-                                    <Label>Quantidade<span>*</span></Label>
-                                    <Input type="number" value={qtd} id={`qtd${index + 1}`} onChange={(e) => handleChangeQTD(e, index)} min={0} bsSize="sm" />
-                                </Col>
-
-                            ))}
-
-                            <Col className="col-md-2 mt-2 d-flex align-items-end">
-                                <Button icon="pi pi-minus" rounded raised severity="danger" tooltip="Remover AWG/Quantidade" size="sm" onClick={removeInputs} />
-                            </Col>
-                        </Row>
-                        <Row>
-                            {motor.fio.espiras.map((esp, index) => (
-
-                                <Col className="col-md-2" key={index}>
-                                    <Label>Espiras<span>*</span></Label>
-                                    <Input type="number" value={esp} id={`esp${index + 1}`} onChange={(e) => handleChangeESP(e, index)} min={0} bsSize="sm" />
-                                </Col>
-
-                            ))}
-                            <Col className="col-2 mt-2 d-flex align-items-end">
-                                <Button className="me-1" icon="pi pi-plus" rounded raised severity="info" tooltip="Adicionar Espiras" onClick={addInputsESP} size="small" />
-                                <Button className="ms-1" icon="pi pi-minus" rounded raised severity="danger" tooltip="Remover Espiras" onClick={removeInputsESP} size="small" />
-                            </Col>
-
-                        </Row>
-                        <Row className="mt-2">
-                            {checkboxVolts.map((checkbox, index) => (
-                                <div className="col-md-2" key={index}>
-                                    <Label>Voltagem<span>*</span></Label>
-                                    <Checkbox
-                                        label={`${checkbox.volts}v`} checked={checkbox.checked}
-                                        onChange={(e) => handleCheckboxChange(index, e.target.checked)}
-                                    />
-                                    {motor.voltagens.includes(checkbox.volts) && (
-                                        <><Label>Amperagem</Label>
-                                            <Input
-                                                type="number"
-                                                value={motor.amperagens[motor.voltagens.indexOf(checkbox.volts)]}
-                                                min={0}
-                                                onChange={(e) => {
-                                                    const newMotor = { ...motor };
-                                                    const value = e.target.value !== '' ? Number(e.target.value) : '';
-                                                    newMotor.amperagens[motor.voltagens.indexOf(checkbox.volts)] = value;
-                                                    setMotor(newMotor);
-                                                }}
-                                            />
-
-                                        </>
-                                    )}
-                                </div>
-                            ))}
-
-                        </Row>
-
-                        <Row>
-                            <Col className="col-md-3">
-                                <Label>Tensão<span>*</span></Label>
-                                <Input name="tensao" value={motor.tensao} disabled min={0} bsSize="sm" />
-                            </Col>
-                            <Col className="col-md-5">
-                                <Label>Ligação<span>*</span></Label>
-                                <Input name="ligacao" value={motor.ligacao} onChange={handleInputChange} type="text" min={0} bsSize="sm" />
-                            </Col>
-                            <Col className="col-md-4">
-                                <Label>Empresa<span>*</span></Label>
-                                <select name="empresa" value={motor.empresa} onChange={handleInputChange} className="form-select form-select-sm">
-                                    <option value="">Selecione uma empresa</option>
-                                    {empresas.map((empresa) => (
-                                        <option key={empresa.valor} value={empresa.valor}>{empresa.descricao}</option>
-                                    ))}
-                                </select>
-                            </Col>
-                        </Row>
-
-                        <Row>
-                            <Col className="col-md-6 mt-2">
-                                <Label>Esquema</Label>
-                                <Input type={"file"} name="file" id="fileInput" accept={".jpg, .png"} onChange={handleFileChange} bsSize="sm" />
-                            </Col>
-                        </Row>
-
-                        <Col className="d-flex justify-content-start mt-2">
-                            <small>
-                                Itens marcados com <label><span>*</span></label> são obrigatórios
-                            </small>
-                        </Col>
-
-                        <Row>
-
-                            <Col className="d-flex justify-content-end mt-2">
-
-                                <Button onClick={create} label="Cadastrar" icon="pi pi-check" size="sm" loading={loading} />
-                                <Toast ref={toast} />
-                            </Col>
-                        </Row>
-
-                    </Card>
-                </Col>
-            </Row>
-
-
-        </Container>
-
-
+        <MotorForm
+            motor={motor}
+            checkboxVolts={checkboxVolts}
+            addInputsESP={addInputsESP}
+            removeInputsESP={removeInputsESP}
+            handleInputChange={handleInputChange}
+            handleInputChangePeso={handleInputChangePeso}
+            handleChangePasso={handleChangePasso}
+            addInputsPasso={addInputsPasso}
+            removeInputsPasso={removeInputsPasso}
+            addInputs={addInputs}
+            removeInputs={removeInputs}
+            handleChangeAWG={handleChangeAWG}
+            handleChangeQTD={handleChangeQTD}
+            handleChangeESP={handleChangeESP}
+            handleCheckboxChange={handleCheckboxChange}
+            handleFileChange={handleFileChange}
+            empresas={empresas}
+            create={create}
+            loading={loading}
+            toast={toast}
+        />
     )
 
 }

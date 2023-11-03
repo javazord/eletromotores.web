@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useState } from "react";
 import { MotorService } from "../../app/service/motor/motorService";
 import { Card } from 'primereact/card';
 import MotorTable from "./motorTable";
@@ -43,10 +43,6 @@ const MotorSearch = () => {
     const { authUser } = useContext(AuthContext);
     const { showMessageSuccess, showMessageAlert, showMessageError, toast } = useToast();
     const service = new MotorService();
-
-    useEffect(() =>{
-
-    },[motor])
 
     const buttonSearch = () => {
         service
