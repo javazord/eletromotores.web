@@ -1,3 +1,4 @@
+
 import React from 'react';
 import Rotas from './routes';
 import Body from './body';
@@ -15,14 +16,13 @@ import 'toastr/build/toastr.min.css'
 class App extends React.Component {
   render() {
     return (
-      <AuthProvider>
-        <MenuBar/>
-        <Body>
-          <Rotas />
-        </Body>
-      </AuthProvider>
-
-    )
+        <AuthProvider>
+          <MenuBar />
+          <Body>
+            <Rotas />
+          </Body>
+        </AuthProvider>
+    );
   }
 }
 
