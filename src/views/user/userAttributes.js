@@ -26,7 +26,7 @@ export function Validate(user) {
     if (!user.login) {
         msgs.push('Informe um login')
     }
-    if (user.login.length > 10 ) {
+    if (user.login.length > 10) {
         msgs.push('O login deve ter no máx 10 digitos')
     }
     if (!user.password) {
@@ -36,13 +36,21 @@ export function Validate(user) {
         msgs.push('A senhas informadas não conhecidem')
     }
 
+    // Validação da senha
+    if (user.password) {
+        const passwordRegex = /^(?=.*\d)(?=.*[@#$!%^&*])[A-Za-z\d@#$!%^&*]{8,12}$/;
+        if (!passwordRegex.test(user.password)) {
+            msgs.push('A senha não atende os requisitos mínimos');
+        }
+    }
+
     if (msgs && msgs.length > 0) {
         throw new ValidateError(msgs)
     }
 
 }
 
-export function loginValidate(user){
+export function loginValidate(user) {
 
     const msgs = []
 

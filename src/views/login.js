@@ -47,6 +47,13 @@ const Login = (props) => {
                             />
                         </Col>
                     </Row>
+                    <Row>
+                        <Col className="d-flex justify-content-start mt-2">
+                            <small>
+                                A senha deve ter entre 8 e 12 caracteres, pelo menos um número e um caractere especial (@, #, $, !, %, ^, & ou *)
+                            </small>
+                        </Col>
+                    </Row>
                 </>
             );
         }
@@ -116,7 +123,7 @@ const Login = (props) => {
     );
 
     return (
-        <><Card header={header} style={{ width: "500px", height: "600px" }}>
+        <><Card header={header} style={{ width: "500px", height: "620px" }}>
 
             {showAuthInputs && ( // renderizar os inputs de login e senha apenas se showAuthInputs for true
                 <>
@@ -137,10 +144,11 @@ const Login = (props) => {
             )}
             {renderPasswordInputs()}
             <Row>
-                <Col className="col-md-12 mt-3">
+                <Col className="col-md-12 mt-4">
                     <Button className="col-md-12" onClick={autenticar} label="Entrar" size="sm"></Button>
                 </Col>
             </Row>
+
 
         </Card><Toast ref={toast} /></>
     )
