@@ -1,5 +1,5 @@
 import React from "react";
-import { BrowserRouter as  Render, Routes, Route, Navigate, BrowserRouter } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import Home from "../views/home";
 import Login from "../views/login";
 import UserRegister from "../views/user/userRegister";
@@ -32,10 +32,10 @@ const Rotas = (props) => {
     )
 }
 
-export default () => (
+const MyComponent = () => (
     <AuthConsumer>
-        {
-            (context) => (<Rotas autenticationUser={context.authenticated} />)
-        }
+        {(context) => (<Rotas autenticationUser={context.authenticated} />)}
     </AuthConsumer>
-)
+);
+
+export default MyComponent;
