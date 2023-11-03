@@ -13,7 +13,7 @@ import { Image } from 'primereact/image';
 import _ from 'lodash'; // Importe o Lodash
 
 
-export default function EditMotorDialog(props) {
+const EditMotorDialog = (props) => {
 
     const [motor, setMotor] = useState(_.cloneDeep(props.motor)); // Use _.cloneDeep
     const [initialData, ] = useState(_.cloneDeep(props.motor));
@@ -38,8 +38,6 @@ export default function EditMotorDialog(props) {
 
     useEffect(() => {
         motorService.empresas().then(response => { setEmpresas(response.data) })
-        if (motor) {
-        }
     }, [motor, motorService])
 
     const handleInputChangePeso = (event) => {
@@ -532,3 +530,4 @@ export default function EditMotorDialog(props) {
             </Dialog></>
     );
 }
+export default EditMotorDialog;
