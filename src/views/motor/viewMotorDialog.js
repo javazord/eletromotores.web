@@ -1,32 +1,31 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Dialog } from "primereact/dialog";
 import { Button } from 'primereact/button';
 import { Col, Row, Input, Label } from "reactstrap";
 import { Image } from 'primereact/image';
 
 
-export default function ViewMotorDialog(props) {
+const ViewMotorDialog = (props) => {
     const { motor, visible, onHide } = props;
     const [showSchema, setShowSchema] = useState(false);
 
-    useEffect(() => {
-    }, [motor])
+    const handleToggleSchema = () => {
+        setShowSchema(!showSchema);
+    };
 
-    const footer = (
-        <Button label="Fechar" className="p-button-secondary mt-2" icon="pi pi-times" onClick={onHide} size="sm" />
-    )
+    const header = `Registrado em ${new Intl.DateTimeFormat('pt-BR').format(motor.registro)}`;
 
     return (
-
         <>
-
             <Dialog
-                header={`Registrado em ${new Intl.DateTimeFormat('pt-BR').format(motor.registro)}`}
+                header={header}
                 visible={visible}
                 modal={false}
                 style={{ width: '65vw' }}
-                onHide={onHide} // Passa a propriedade onHide para o componente Dialog
-                footer={footer}
+                onHide={onHide}
+                footer={
+                    <Button label="Fechar" className="p-button-secondary mt-2" icon="pi pi-times" onClick={onHide} size="sm" />
+                }
             >
                 <Row>
                     <Col>
@@ -137,13 +136,13 @@ export default function ViewMotorDialog(props) {
                 <Row>
                     <Label>Esquema </Label>
                     <Col className="mt-2">
-                        <Button className='custom-choose-btn p-button-rounded ' icon='pi pi-fw pi-images' tooltip="Visualizar esquema" size="sm" onClick={() => setShowSchema(true)} />
+                        <Button className='custom-choose-btn p-button-rounded ' icon='pi pi-fw pi-images' tooltip="Visualizar esquema" size="sm" onClick={handleToggleSchema} />
                     </Col>
                 </Row>
             </Dialog>
 
-            <Dialog header="Esquema" visible={showSchema} style={{ width: '35vw' }} onHide={() => setShowSchema(false)}>
-                {motor.imagem.dados !== null && typeof motor.imagem === 'object' ? (
+            <Dialog header="Esquema" visible={showSchema} style={{ width: '35vw' }} onHide={handleToggleSchema}>
+                {motor.imagem.dados ? (
                     <div style={{ display: 'flex', justifyContent: 'center' }}>
                         <Image src={`data:${motor.imagem.tipo};base64,${motor.imagem.dados}`} loading="lazy" alt={motor.imagem.nome} preview width="250" />
                     </div>
@@ -155,3 +154,4 @@ export default function ViewMotorDialog(props) {
         </>
     );
 }
+export default ViewMotorDialog;

@@ -34,7 +34,6 @@ const Home = () => {
     useEffect(() => {
         motorService.getLastMotors().then((response) => setLastMotors(response.data));
     }, [motorService]);
-     
 
     const motorsTemplate = (motor) => {
         return (
@@ -87,8 +86,6 @@ const Home = () => {
                     )}
                 </div>
             </Row>
-
-
         </>
     )
 
