@@ -6,7 +6,7 @@ import { DataTable } from "primereact/datatable";
 import Render from "../../components/grid/render";
 
 const MotorTable = (props) => {
-
+    
     const button = (rowData) => {
         return <>
             <Button type="button" icon={"pi pi-eye"} className="p-button-sm p-button-text" style={{ color: 'green' }} onClick={e => props.view(rowData)} tooltip="Visualizar" />
@@ -14,7 +14,6 @@ const MotorTable = (props) => {
                 <Button type="button" icon={"pi pi-user-edit"} className="p-button-sm p-button-text" onClick={e => props.edit(rowData)} tooltip="Editar"/>
                 <Button type="button" icon={"pi pi-trash"} className="p-button-sm p-button-text" style={{ color: 'red' }} onClick={e => props.delete(rowData)} tooltip="Deletar"/>
             </Render>
-
         </>;
     };
 
@@ -30,7 +29,7 @@ const MotorTable = (props) => {
                 <Column field="ranhuras" header="Ranhuras" align={"center"}></Column>
                 <Column field="comprimento" header="Comprimento" align={"center"}></Column>
                 <Column field="medidaExterna" header="M. Externa" align={"center"}></Column>
-                <Column field={button} header="Ação" align={"center"}></Column>
+                <Column field={rowData => button(rowData)} header="Ação" align={"center"} />
             </DataTable>
         </div>
 
