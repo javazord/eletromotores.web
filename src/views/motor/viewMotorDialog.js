@@ -6,6 +6,7 @@ import { Image } from 'primereact/image';
 
 
 const ViewMotorDialog = (props) => {
+    console.log(props)
     const { motor, visible, onHide } = props;
     const [showSchema, setShowSchema] = useState(false);
 
@@ -14,7 +15,6 @@ const ViewMotorDialog = (props) => {
     };
 
     const header = `Registrado em ${new Intl.DateTimeFormat('pt-BR').format(motor.registro)}`;
-
     return (
         <>
             <Dialog
