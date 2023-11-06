@@ -8,7 +8,6 @@ import { format } from 'date-fns';
 
 
 const ViewMotorDialog = (props) => {
-    console.log(props)
     const { motor, visible, onHide } = props;
 
     const [showSchema, setShowSchema] = useState(false);
