@@ -49,7 +49,6 @@ const MotorSearch = () => {
             .search(motor)
             .then((response) => {
                 load(response.data);
-                console.log(response.data)
                 setMotores(response.data);
             })
             .catch((erro) => {
