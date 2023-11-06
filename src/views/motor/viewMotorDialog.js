@@ -3,18 +3,21 @@ import { Dialog } from "primereact/dialog";
 import { Button } from 'primereact/button';
 import { Col, Row, Input, Label } from "reactstrap";
 import { Image } from 'primereact/image';
+import { format } from 'date-fns';
+
 
 
 const ViewMotorDialog = (props) => {
     console.log(props)
     const { motor, visible, onHide } = props;
+
     const [showSchema, setShowSchema] = useState(false);
 
     const handleToggleSchema = () => {
         setShowSchema(!showSchema);
     };
 
-    const header = `Registrado em ${new Intl.DateTimeFormat('pt-BR').format(motor.registro)}`;
+    const header = `Registrado em ${format(new Date(motor.registro), 'dd/MM/yyyy')}`;
     return (
         <>
             <Dialog

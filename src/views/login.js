@@ -91,7 +91,12 @@ const Login = (props) => {
                 }
 
             }).catch(erro => {
-                showMessageError(erro.response.data)
+                if (erro.response.data) {
+                    showMessageError(erro.response.data)
+                } else {
+                    showMessageError(erro.message)
+                }
+                
             })
 
         }
