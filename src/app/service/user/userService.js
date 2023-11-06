@@ -6,9 +6,14 @@ export default class UserService extends ApiService{
         super('api/usuarios');
     }
 
-    authenticate(credentials){
-        return this.post('/autenticar', credentials)
+    authenticate(credentials) {
+        const params = new URLSearchParams();
+        params.append('login', credentials.login);
+        params.append('password', credentials.password);
+    
+        return this.get(`/autenticar?${params.toString()}`);
     }
+    
 
     save(usuario){
         return this.post('', usuario)
