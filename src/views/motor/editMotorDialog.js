@@ -313,7 +313,6 @@ const EditMotorDialog = (props) => {
         
         // Converte o objeto 'motorInsert' para uma string JSON e o adiciona à solicitação
         formData.append('motorData', JSON.stringify(motor));
-
         motorService.update(formData)
             .then(response => {
                 load();             
