@@ -253,8 +253,6 @@ const EditMotorDialog = (props) => {
             updatedList.includes(760);
 
         const hasMonofasicVoltage = updatedList.length === 2 && updatedList.includes(127) && updatedList.includes(220);
-        console.log(motor)
-        console.log(checkboxVolts)
         if (hasAllTrifasicVoltages) {
             setMotor((prevMotor) => ({ ...prevMotor, tensao: updatedList.includes(127) ? '' : 'TRIFASICO' }));
         } else if (hasMonofasicVoltage) {
@@ -269,7 +267,6 @@ const EditMotorDialog = (props) => {
     const load = () => {
         setTimeout(() => {
             setLoading(false);
-            showMessageSuccess('Motor atualizado com sucesso!');
             onHide();
         }, 1500);
     }
@@ -315,11 +312,12 @@ const EditMotorDialog = (props) => {
         formData.append('motorData', JSON.stringify(motor));
         motorService.update(formData)
             .then(response => {
+                showMessageSuccess('Motor atualizado com sucesso!');
                 load();             
             })
             .catch(error => {
                 load();
-                showMessageError(error.response.data);
+                showMessageError(error.message);
             });
 
     }
