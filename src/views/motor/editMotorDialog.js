@@ -293,7 +293,7 @@ const EditMotorDialog = (props) => {
             validate(motor);
         } catch (error) {
             const msgs = error.mensagens;
-            msgs.forEach(msg => toast.showMessageAlert(msg));
+            showMessageAlert(msgs);
             return false;
         }
 
