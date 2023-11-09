@@ -284,7 +284,6 @@ const MotorRegister = () => {
     const load = () => {
         setTimeout(() => {
             setLoading(false);
-            showMessageSuccess('Motor cadastrado com sucesso!');
         }, 2000);
     }
 
@@ -366,7 +365,7 @@ const MotorRegister = () => {
         motorService.save(formData)
             .then(response => {
                 load();
-
+                showMessageSuccess('Motor cadastrado com sucesso!');
                 resetState();
             })
             .catch(error => {
