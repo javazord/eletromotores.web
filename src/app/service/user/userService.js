@@ -23,13 +23,20 @@ export default class UserService extends ApiService{
         return this.put(`/${usuario.id}`, usuario)
     }
 
-    search(userFilter){
-        let params = `?login=${userFilter.login}`
+    search(userFilter) {
+        let params = '';
         
-        params = `${params}&condition=${userFilter.condition}`
-                
-        return this.get(params)
+        if (userFilter.login) {
+            params += `?login=${userFilter.login}`;
+        }
+    
+        if (userFilter.condition !== undefined) {
+            params += `${params ? '&' : '?'}condition=${userFilter.condition}`;
+        }
+        
+        return this.get(params);
     }
+    
 
     blankPassword(user){
         let params = `?login=${user.login}`
