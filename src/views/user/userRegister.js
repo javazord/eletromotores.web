@@ -2,12 +2,16 @@ import { Card } from 'primereact/card';
 import UserService from "../../app/service/user/userService";
 import { Button } from "primereact/button";
 import React, { useState } from 'react';
-import { Row, Col, Input } from 'reactstrap';
+import { Row, Col } from 'reactstrap';
 import { Validate } from './userAttributes';
 import useToast from "../../components/toast";
 import { Toast } from "primereact/toast";
+import { InputText } from 'primereact/inputtext';
+import { Dropdown } from 'primereact/dropdown';
 
-export function UserRegister() {
+
+
+const UserRegister = () => {
 
   const [state, setState] = useState({
     login: '',
@@ -65,28 +69,58 @@ export function UserRegister() {
     </div>
   );
 
+  const roles = [
+    { role: 'Usuário', value: 'USER' },
+    { role: 'Administrador', value: 'ADMIN' }
+  ]
+
   return (
     <>
-        <Col className="col-md-8 mx-auto">
-          <Card title={"Cadastrar Colaborador"} footer={footer} >
-            <Row>
-              <Col >
-                <Input name="login" value={state.login} onChange={handleInputChange} className="form-control m-1" placeholder="Login" />
 
-                <select name="role" value={state.role} onChange={handleInputChange} className="form-select m-1" >
-                  <option value="USER">Usuario</option>
-                  <option value="ADMIN">Administrador</option>
-                </select>
-              </Col>
-              <Col>
-                <Input name="password" value={state.password} onChange={handleInputChange} type="password" className="form-control m-1" placeholder="Senha" />
+      <Card title={"Cadastrar Colaborador"} footer={footer}>
+        <Row>
+          <Col className='col-md-6'>
+            <InputText
+              name="login"
+              value={state.login}
+              onChange={handleInputChange}
+              placeholder="Login"
+              className="w-full col-12 m-1"
+            />
+            <Dropdown
+              value={state.role}
+              onChange={handleInputChange}
+              options={roles}
+              optionLabel="role"
+              name="role"
+              className="w-full col-12 m-1"
+            />
+          </Col>
+          <Col className='col-md-6'>
+            <InputText
+              name="password"
+              value={state.password}
+              onChange={handleInputChange}
+              type="password"
+              placeholder="Senha"
+              className="w-full col-12 m-1"
+            />
+            <InputText
+              name="repeatPassword"
+              value={state.repeatPassword}
+              onChange={handleInputChange}
+              type="password"
+              placeholder="Repetir senha"
+              className="w-full col-12 m-1"
+            />
+          </Col>
+        </Row>
 
-                <Input name="repeatPassword" value={state.repeatPassword} onChange={handleInputChange} type="password" className="form-control m-1" placeholder="Repetir senha" />
 
-              </Col>
-            </Row>
-          </Card>
-        </Col>
+
+      </Card>
+
+
       <Toast ref={toast} />
     </>
   )

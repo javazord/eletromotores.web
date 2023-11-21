@@ -69,7 +69,7 @@ export default class AuthProvider extends React.Component{
 
         return(
             <AProvider value={context}>
-                {this.props.children}
+                {this.props.children(context)}
             </AProvider>
         )
     }
