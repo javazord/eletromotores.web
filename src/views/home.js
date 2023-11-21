@@ -62,9 +62,9 @@ const Home = () => {
         <>
             <Row>
                 <div className="welcome-section">
-                    <h2 className="font-home">Bem vindo {authUser.login}!</h2>
+                    <h2>Bem vindo {authUser.login}!</h2>
                 </div>
-                <p className="font-home">Últimos Registros</p>
+                <p>Últimos Registros</p>
                 <div className="text-center">
                     {lastMotors.length > 0 ? (
                         <div className="carousel-container">

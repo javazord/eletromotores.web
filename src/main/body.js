@@ -2,7 +2,7 @@ import React from "react"
 
 const Body = (props) => {
     return (
-        <div className="container d-flex justify-content-center align-items-center p-2" style={{ height: '100vh' }}>
+        <div id="content" className="p-4 p-md-5 pt-5">
             {props.children}
         </div>
 
