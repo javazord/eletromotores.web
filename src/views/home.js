@@ -62,10 +62,10 @@ const Home = () => {
         <>
             <Row>
                 <div className="welcome-section">
-                    <h2>Bem vindo {authUser.login}!</h2>
+                    <h2 className="h2-custom">Bem vindo {authUser.login}!</h2>
                 </div>
                 <p>Últimos Registros</p>
-                <div className="text-center">
+                <div >
                     {lastMotors.length > 0 ? (
                         <div className="carousel-container">
                             <Card>

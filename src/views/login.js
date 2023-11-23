@@ -8,6 +8,7 @@ import { Row, Col, Input, Label } from "reactstrap";
 import useToast from "../components/toast";
 import { Toast } from "primereact/toast";
 import { loginValidate, Validate } from "./user/userAttributes";
+import { InputText } from 'primereact/inputtext';
 
 const Login = (props) => {
     const authContext = useContext(AuthContext);
@@ -124,7 +125,7 @@ const Login = (props) => {
 
     return (
         <>
-            <div className="container d-flex justify-content-center align-items-center p-2" style={{ height: '100vh' }}>
+            <div className="container d-flex justify-content-center align-items-center p-2" style={{ height: '85vh' }}>
                 <Card header={header} style={{ width: "500px", height: "620px" }}>
 
                     {showAuthInputs && ( // renderizar os inputs de login e senha apenas se showAuthInputs for true
@@ -132,14 +133,14 @@ const Login = (props) => {
                             <Row>
                                 <Col>
                                     <Label>Login</Label>
-                                    <Input type="email" value={user.login} name="login" onChange={handleInputChange} className="form-control" />
+                                    <InputText value={user.login} name="login" onChange={handleInputChange} className="p-inputtext-sm form-control" />
                                 </Col>
                             </Row>
 
                             <Row>
                                 <Col>
                                     <Label>Senha</Label>
-                                    <Input type="password" value={user.password || ''} name="password" onChange={handleInputChange} className="form-control" />
+                                    <InputText type="password" value={user.password || ''} name="password" onChange={handleInputChange} className="p-inputtext-sm form-control" />
                                 </Col>
                             </Row>
                         </>

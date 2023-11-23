@@ -9,8 +9,6 @@ import { Toast } from "primereact/toast";
 import { InputText } from 'primereact/inputtext';
 import { Dropdown } from 'primereact/dropdown';
 
-
-
 const UserRegister = () => {
 
   const [state, setState] = useState({
@@ -115,8 +113,6 @@ const UserRegister = () => {
             />
           </Col>
         </Row>
-
-
 
       </Card>
 

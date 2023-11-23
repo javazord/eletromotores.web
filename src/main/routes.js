@@ -8,8 +8,12 @@ import MotorSearch from "../views/motor/motorSearch"
 import MotorRegister from "../views/motor/motorRegister";
 import { AuthConsumer } from "./authProvider";
 
-const RotaAutenticada = ({ children, autenticationUser, redirectTo }) => {
-    return autenticationUser ? children : <Navigate to={redirectTo} />
+const RotaAutenticada = ({ children, autenticationUser, authUserRole, role, redirectTo }) => {
+    return autenticationUser && authUserRole === role ? (
+        children
+    ) : (
+        <Navigate to={redirectTo} />
+    );
 }
 
 const Rotas = (props) => {
@@ -20,13 +24,13 @@ const Rotas = (props) => {
 
                 <Route exact path="/home" element={<RotaAutenticada autenticationUser={props.autenticationUser} redirectTo={"/"}> <Home /> </RotaAutenticada>} />
 
-                <Route exact path="/buscar-colaboradores" element={<RotaAutenticada autenticationUser={props.autenticationUser} redirectTo={"/"}> <UserSearch /> </RotaAutenticada>} />
+                <Route exact path="/buscar-colaboradores" element={<RotaAutenticada autenticationUser={props.autenticationUser}  redirectTo={"/"}> <UserSearch /> </RotaAutenticada>} />
 
-                <Route exact path="/cadastro-colaboradores" element={<RotaAutenticada autenticationUser={props.autenticationUser} redirectTo={"/"}> <UserRegister /> </RotaAutenticada>} />
+                <Route exact path="/cadastro-colaboradores" element={<RotaAutenticada autenticationUser={props.autenticationUser} authUserRole={props.authUserRole} role={'Administrador'} redirectTo={"/"}> <UserRegister /> </RotaAutenticada>} />
 
                 <Route exact path="/buscar-motores" element={<RotaAutenticada autenticationUser={props.autenticationUser} redirectTo={"/"}> <MotorSearch /> </RotaAutenticada>} />
 
-                <Route exact path="/cadastro-motores" element={<RotaAutenticada autenticationUser={props.autenticationUser} redirectTo={"/"}> <MotorRegister /> </RotaAutenticada>} />
+                <Route exact path="/cadastro-motores" element={<RotaAutenticada autenticationUser={props.autenticationUser} authUserRole={props.authUserRole} role={'Administrador'} redirectTo={"/"}> <MotorRegister /> </RotaAutenticada>} />
             </Routes>
         </BrowserRouter>
     )
@@ -34,7 +38,7 @@ const Rotas = (props) => {
 
 const MyComponent = () => (
     <AuthConsumer>
-        {(context) => (<Rotas autenticationUser={context.authenticated} />)}
+        {(context) => (<Rotas autenticationUser={context.authenticated} authUserRole={context.authUser?.role}/>)}
     </AuthConsumer>
 );
 
