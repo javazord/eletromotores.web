@@ -70,33 +70,31 @@ export default function UserSearch() {
 
     return (
         <>
-            <Col className="col-md-8 mx-auto">
 
-                <Card title="Pesquisar">
-                    <Row className="d-flex align-items-end">
-                        <Col>
-                            <Label>Login</Label>
-                            <Input name="login" value={login} onChange={e => setLogin(e.target.value)} type="text" className="form-control mt-1" placeholder="Informe o login" />
-                        </Col>
-                        <Col>
-                            <Label>Condição</Label>
-                            <select name="condition" value={condition} onChange={e => setCondition(e.target.value)} className="form-select mt-1" >
-                                <option value="1">Ativado</option>
-                                <option value="0">Desativado</option>
-                            </select>
-                        </Col>
-                        <Col>
-                            <Button onClick={buttonSearch} className="btn btn-primary" icon="pi pi-search" label="Buscar" size="sm" />
-                            <Toast ref={toast} />
-                        </Col>
-                    </Row>
-                    <br />
-                    <UserTable users={users} view={view} edit={edit} context={authUser} />
+            <Card title="Pesquisar">
+                <Row className="d-flex align-items-end">
+                    <Col>
+                        <Label>Login</Label>
+                        <Input name="login" value={login} onChange={e => setLogin(e.target.value)} type="text" className="form-control mt-1" placeholder="Informe o login" />
+                    </Col>
+                    <Col>
+                        <Label>Condição</Label>
+                        <select name="condition" value={condition} onChange={e => setCondition(e.target.value)} className="form-select mt-1" >
+                            <option value="1">Ativado</option>
+                            <option value="0">Desativado</option>
+                        </select>
+                    </Col>
+                    <Col>
+                        <Button onClick={buttonSearch} className="btn btn-primary" icon="pi pi-search" label="Buscar" size="sm" />
+                        <Toast ref={toast} />
+                    </Col>
+                </Row>
+                <br />
+                <UserTable users={users} view={view} edit={edit} context={authUser} />
 
-                    <EditUserDialog user={user} visible={editConfirmDialog} onHide={onHide} />
+                <EditUserDialog user={user} visible={editConfirmDialog} onHide={onHide} />
 
-                </Card>
-            </Col>
+            </Card>
 
 
         </>
