@@ -2,19 +2,9 @@ import { useRef } from "react";
 
 const useToast = () => {
   const toast = useRef(null);
-  const lista = [];
-  const showMessage = (tipo, title, msgs) => {
 
-    if (Array.isArray(msgs)) {
-      msgs.forEach(msg => {
-        lista.push({ severity: tipo, summary: title, detail: msg, life: 3000 })
-      });
-      toast.current.show(lista);
-    } else {
-      toast.current.show({ severity: tipo, summary: title, detail: msgs, life: 3000 });
-    }
-
-
+  const showMessage = (tipo, title, msg) => {
+    toast.current.show({ severity: tipo, summary: title, detail: msg, life: 2000 });
   }
 
   const showMessageSuccess = (msg) => {
@@ -25,8 +15,8 @@ const useToast = () => {
     showMessage('warn', 'Alerta', msg);
   }
 
-  const showMessageError = (msgs) => {
-    showMessage('error', 'Erro', msgs);
+  const showMessageError = (msg) => {
+    showMessage('error', 'Erro', msg);
   }
 
   return { showMessage, showMessageSuccess, showMessageAlert, showMessageError, toast };

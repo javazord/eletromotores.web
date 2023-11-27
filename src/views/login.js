@@ -64,34 +64,30 @@ const Login = (props) => {
     const autenticar = () => {
 
         if (showAuthInputs) {
-
             try {
                 loginValidate(user);
+
+                props.service.authenticate({
+                    login: user.login,
+                    password: user.password
+                }).then(response => {
+                    if (response.data.result) {
+                        setShowAuthInputs(false);
+                        setShowPasswordInputs(true);
+                        setUser(response.data.user);
+                    } else {
+                        authContext.beginSession(response.data);
+                        navigate('/home');
+                    }
+                }).catch(erro => {
+                    showMessageError(erro.response.data);
+                });
+
             } catch (error) {
                 const msgs = error.mensagens;
                 showMessageError(msgs);
                 return false;
             }
-
-            props.service.authenticate({
-                login: user.login,
-                password: user.password
-            }).then(response => {
-
-                if (response.data.result) {
-                    setShowAuthInputs(false)
-                    setShowPasswordInputs(true);
-                    setUser(response.data.user)
-                }
-                else {
-                    authContext.beginSession(response.data)
-                    navigate('/home')
-                }
-
-            }).catch(erro => {
-                showMessageError(erro.response.data)
-            })
-
         }
 
         if (showPasswordInputs) {
