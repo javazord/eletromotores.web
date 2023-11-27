@@ -4,7 +4,7 @@ if (!('boxShadow' in document.body.style)) {
 
 document.body.addEventListener("click", function(e) {
     var target = e.target;
-    if (target.tagName === "INPUT" &&
+    if (target.tagName === "Form.Form.Control" &&
         target.getAttribute('class').indexOf('liga') === -1) {
         target.select();
     }
@@ -24,7 +24,7 @@ document.body.addEventListener("click", function(e) {
         testDrive.style.fontSize = fontSize.value + 'px';
     }
     fontSize.addEventListener('change', updateSize, false);
-    testText.addEventListener('input', updateTest, false);
+    testText.addEventListener('Form.Form.Control', updateTest, false);
     testText.addEventListener('change', updateTest, false);
     updateSize();
 }());

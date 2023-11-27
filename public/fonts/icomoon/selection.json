@@ -29739,19 +29739,19 @@
         "isMulticolor": false,
         "isMulticolor2": false,
         "tags": [
-          "label"
+          "Form.Label"
         ],
         "defaultCode": 59538,
         "grid": 24
       },
       "attrs": [],
       "properties": {
-        "ligatures": "label",
+        "ligatures": "Form.Label",
         "id": 422,
         "order": 433,
         "prevSize": 24,
         "code": 59538,
-        "name": "label"
+        "name": "Form.Label"
       },
       "setIdx": 2,
       "setId": 2,
@@ -29766,19 +29766,19 @@
         "isMulticolor": false,
         "isMulticolor2": false,
         "tags": [
-          "label_outline"
+          "Form.Label_outline"
         ],
         "defaultCode": 59539,
         "grid": 24
       },
       "attrs": [],
       "properties": {
-        "ligatures": "label_outline",
+        "ligatures": "Form.Label_outline",
         "id": 423,
         "order": 434,
         "prevSize": 24,
         "code": 59539,
-        "name": "label_outline"
+        "name": "Form.Label_outline"
       },
       "setIdx": 2,
       "setId": 2,
@@ -39811,19 +39811,19 @@
         "isMulticolor": false,
         "isMulticolor2": false,
         "tags": [
-          "video_label"
+          "video_Form.Label"
         ],
         "defaultCode": 57457,
         "grid": 24
       },
       "attrs": [],
       "properties": {
-        "ligatures": "video_label",
+        "ligatures": "video_Form.Label",
         "id": 795,
         "order": 806,
         "prevSize": 24,
         "code": 57457,
-        "name": "video_label"
+        "name": "video_Form.Label"
       },
       "setIdx": 2,
       "setId": 2,

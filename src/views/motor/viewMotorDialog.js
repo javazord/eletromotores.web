@@ -1,147 +1,150 @@
 import React, { useState } from "react";
 import { Dialog } from "primereact/dialog";
 import { Button } from 'primereact/button';
-import { Col, Row, Input, Label } from "reactstrap";
+import { Modal, Row, Col, Form } from 'react-bootstrap';
 import { Image } from 'primereact/image';
-import { format } from 'date-fns';
-
-
+import moment from "moment/moment";
 
 const ViewMotorDialog = (props) => {
     const { motor, visible, onHide } = props;
-
     const [showSchema, setShowSchema] = useState(false);
 
     const handleToggleSchema = () => {
         setShowSchema(!showSchema);
     };
 
-    const header = `Registrado em ${format(new Date(motor.registro), 'dd/MM/yyyy')}`;
+    const footer = (
+        <Button label="Fechar" className="p-button-secondary mt-2" icon="pi pi-times" onClick={onHide} size="sm" />
+    )
     return (
         <>
-            <Dialog
-                header={header}
-                visible={visible}
+            <Modal
+                show={visible}
                 modal={false}
-                style={{ width: '65vw' }}
                 onHide={onHide}
-                footer={
-                    <Button label="Fechar" className="p-button-secondary mt-2" icon="pi pi-times" onClick={onHide} size="sm" />
-                }
+                centered
+                size="xl"
             >
-                <Row>
-                    <Col>
-                        <Label>Marca</Label>
-                        <Input name="marca" value={motor.marca || ''} type="text" bsSize="sm" disabled />
-                    </Col>
-                    <Col>
-                        <Label>Modelo</Label>
-                        <Input name="modelo" value={motor.modelo || ''} type="text" bsSize="sm" disabled />
-                    </Col>
-                    <Col>
-                        <Label>Ranhuras</Label>
-                        <Input name="ranhuras" value={motor.ranhuras || ''} type="number" bsSize="sm" disabled />
-                    </Col>
-                    <Col>
-                        <Label>Rotação</Label>
-                        <Input name="rotacao" value={motor.rotacao || ''} type="number" bsSize="sm" disabled />
-                    </Col>
-                    <Col>
-                        <Label>Peso</Label>
-                        <Input id="peso" value={motor.fio.peso.toFixed(3)} type="number" bsSize="sm" disabled />
-                    </Col>
-                    <Col>
-                        <Label>Potência</Label>
-                        <Input name="potencia" value={motor.potencia || ''} type="number" bsSize="sm" disabled />
-                    </Col>
-                </Row>
-
-                <Row>
-
-                    <Col className="col-md-2">
-                        <Label>Comprimento</Label>
-                        <Input name="comprimento" value={motor.comprimento || ''} type="number" min="1" bsSize="sm" disabled />
-                    </Col>
-                    <Col className="col-md-2">
-                        <Label>M. Externa</Label>
-                        <Input name="medidaExterna" value={motor.medidaExterna || ''} type="number" bsSize="sm" disabled />
-                    </Col>
-                    {motor.passo.map((valor, index) => (
-                        <Col className="col-md-1" key={index}>
-                            <Label>Passo</Label>
-                            <Input type="number" value={valor} id={`passo${index + 1}`} bsSize="sm" disabled />
+                <Modal.Header closeButton>
+                    <Modal.Title>Registrado em {moment(motor.registro).format('DD/MM/YYYY')}</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    <Row>
+                        <Col>
+                            <Form.Label>Marca</Form.Label>
+                            <Form.Control name="marca" value={motor.marca || ''} type="text" bsSize="sm" disabled />
                         </Col>
-
-                    ))}
-                </Row>
-
-                <Row>
-                    {motor.fio.awgs.map((valor, index) => (
-                        <Col className="col-md-2" key={index}>
-                            <Label>Awg</Label>
-                            <Input type="number" value={valor} id={`awg${index + 1}`} bsSize="sm" disabled />
+                        <Col>
+                            <Form.Label>Modelo</Form.Label>
+                            <Form.Control name="modelo" value={motor.modelo || ''} type="text" bsSize="sm" disabled />
                         </Col>
-                    ))}
-                </Row>
-
-                <Row>
-                    {motor.fio.quantidades.map((qtd, index) => (
-
-                        <Col className="col-md-2" key={index}>
-                            <Label>Quantidade</Label>
-                            <Input type="number" value={qtd} id={`qtd${index + 1}`} bsSize="sm" disabled />
+                        <Col>
+                            <Form.Label>Ranhuras</Form.Label>
+                            <Form.Control name="ranhuras" value={motor.ranhuras || ''} type="number" bsSize="sm" disabled />
                         </Col>
-
-                    ))}
-
-                </Row>
-                <Row>
-                    {motor.fio.espiras.map((esp, index) => (
-
-                        <Col className="col-md-2" key={index}>
-                            <Label>Espiras</Label>
-                            <Input type="number" value={esp} id={`esp${index + 1}`} bsSize="sm" disabled />
+                        <Col>
+                            <Form.Label>Rotação</Form.Label>
+                            <Form.Control name="rotacao" value={motor.rotacao || ''} type="number" bsSize="sm" disabled />
                         </Col>
-                    ))}
-                </Row>
-                <Row>
-                    {motor.voltagens.map((volts, index) => (
-                        <Col className="col-md-2" key={index}>
-                            <Label>Voltagem</Label>
-                            <Input type="number" value={volts} id={`v${index + 1}`} bsSize="sm" disabled />
+                        <Col>
+                            <Form.Label>Peso</Form.Label>
+                            <Form.Control id="peso" value={motor.fio.peso.toFixed(3)} type="number" bsSize="sm" disabled />
                         </Col>
-                    ))}
-                </Row>
-                <Row>
-                    {motor.amperagens.map((amp, index) => (
-                        <Col className="col-md-2" key={index}>
-                            <Label>Amperagem </Label>
-                            <Input type="number" value={amp} id={`amp${index + 1}`} bsSize="sm" disabled />
+                        <Col>
+                            <Form.Label>Potência</Form.Label>
+                            <Form.Control name="potencia" value={motor.potencia || ''} type="number" bsSize="sm" disabled />
                         </Col>
-                    ))}
-                </Row>
+                    </Row>
 
-                <Row>
-                    <Col>
-                        <Label>Tensão</Label>
-                        <Input name="tensao" value={motor.tensao || ''} type="text" bsSize="sm" disabled />
-                    </Col>
-                    <Col className="col-md-6">
-                        <Label>Ligação</Label>
-                        <Input name="ligacao" value={motor.ligacao || ''} type="text" bsSize="sm" disabled />
-                    </Col>
-                    <Col>
-                        <Label>Empresa</Label>
-                        <Input name="empresa" value={motor.empresa || ''} type="text" bsSize="sm" disabled />
-                    </Col>
-                </Row>
-                <Row>
-                    <Label>Esquema </Label>
-                    <Col className="mt-2">
-                        <Button className='custom-choose-btn p-button-rounded ' icon='pi pi-fw pi-images' tooltip="Visualizar esquema" size="sm" onClick={handleToggleSchema} />
-                    </Col>
-                </Row>
-            </Dialog>
+                    <Row>
+
+                        <Col className="col-md-2">
+                            <Form.Label>Comprimento</Form.Label>
+                            <Form.Control name="comprimento" value={motor.comprimento || ''} type="number" min="1" bsSize="sm" disabled />
+                        </Col>
+                        <Col className="col-md-2">
+                            <Form.Label>M. Externa</Form.Label>
+                            <Form.Control name="medidaExterna" value={motor.medidaExterna || ''} type="number" bsSize="sm" disabled />
+                        </Col>
+                        {motor.passo.map((valor, index) => (
+                            <Col className="col-md-1" key={index}>
+                                <Form.Label>Passo</Form.Label>
+                                <Form.Control type="number" value={valor} id={`passo${index + 1}`} bsSize="sm" disabled />
+                            </Col>
+
+                        ))}
+                    </Row>
+
+                    <Row>
+                        {motor.fio.awgs.map((valor, index) => (
+                            <Col className="col-md-2" key={index}>
+                                <Form.Label>Awg</Form.Label>
+                                <Form.Control type="number" value={valor} id={`awg${index + 1}`} bsSize="sm" disabled />
+                            </Col>
+                        ))}
+                    </Row>
+
+                    <Row>
+                        {motor.fio.quantidades.map((qtd, index) => (
+
+                            <Col className="col-md-2" key={index}>
+                                <Form.Label>Quantidade</Form.Label>
+                                <Form.Control type="number" value={qtd} id={`qtd${index + 1}`} bsSize="sm" disabled />
+                            </Col>
+
+                        ))}
+
+                    </Row>
+                    <Row>
+                        {motor.fio.espiras.map((esp, index) => (
+
+                            <Col className="col-md-2" key={index}>
+                                <Form.Label>Espiras</Form.Label>
+                                <Form.Control type="number" value={esp} id={`esp${index + 1}`} bsSize="sm" disabled />
+                            </Col>
+                        ))}
+                    </Row>
+                    <Row>
+                        {motor.voltagens.map((volts, index) => (
+                            <Col className="col-md-2" key={index}>
+                                <Form.Label>Voltagem</Form.Label>
+                                <Form.Control type="number" value={volts} id={`v${index + 1}`} bsSize="sm" disabled />
+                            </Col>
+                        ))}
+                    </Row>
+                    <Row>
+                        {motor.amperagens.map((amp, index) => (
+                            <Col className="col-md-2" key={index}>
+                                <Form.Label>Amperagem </Form.Label>
+                                <Form.Control type="number" value={amp} id={`amp${index + 1}`} bsSize="sm" disabled />
+                            </Col>
+                        ))}
+                    </Row>
+
+                    <Row>
+                        <Col>
+                            <Form.Label>Tensão</Form.Label>
+                            <Form.Control name="tensao" value={motor.tensao || ''} type="text" bsSize="sm" disabled />
+                        </Col>
+                        <Col className="col-md-6">
+                            <Form.Label>Ligação</Form.Label>
+                            <Form.Control name="ligacao" value={motor.ligacao || ''} type="text" bsSize="sm" disabled />
+                        </Col>
+                        <Col>
+                            <Form.Label>Empresa</Form.Label>
+                            <Form.Control name="empresa" value={motor.empresa || ''} type="text" bsSize="sm" disabled />
+                        </Col>
+                    </Row>
+                    <Row>
+                        <Form.Label>Esquema </Form.Label>
+                        <Col className="mt-2">
+                            <Button className='custom-choose-btn p-button-rounded ' icon='pi pi-fw pi-images' tooltip="Visualizar esquema" size="sm" onClick={handleToggleSchema} />
+                        </Col>
+                    </Row>
+                </Modal.Body>
+                <Modal.Footer>{footer}</Modal.Footer>
+
+            </Modal>
 
             <Dialog header="Esquema" visible={showSchema} style={{ width: '35vw' }} onHide={handleToggleSchema}>
                 {motor.imagem.dados ? (

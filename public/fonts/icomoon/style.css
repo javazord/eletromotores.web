@@ -3648,10 +3648,10 @@
 .icon-kitchen:before {
   content: "\eb47";
 }
-.icon-label:before {
+.icon-Form.Label:before {
   content: "\e892";
 }
-.icon-label_outline:before {
+.icon-Form.Label_outline:before {
   content: "\e893";
 }
 .icon-language2:before {
@@ -4767,7 +4767,7 @@
 .icon-video_call:before {
   content: "\e070";
 }
-.icon-video_label:before {
+.icon-video_Form.Label:before {
   content: "\e071";
 }
 .icon-video_library:before {

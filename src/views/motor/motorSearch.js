@@ -48,7 +48,7 @@ const MotorSearch = () => {
             .search(motor)
             .then((response) => {
                 load(response.data);
-                setMotores(response.data);
+                
             })
             .catch((erro) => {
                 console.log(erro);
@@ -110,6 +110,7 @@ const MotorSearch = () => {
             if (lista < 1) {
                 showMessageAlert('Nenhum resultado encontrado.');
             }
+            setMotores(lista);
         }, 2000);
     }
 
