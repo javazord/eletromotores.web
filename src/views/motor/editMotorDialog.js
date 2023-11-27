@@ -1,7 +1,6 @@
-/* eslint-disable no-undef */
 import React, { useState, useMemo } from "react";
-import { Row, Col, Input, Label } from "reactstrap";
-import { Dialog } from "primereact/dialog";
+import { Dialog } from 'primereact/dialog'
+import { Modal, Row, Col, Form } from 'react-bootstrap';
 import { Button } from 'primereact/button';
 import { useEffect } from "react";
 import { MotorService } from '../../app/service/motor/motorService';
@@ -10,14 +9,13 @@ import useToast from "../../components/toast";
 import { Toast } from "primereact/toast";
 import Checkbox from "../../components/grid/checkbox";
 import { Image } from 'primereact/image';
-
 import _ from 'lodash'; // Importe o Lodash
 
 
 const EditMotorDialog = (props) => {
 
     const [motor, setMotor] = useState(_.cloneDeep(props.motor)); // Use _.cloneDeep
-    const [initialData, ] = useState(_.cloneDeep(props.motor));
+    const [initialData,] = useState(_.cloneDeep(props.motor));
     const [checkboxVolts, setCheckboxVolts] = useState([
         { volts: 127, checked: initialData.voltagens.includes(127) ? true : false },
         { volts: 220, checked: initialData.voltagens.includes(220) ? true : false },
@@ -31,10 +29,10 @@ const EditMotorDialog = (props) => {
     const [indexPasso, setIndexPasso] = useState(props.motor.passo.length);
     const [indexAWG, setIndexAWG] = useState(props.motor.fio.awgs.length);
     const [indexESP, setIndexESP] = useState(props.motor.fio.espiras.length);
-    const { showMessageSuccess, showMessageError, toast } = useToast();
+    const { showMessageSuccess, showMessageError, showMessageAlert, toast } = useToast();
     const motorService = useMemo(() => new MotorService(), []);
     const { visible, onHide } = props;
-    const [imagem, ] = useState();
+    const [imagem,] = useState();
     const [showSchema, setShowSchema] = useState(false);
 
     useEffect(() => {
@@ -196,19 +194,19 @@ const EditMotorDialog = (props) => {
         // 1. Adicione o valor ao final da matriz
         const newStep = [...motor.passo];
         newStep[index] = e.target.value;
-        
+
         // 2. Ordene a matriz em ordem crescente
         newStep.sort((a, b) => a - b);
-      
+
         setMotor({
-          ...motor,
-          fio: {
-            ...motor.fio
-          },
-          passo: newStep
+            ...motor,
+            fio: {
+                ...motor.fio
+            },
+            passo: newStep
         });
-      }
-      
+    }
+
 
     const handleCheckboxChange = (index, checked) => {
 
@@ -240,7 +238,6 @@ const EditMotorDialog = (props) => {
 
         validateCheckbox();
     };
-
 
     const validateCheckbox = () => {
 
@@ -307,13 +304,13 @@ const EditMotorDialog = (props) => {
             const emptyImage = new File([new Blob()], 'semimagem.png', { type: 'image/png' });
             formData.append('file', emptyImage);
         }
-        
+
         // Converte o objeto 'motorInsert' para uma string JSON e o adiciona à solicitação
         formData.append('motorData', JSON.stringify(motor));
         motorService.update(formData)
             .then(response => {
                 showMessageSuccess('Motor atualizado com sucesso!');
-                load();             
+                load();
             })
             .catch(error => {
                 load();
@@ -345,158 +342,158 @@ const EditMotorDialog = (props) => {
 
     return (
 
-        <><Dialog
-            header={`Atualizar Motor `}
-            visible={visible}
+        <><Modal
+            show={visible}
             modal={true}
-            style={{ width: '65vw' }}
-            onHide={onHide} // Passa a propriedade onHide para o componente Dialog
-            footer={footer}
+            onHide={onHide}
+            centered
+            size="xl"
         >
-            <Row>
-                <Col>
-                    <Label>Marca<span>*</span> </Label>
-                    <Input name="marca" value={motor.marca || ''} onChange={handleInputChange} type="text" bsSize="sm" />
-                </Col>
-                <Col>
-                    <Label>Modelo</Label>
-                    <Input name="modelo" value={motor.modelo || ''} onChange={handleInputChange} type="text" bsSize="sm" />
-                </Col>
-                <Col>
-                    <Label>Ranhuras<span>*</span></Label>
-                    <Input name="ranhuras" value={motor.ranhuras || ''} onChange={handleInputChange} type="number" min={0} bsSize="sm" />
-                </Col>
-                <Col>
-                    <Label>Rotação</Label>
-                    <Input name="rotacao" value={motor.rotacao || ''} onChange={handleInputChange} type="number" min={0} bsSize="sm" />
-                </Col>
-                <Col>
-                    <Label>Peso<span>*</span></Label>
-                    <Input name="peso" value={motor.fio.peso ? motor.fio.peso.toFixed(3) : ''} onChange={handleInputChangePeso} type="number" min={0} bsSize="sm" />
-                </Col>
-                <Col>
-                    <Label>Potência</Label>
-                    <Input name="potencia" value={motor.potencia || ''} onChange={handleInputChange} type="number" min={0} bsSize="sm" />
-                </Col>
-            </Row>
-
-            <Row>
-
-
-                <Col className="col-md-2">
-                    <Label>Comprimento<span>*</span></Label>
-                    <Input name="comprimento" value={motor.comprimento || ''} onChange={handleInputChange} type="number" min={0} bsSize="sm" />
-                </Col>
-                <Col className="col-md-2">
-                    <Label>M. Externa<span>*</span></Label>
-                    <Input name="medidaExterna" value={motor.medidaExterna || ''} onChange={handleInputChange} type="number" min={0} bsSize="sm" />
-                </Col>
-                {motor.passo.map((passo, index) => (
-
-                    <Col className="col-md-1" key={index}>
-                        <Label>Passo<span>*</span></Label>
-                        <Input type="number" value={passo} id={`passo${index + 1}`} onChange={(e) => handleChangePasso(e, index)} min={0} bsSize="sm" />
+            <Modal.Header closeButton>
+                <Modal.Title>Editar Motor</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+                <Row>
+                    <Col>
+                        <Form.Label>Marca<span>*</span> </Form.Label>
+                        <Form.Control name="marca" value={motor.marca || ''} onChange={handleInputChange} type="text" size="sm" />
                     </Col>
-
-                ))}
-                <Col className="col-2 mt-2 d-flex align-items-end">
-                    <Button className="me-1" icon="pi pi-plus" rounded raised severity="info" tooltip="Adicionar Passo" onClick={addInputsPasso} size="sm" />
-                    <Button className="ms-1" icon="pi pi-minus" rounded raised severity="danger" tooltip="Remover Passo" onClick={removeInputsPasso} size="sm" />
-                </Col>
-            </Row>
-
-            <Row>
-                {motor.fio.awgs.map((valor, index) => (
-                    <Col className="col-md-2" key={index}>
-                        <Label>Awg<span>*</span></Label>
-                        <Input type="number" value={valor} onChange={(e) => handleChangeAWG(e, index)} min={0} bsSize="sm" />
+                    <Col>
+                        <Form.Label>Modelo</Form.Label>
+                        <Form.Control name="modelo" value={motor.modelo || ''} onChange={handleInputChange} type="text" size="sm" />
                     </Col>
-                ))}
-
-                <Col className="col-md-2 mt-2 d-flex align-items-end">
-                    <Button icon="pi pi-plus" rounded raised severity="info" tooltip="Adicionar AWG/Quantidade" size="sm" onClick={addInputs} />
-                </Col>
-            </Row>
-
-            <Row>
-                {motor.fio.quantidades.map((qtd, index) => (
-
-                    <Col className="col-md-2" key={index}>
-                        <Label>Quantidade<span>*</span></Label>
-                        <Input type="number" value={qtd} id={`qtd${index + 1}`} onChange={(e) => handleChangeQTD(e, index)} min={0} bsSize="sm" />
+                    <Col>
+                        <Form.Label>Ranhuras<span>*</span></Form.Label>
+                        <Form.Control name="ranhuras" value={motor.ranhuras || ''} onChange={handleInputChange} type="number" min={0} size="sm" />
                     </Col>
-
-                ))}
-
-                <Col className="col-md-2 mt-2 d-flex align-items-end">
-                    <Button icon="pi pi-minus" rounded raised severity="danger" tooltip="Remover AWG/Quantidade" size="sm" onClick={removeInputs} />
-                </Col>
-            </Row>
-            <Row>
-                {motor.fio.espiras.map((esp, index) => (
-
-                    <Col className="col-md-2" key={index}>
-                        <Label>Espiras<span>*</span></Label>
-                        <Input type="number" value={esp} id={`esp${index + 1}`} onChange={(e) => handleChangeESP(e, index)} min={0} bsSize="sm" />
+                    <Col>
+                        <Form.Label>Rotação</Form.Label>
+                        <Form.Control name="rotacao" value={motor.rotacao || ''} onChange={handleInputChange} type="number" min={0} size="sm" />
                     </Col>
-
-                ))}
-                <Col className="col-2 mt-2 d-flex align-items-end">
-                    <Button className="me-1" icon="pi pi-plus" rounded raised severity="info" tooltip="Adicionar Espiras" onClick={addInputsESP} size="small" />
-                    <Button className="ms-1" icon="pi pi-minus" rounded raised severity="danger" tooltip="Remover Espiras" onClick={removeInputsESP} size="small" />
-                </Col>
-
-            </Row>
-            <Row className="mt-2">
-                {checkboxVolts.map((checkbox, index) => (
-                    <div className="col-md-2" key={index}>
-                        <Label>Voltagem<span>*</span></Label>
-                        <Checkbox
-                            label={`${checkbox.volts}v`} checked={checkbox.checked}
-                            onChange={(e) => handleCheckboxChange(index, e.target.checked)} />
-                        {motor.voltagens.includes(checkbox.volts) && (
-                            <><Label>Amperagem</Label>
-                                <Input
-                                    type="number"
-                                    value={motor.amperagens[motor.voltagens.indexOf(checkbox.volts)]}
-                                    min={0}
-                                    bsSize="sm"
-                                    onChange={(e) => {
-                                        const newMotor = { ...motor };
-                                        newMotor.amperagens[motor.voltagens.indexOf(checkbox.volts)] = Number(e.target.value);
-                                        setMotor(newMotor);
-                                    }} />
-                            </>
-                        )}
-                    </div>
-                ))}
-
-            </Row>
-
-            <Row>
-                <Col className="col-md-3">
-                    <Label>Tensão<span>*</span></Label>
-                    <Input name="tensao" value={motor.tensao} disabled type="text" bsSize="sm" />
-                </Col>
-                <Col className="col-md-5">
-                    <Label>Ligação<span>*</span></Label>
-                    <Input name="ligacao" value={motor.ligacao || ''} onChange={handleInputChange} type="text" min={0} bsSize="sm" />
-                </Col>
-                <Col className="col-md-4">
-                    <Label>Empresa<span>*</span></Label>
-                    <select name="empresa" value={motor.empresa} onChange={handleInputChange} className="form-select form-select-sm">
-                        <option value="">Selecione uma empresa</option>
-                        {empresas.map((empresa) => (
-                            <option key={empresa.valor} value={empresa.valor}>{empresa.descricao}</option>
-                        ))}
-                    </select>
-                </Col>
+                    <Col>
+                        <Form.Label>Peso<span>*</span></Form.Label>
+                        <Form.Control name="peso" value={motor.fio.peso ? motor.fio.peso.toFixed(3) : ''} onChange={handleInputChangePeso} type="number" min={0} size="sm" />
+                    </Col>
+                    <Col>
+                        <Form.Label>Potência</Form.Label>
+                        <Form.Control name="potencia" value={motor.potencia || ''} onChange={handleInputChange} type="number" min={0} size="sm" />
+                    </Col>
+                </Row>
 
                 <Row>
+                    <Col className="col-md-2">
+                        <Form.Label>Comprimento<span>*</span></Form.Label>
+                        <Form.Control name="comprimento" value={motor.comprimento || ''} onChange={handleInputChange} type="number" min={0} size="sm" />
+                    </Col>
+                    <Col className="col-md-2">
+                        <Form.Label>M. Externa<span>*</span></Form.Label>
+                        <Form.Control name="medidaExterna" value={motor.medidaExterna || ''} onChange={handleInputChange} type="number" min={0} size="sm" />
+                    </Col>
+                    {motor.passo.map((passo, index) => (
+
+                        <Col className="col-md-1" key={index}>
+                            <Form.Label>Passo<span>*</span></Form.Label>
+                            <Form.Control type="number" value={passo} id={`passo${index + 1}`} onChange={(e) => handleChangePasso(e, index)} min={0} size="sm" />
+                        </Col>
+
+                    ))}
+                    <Col className="col-2 mt-2 d-flex align-items-end">
+                        <Button className="me-1" icon="pi pi-plus" rounded raised severity="info" tooltip="Adicionar Passo" onClick={addInputsPasso} size="sm" />
+                        <Button className="ms-1" icon="pi pi-minus" rounded raised severity="danger" tooltip="Remover Passo" onClick={removeInputsPasso} size="sm" />
+                    </Col>
+                </Row>
+
+                <Row>
+                    {motor.fio.awgs.map((valor, index) => (
+                        <Col className="col-md-2" key={index}>
+                            <Form.Label>Awg<span>*</span></Form.Label>
+                            <Form.Control type="number" value={valor} onChange={(e) => handleChangeAWG(e, index)} min={0} size="sm" />
+                        </Col>
+                    ))}
+
+                    <Col className="col-md-2 mt-2 d-flex align-items-end">
+                        <Button icon="pi pi-plus" rounded raised severity="info" tooltip="Adicionar AWG/Quantidade" size="sm" onClick={addInputs} />
+                    </Col>
+                </Row>
+
+                <Row>
+                    {motor.fio.quantidades.map((qtd, index) => (
+
+                        <Col className="col-md-2" key={index}>
+                            <Form.Label>Quantidade<span>*</span></Form.Label>
+                            <Form.Control type="number" value={qtd} id={`qtd${index + 1}`} onChange={(e) => handleChangeQTD(e, index)} min={0} size="sm" />
+                        </Col>
+
+                    ))}
+
+                    <Col className="col-md-2 mt-2 d-flex align-items-end">
+                        <Button icon="pi pi-minus" rounded raised severity="danger" tooltip="Remover AWG/Quantidade" size="sm" onClick={removeInputs} />
+                    </Col>
+                </Row>
+                <Row>
+                    {motor.fio.espiras.map((esp, index) => (
+
+                        <Col className="col-md-2" key={index}>
+                            <Form.Label>Espiras<span>*</span></Form.Label>
+                            <Form.Control type="number" value={esp} id={`esp${index + 1}`} onChange={(e) => handleChangeESP(e, index)} min={0} size="sm" />
+                        </Col>
+
+                    ))}
+                    <Col className="col-2 mt-2 d-flex align-items-end">
+                        <Button className="me-1" icon="pi pi-plus" rounded raised severity="info" tooltip="Adicionar Espiras" onClick={addInputsESP} size="small" />
+                        <Button className="ms-1" icon="pi pi-minus" rounded raised severity="danger" tooltip="Remover Espiras" onClick={removeInputsESP} size="small" />
+                    </Col>
+
+                </Row>
+                <Row className="mt-2">
+                    {checkboxVolts.map((checkbox, index) => (
+                        <div className="col-md-2" key={index}>
+                            <Form.Label>Voltagem<span>*</span></Form.Label>
+                            <Checkbox
+                                label={`${checkbox.volts}v`} checked={checkbox.checked}
+                                onChange={(e) => handleCheckboxChange(index, e.target.checked)} />
+                            {motor.voltagens.includes(checkbox.volts) && (
+                                <><Form.Label>Amperagem</Form.Label>
+                                    <Form.Control
+                                        type="number"
+                                        value={motor.amperagens[motor.voltagens.indexOf(checkbox.volts)]}
+                                        min={0}
+                                        size="sm"
+                                        onChange={(e) => {
+                                            const newMotor = { ...motor };
+                                            newMotor.amperagens[motor.voltagens.indexOf(checkbox.volts)] = Number(e.target.value);
+                                            setMotor(newMotor);
+                                        }} />
+                                </>
+                            )}
+                        </div>
+                    ))}
+
+                </Row>
+
+                <Row>
+                    <Col className="col-md-3">
+                        <Form.Label>Tensão<span>*</span></Form.Label>
+                        <Form.Control name="tensao" value={motor.tensao} disabled type="text" size="sm" />
+                    </Col>
+                    <Col className="col-md-5">
+                        <Form.Label>Ligação<span>*</span></Form.Label>
+                        <Form.Control name="ligacao" value={motor.ligacao || ''} onChange={handleInputChange} type="text" min={0} size="sm" />
+                    </Col>
+                    <Col className="col-md-4">
+                        <Form.Label>Empresa<span>*</span></Form.Label>
+                        <select name="empresa" value={motor.empresa} onChange={handleInputChange} className="form-select form-select-sm">
+                            <option value="">Selecione uma empresa</option>
+                            {empresas.map((empresa) => (
+                                <option key={empresa.valor} value={empresa.valor}>{empresa.descricao}</option>
+                            ))}
+                        </select>
+                    </Col>
+
                     <Row>
                         <Col className="col-md-6 mt-2">
-                            <Label>Esquema</Label>
-                            <Input type={"file"} accept={".jpg, .png"} onChange={handleFileChange} bsSize="sm" />
+                            <Form.Label>Esquema</Form.Label>
+                            <Form.Control type={"file"} accept={".jpg, .png"} onChange={handleFileChange} size="sm" />
 
                         </Col>
                         <Col className="mt-2 d-flex align-items-end">
@@ -504,20 +501,27 @@ const EditMotorDialog = (props) => {
                         </Col>
 
                     </Row>
+
+                </Row>
+                <Row>
+                    <Col className="col-md-6 mt-2">
+                        <small>
+                            Itens marcados com <label><span>*</span></label> são obrigatórios
+                        </small>
+                    </Col>
                 </Row>
 
-            </Row>
-            <Col className="d-flex justify-content-start mt-2">
-                <small>
-                    Itens marcados com <label><span>*</span></label> são obrigatórios
-                </small>
-            </Col>
 
-            <Row>
-                <Toast ref={toast} />
-            </Row>
+                <Row>
+                    <Toast ref={toast} />
+                </Row>
+            </Modal.Body>
 
-        </Dialog><Dialog header="Esquema" visible={showSchema} style={{ width: '55vw' }} onHide={() => setShowSchema(false)}>
+            <Modal.Footer>{footer}</Modal.Footer>
+
+        </Modal>
+
+            <Dialog header="Esquema" visible={showSchema} style={{ width: '55vw' }} onHide={() => setShowSchema(false)}>
                 {typeof motor.imagem.dados ? (
                     <div style={{ display: 'flex', justifyContent: 'center' }}>
                         <Image src={`data:${motor.imagem.tipo};base64,${motor.imagem.dados}`} loading="lazy" alt={motor.imagem.nome} preview width="250" />
@@ -525,7 +529,8 @@ const EditMotorDialog = (props) => {
                 ) : (
                     <p>{imagem}</p>
                 )}
-            </Dialog></>
+            </Dialog>
+        </>
     );
 }
 export default EditMotorDialog;

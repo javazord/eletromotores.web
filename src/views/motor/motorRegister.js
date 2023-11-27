@@ -335,7 +335,7 @@ const MotorRegister = () => {
             },
             voltagens: voltagens.sort().map(parseAsIntIfString),
             amperagens: amperagens.map(parseAsFloatIfString),
-            passo: passo.sort().map(parseAsIntIfString),
+            passo: passo.sort((a, b) => a - b).map(parseAsIntIfString),
             usuario: authUser.id,
             imagem
         }
