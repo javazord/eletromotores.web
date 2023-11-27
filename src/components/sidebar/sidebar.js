@@ -1,6 +1,6 @@
 import React from 'react';
 import { AuthConsumer } from '../../main/authProvider';
-import Body from '../../main/body';
+import Content from '../../main/content';
 import Rotas from '../../main/routes';
 
 const Sidebar = (props) => {
@@ -16,6 +16,7 @@ const Sidebar = (props) => {
                 <div className="custom-menu">
                     <button type="button" id="sidebarCollapse" className="btn btn-primary">
                     </button>
+
                 </div>
 
                 <div className="img bg-wrap text-center py-4" style={{ backgroundImage: 'url(images/bg_1.jpg)' }}>
@@ -75,9 +76,9 @@ const SidebarWrapper = () => (
     <AuthConsumer>
         {(context) => (
             <Sidebar autenticationUser={context.authenticated} authUser={context.authUser} deslogar={context.endSession}>
-                <Body>
+                <Content>
                     <Rotas />
-                </Body>
+                </Content>
             </Sidebar>
         )}
     </AuthConsumer>

@@ -1,12 +1,11 @@
 import React, { useContext, useState } from "react";
 import { MotorService } from "../../app/service/motor/motorService";
-import { Card } from 'primereact/card';
 import MotorTable from "./motorTable";
 import ViewMotorDialog from "./viewMotorDialog";
 import { Button } from 'primereact/button';
 import EditMotorDialog from "./editMotorDialog";
 import { AuthContext } from "../../main/authProvider";
-import { Col, Row, Input, Label } from "reactstrap";
+import { Card, Form, Row, Col, CardHeader } from 'react-bootstrap';
 import useToast from '../../components/toast';
 import { Toast } from "primereact/toast";
 import { Dialog } from "primereact/dialog";
@@ -158,33 +157,37 @@ const MotorSearch = () => {
 
     return (
         <>
-            <Card title="Pesquisar">
-                <Row className="d-flex align-items-end">
+            <Card>
+                <CardHeader as="h5">Pesquisar</CardHeader>
+                <Card.Body>
+                   <Row className="d-flex align-items-end">
                     <Col>
-                        <Label>Marca</Label>
-                        <Input name="marca" value={motor.marca} onChange={handleInputChange} type="text" className="form-control mt-1" />
+                        <Form.Label>Marca</Form.Label>
+                        <Form.Control name="marca" value={motor.marca} onChange={handleInputChange} type="text" className="form-control mt-1" />
                     </Col>
                     <Col>
-                        <Label>Ranhuras</Label>
-                        <Input name="ranhuras" value={motor.ranhuras} onChange={handleInputChange} type="number" className="form-control mt-1" />
+                        <Form.Label>Ranhuras</Form.Label>
+                        <Form.Control name="ranhuras" value={motor.ranhuras} onChange={handleInputChange} type="number" className="form-control mt-1" />
                     </Col>
                     <Col>
-                        <Label>Potência</Label>
-                        <Input name="potencia" value={motor.potencia} onChange={handleInputChange} type="number" className="form-control mt-1" />
+                        <Form.Label>Potência</Form.Label>
+                        <Form.Control name="potencia" value={motor.potencia} onChange={handleInputChange} type="number" className="form-control mt-1" />
                     </Col>
                     <Col>
-                        <Label>Comprimento</Label>
-                        <Input name="comprimento" value={motor.comprimento} onChange={handleInputChange} type="number" className="form-control mt-1" />
+                        <Form.Label>Comprimento</Form.Label>
+                        <Form.Control name="comprimento" value={motor.comprimento} onChange={handleInputChange} type="number" className="form-control mt-1" />
                     </Col>
                     <Col >
-                        <Label>M. Externa</Label>
-                        <Input name="medidaExterna" value={motor.medidaExterna} onChange={handleInputChange} type="number" className="form-control mt-1" />
+                        <Form.Label>M. Externa</Form.Label>
+                        <Form.Control name="medidaExterna" value={motor.medidaExterna} onChange={handleInputChange} type="number" className="form-control mt-1" />
                     </Col>
 
                     <Col className="">
                         <Button onClick={buttonSearch} className="btn btn-primary" icon="pi pi-search" size="sm" label="Buscar" loading={loading} />
                     </Col>
-                </Row>
+                </Row> 
+                </Card.Body>
+                
                 <br />
 
                 <MotorTable motores={motores} view={view} edit={edit} delete={deletar} context={authUser} />

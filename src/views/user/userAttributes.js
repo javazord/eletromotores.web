@@ -54,13 +54,6 @@ export function loginValidate(user) {
 
     const msgs = []
 
-    if (!user.login || user.login === '') {
-        msgs.push('Informe um login')
-    }
-    if (!user.password || user.password === '') {
-        msgs.push('Informe uma senha')
-    }
-
     if (msgs && msgs.length > 0) {
         throw new ValidateError(msgs)
     }
