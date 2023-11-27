@@ -11,9 +11,6 @@ import Content from './content';
 import AuthProvider from './authProvider'
 import SidebarWrapper from '../components/sidebar/sidebar';
 
-
-
-
 class App extends React.Component {
   render() {
     return (
