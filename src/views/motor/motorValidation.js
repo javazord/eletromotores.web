@@ -19,75 +19,75 @@ export function isValidString(value) {
 }
 
 export function validate(motor) {
-
-    const msgs = []
+    const msgs = {};
 
     if (!isValidString(motor.marca)) {
-        msgs.push('Informe uma marca')
+        msgs.marca = 'Informe uma marca';
     }
     if (motor.marca.length > 10) {
-        msgs.push('A marca pode ter no max 10 digitos')
+        msgs.marca = 'A marca pode ter no máximo 10 dígitos';
     }
     if (motor.modelo.length > 10) {
-        msgs.push('O modelo pode ter no max 10 digitos')
+        msgs.modelo = 'O modelo pode ter no máximo 10 dígitos';
     }
     if (!isValidNumber(motor.ranhuras)) {
-        msgs.push('Informe um número de ranhuras válido')
+        msgs.ranhuras = 'Informe um número de ranhuras válido';
     }
     if (!isValidNumber(motor.fio.peso)) {
-        msgs.push('Informe um peso válido')
+        msgs.peso = 'Informe um peso válido';
     }
     if (!isValidNumber(motor.comprimento)) {
-        msgs.push('Informe um campo de comprimento válido')
+        msgs.comprimento = 'Informe um campo de comprimento válido';
     }
     if (!isValidNumber(motor.medidaExterna)) {
-        msgs.push('Informe um campo de medida externa válido')
+        msgs.medidaExterna = 'Informe um campo de medida externa válido';
     }
 
-    motor.fio.awgs.forEach(awg => {
+    motor.fio.awgs.forEach((awg, index) => {
         if (!isValidNumber(awg)) {
-            msgs.push('Informe um número de AWG válido')
+            msgs[`awg${index}`] = 'Informe um número de AWG válido';
         }
     });
 
-    motor.fio.quantidades.forEach(quantidade => {
+    motor.fio.quantidades.forEach((quantidade, index) => {
         if (!isValidNumber(quantidade)) {
-            msgs.push('Informe uma quantidade válida')
+            msgs[`quantidade${index}`] = 'Informe uma quantidade válida';
         }
     });
 
-    motor.fio.espiras.forEach(espiras => {
+    motor.fio.espiras.forEach((espiras, index) => {
         if (!isValidNumber(espiras)) {
-            msgs.push('Informe um número de espiras válido')
+            msgs[`espiras${index}`] = 'Informe um número de espiras válido';
         }
     });
 
-    motor.passo.forEach(passo => {
+    motor.passo.forEach((passo, index) => {
         if (!isValidNumber(passo)) {
-            msgs.push('Informe um passo válida')
+            msgs[`passo${index}`] = 'Informe um passo válido';
         }
     });
 
-    motor.voltagens.forEach(volts => {
+    motor.voltagens.forEach((volts, index) => {
         if (!isValidNumber(volts)) {
-            msgs.push('Informe uma voltagem válida')
+            msgs[`voltagem${index}`] = 'Informe uma voltagem válida';
         }
     });
 
     if (!isValidString(motor.tensao)) {
-        msgs.push('Selecione a voltagem para informar uma tensão')
+        msgs.tensao = 'Selecione a voltagem para informar uma tensão';
     }
 
     if (!isValidString(motor.ligacao)) {
-        msgs.push('Informe a ligação')
+        msgs.ligacao = 'Informe a ligação';
     }
 
     if (!isValidString(motor.empresa)) {
-        msgs.push('Informe uma empresa')
+        msgs.empresa = 'Informe uma empresa';
     }
 
-    if (msgs && msgs.length > 0) {
-        throw new ValidateError(msgs)
-    }
+    const firstKey = Object.keys(msgs)[0];
 
+    if (firstKey) {
+        throw new ValidateError(msgs[firstKey]);
+    }
 }

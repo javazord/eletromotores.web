@@ -20,42 +20,47 @@ export function Condition(props) {
 }
 
 export function Validate(user) {
-
-    const msgs = []
+    const msgs = {};
 
     if (!user.login) {
-        msgs.push('Informe um login')
+        msgs.login = 'Informe um login';
     }
     if (user.login.length > 10) {
-        msgs.push('O login deve ter no máx 10 digitos')
+        msgs.login = 'O login deve ter no máximo 10 dígitos';
     }
     if (!user.password) {
-        msgs.push('Informe uma senha')
+        msgs.password = 'Informe uma senha';
     }
     if (user.password !== user.repeatPassword || !user.repeatPassword) {
-        msgs.push('A senhas informadas não conhecidem')
+        msgs.repeatPassword = 'As senhas informadas não coincidem';
     }
 
     // Validação da senha
     if (user.password) {
-        const passwordRegex = /^(?=.*\d)(?=.*[@#$!%^&*])[A-Za-z\d@#$!%^&*]{8,12}$/;
+        const passwordRegex = /^(?=.*\d)(?=.*[@#$!%^&*])[A-Za-z\d@#$!%^&*]{8,10}$/;
         if (!passwordRegex.test(user.password)) {
-            msgs.push('A senha não atende os requisitos mínimos');
+            msgs.passwordRegex = 'A senha não atende aos requisitos mínimos';
         }
     }
 
-    if (msgs && msgs.length > 0) {
-        throw new ValidateError(msgs)
-    }
+    const firstKey = Object.keys(msgs)[0];
 
+    if (firstKey) {
+        throw new ValidateError(msgs[firstKey]);
+    }
 }
+
 
 export function loginValidate(user) {
 
-    const msgs = []
+    const msgs = [];
 
-    if (msgs && msgs.length > 0) {
-        throw new ValidateError(msgs)
+    if (!user.login || !user.password) {
+        msgs.push("Informe um login e senha válidos!");
+    }
+
+    if (msgs.length > 0) {
+        throw new ValidateError(msgs);
     }
 }
 
