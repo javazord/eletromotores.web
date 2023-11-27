@@ -7,11 +7,14 @@
 
 
 body {
-  font-family: "Poppins", Arial, sans-serif;
-  font-size: 14px;
-  line-height: 1.8;
-  font-weight: normal;
-  color: gray;
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: 1.5;
+  color: #212529;
+  text-align: left;
+  background-color: #fff; 
   background-image: url("https://wallpaper4k.com.br/wp-content/uploads/2022/10/wallpapers-azul-em-4k-48.jpg");
   background-size: cover;
   /* ou outra propriedade para ajustar o tamanho da imagem */
@@ -90,16 +93,6 @@ section {
   display: block;
 }
 
-body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
-  font-size: 1rem;
-  font-weight: 400;
-  line-height: 1.5;
-  color: #212529;
-  text-align: left;
-  background-color: #fff;
-}
 
 [tabindex="-1"]:focus {
   outline: 0 !important;
@@ -11782,7 +11775,7 @@ h5,
 #sidebar {
   min-width: 300px;
   max-width: 300px;
-  background: #32373d;
+  background: #1d1919;
   color: #fff;
   -webkit-transition: all 0.3s;
   -o-transition: all 0.3s;
@@ -11844,8 +11837,8 @@ h5,
 #sidebar ul li a {
   padding: 15px 30px;
   display: block;
-  color: rgba(255, 255, 255, 0.6);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  color: white;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.15);
 }
 
 #sidebar ul li a span.notif {
@@ -11994,12 +11987,17 @@ a[data-toggle="collapse"] {
 
 #content {
   width: 100%;
-  padding: 0;
   min-height: 100vh;
+  margin: 0 auto; /* Centraliza o conteúdo horizontalmente */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
   -webkit-transition: all 0.3s;
   -o-transition: all 0.3s;
   transition: all 0.3s;
 }
+
+
 
 .btn.btn-primary {
   background: #2f89fc;

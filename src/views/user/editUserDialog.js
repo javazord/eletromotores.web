@@ -1,8 +1,7 @@
 import { Button } from "primereact/button";
-import { Dialog } from "primereact/dialog";
 import { Toast } from "primereact/toast";
 import { useEffect, useState } from "react";
-import { Col, Input, Label, Row } from "reactstrap";
+import { Modal, Row, Col, Form } from 'react-bootstrap';
 import UserService from "../../app/service/user/userService";
 import useToast from "../../components/toast";
 
@@ -11,6 +10,7 @@ export default function EditUserDialog(props) {
     const service = new UserService();
     const { visible, onHide } = props;
     const { showMessageSuccess, showMessageError, toast } = useToast();
+    const [loading, setLoading] = useState(false);
 
     const [user, setUser] = useState(useEffect(() => {
         setUser(props.user);
@@ -18,6 +18,13 @@ export default function EditUserDialog(props) {
 
     if (!user) {
         return null;
+    }
+
+    const load = () => {
+        setTimeout(() => {
+            setLoading(false);
+            onHide();
+        }, 1500);
     }
 
     const update = () => {
@@ -29,6 +36,7 @@ export default function EditUserDialog(props) {
             condition: typeof user.condition === 'string' ? parseInt(user.condition) : user.condition
 
         }
+        load()
         service.update(usuario)
             .then(response => {
                 showMessageSuccess('Usuário atualizado com sucesso!')
@@ -40,7 +48,7 @@ export default function EditUserDialog(props) {
     }
 
     const footer = (
-        <><Button label="Atualizar" className="p-button-success" icon="pi pi-check" onClick={update} size="sm" />
+        <><Button label="Atualizar" className="p-button-success" icon="pi pi-check" onClick={update} size="sm" loading={loading} />
             <Button label="Fechar" className="p-button-secondary" icon="pi pi-times" onClick={onHide} size="sm" /></>
     )
 
@@ -51,38 +59,47 @@ export default function EditUserDialog(props) {
 
     return (
         <>
-            <Dialog header="Editar Colaborador"
-                visible={visible}
-                modal={true}
-                style={{ width: '60vw' }}
-                onHide={onHide} // Passa a propriedade onHide para o componente Dialog
-                footer={footer}>
+            <Modal show={visible} onHide={onHide} centered size="lg">
+                <Modal.Header closeButton>
+                    <Modal.Title>Editar Colaborador</Modal.Title>
+                </Modal.Header>
 
-                <Row>
-                    <Col>
-                        <Label>Login</Label>
-                        <Input type="text" className="form-control" value={user.login} name="login" onChange={(handleOnChange)} readOnly />
-                    </Col>
+                <Modal.Body>
+                    <Row>
+                        <Col>
+                            <Form.Group controlId="formLogin">
+                                <Form.Label>Login</Form.Label>
+                                <Form.Control type="text" value={user.login} name="login" onChange={handleOnChange} readOnly />
+                            </Form.Group>
+                        </Col>
 
-                    <Col>
-                        <Label>Função</Label>
-                        <select className="form-select" value={user.role} name="role" onChange={handleOnChange}>
-                            <option value={"ADMIN"}> Administrador </option>
-                            <option value={"USER"}> Usuário </option>
-                        </select>
-                    </Col>
-                </Row>
-                <Row>
-                    <Col>
-                        <Label>Condição</Label>
-                        <select className="form-select" value={user.condition} name="condition" onChange={handleOnChange}>
-                            <option value={1} defaultValue={user.condition === 1}> Ativado </option>
-                            <option value={0} defaultValue={user.condition === 0}> Desativado </option>
-                        </select>
-                    </Col>
-                </Row>
+                        <Col>
+                            <Form.Group controlId="formRole">
+                                <Form.Label>Função</Form.Label>
+                                <Form.Select value={user.role} name="role" onChange={handleOnChange}>
+                                    <option value={"ADMIN"}>Administrador</option>
+                                    <option value={"USER"}>Usuário</option>
+                                </Form.Select>
+                            </Form.Group>
+                        </Col>
+                    </Row>
 
-            </Dialog>
+                    <Row>
+                        <Col>
+                            <Form.Group controlId="formCondition">
+                                <Form.Label>Condição</Form.Label>
+                                <Form.Select value={user.condition} name="condition" onChange={handleOnChange}>
+                                    <option value={1}>Ativado</option>
+                                    <option value={0}>Desativado</option>
+                                </Form.Select>
+                            </Form.Group>
+                        </Col>
+                    </Row>
+                </Modal.Body>
+
+                <Modal.Footer>{footer}
+                </Modal.Footer>
+            </Modal>
             <Toast ref={toast} />
         </>
     )

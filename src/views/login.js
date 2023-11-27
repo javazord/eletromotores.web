@@ -1,14 +1,11 @@
 import React, { useContext, useState } from "react";
-import { Card } from 'primereact/card';
 import UserService from '../app/service/user/userService';
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from '../main/authProvider';
-import { Button } from "primereact/button";
-import { Row, Col, Input, Label } from "reactstrap";
 import useToast from "../components/toast";
 import { Toast } from "primereact/toast";
 import { loginValidate, Validate } from "./user/userAttributes";
-import { InputText } from 'primereact/inputtext';
+import { Card, Form, Row, Col, Button } from 'react-bootstrap';
 
 const Login = (props) => {
     const authContext = useContext(AuthContext);
@@ -31,28 +28,28 @@ const Login = (props) => {
                 <>
                     <Row>
                         <Col>
-                            <Label>Nova Senha</Label>
-                            <Input type="password" value={user.password || ''} name="password" onChange={handleInputChange} className="form-control" />
+                            <Form.Label>Nova Senha</Form.Label>
+                            <Form.Control type="password" value={user.password || ''} name="password" onChange={handleInputChange} size="sm" />
                         </Col>
                     </Row>
 
                     <Row>
                         <Col>
-                            <Label>Confirme a nova senha</Label>
-                            <Input
+                            <Form.Label>Confirme a nova senha</Form.Label>
+                            <Form.Control
                                 type="password"
                                 value={user.repeatPassword || ''}
                                 name="repeatPassword"
                                 onChange={handleInputChange}
-                                className="form-control"
+                                size="sm"
                             />
                         </Col>
                     </Row>
                     <Row>
                         <Col className="d-flex justify-content-start mt-2">
-                            <small>
-                                A senha deve ter entre 8 e 12 caracteres, pelo menos um número e um caractere especial (@, #, $, !, %, ^, & ou *)
-                            </small>
+                            <Form.Text muted>
+                                A senha deve ter entre 8-10 caracteres, min um número, e um caractere especial (@, #, $, !, %, ^, & ou *)
+                            </Form.Text>
                         </Col>
                     </Row>
                 </>
@@ -114,48 +111,46 @@ const Login = (props) => {
                 showMessageError(msgs);
                 return false;
             }
-
         }
 
     }
 
-    const header = (
-        <img alt="Card" src="https://media.istockphoto.com/id/520566511/pt/foto/de-motor-el%C3%A9ctrico-necessita-de-manuten%C3%A7%C3%A3o.jpg?s=612x612&w=0&k=20&c=ftqBNGuC4rLCT_H98j-xt3WXty8iYMklCYwQ4cn8kWE=" style={{ maxWidth: "100%", width: "100%" }} />
-    );
-
     return (
         <>
-            <div className="container d-flex justify-content-center align-items-center p-2" style={{ height: '85vh' }}>
-                <Card header={header} style={{ width: "500px", height: "620px" }}>
+            <div className="d-flex justify-content-center align-items-center " style={{ height: '85vh' }} >
+                <Card style={{ width: '450px' }} border="0">
+                    <Card.Img variant="top" alt="Card" src="https://media.istockphoto.com/id/520566511/pt/foto/de-motor-el%C3%A9ctrico-necessita-de-manuten%C3%A7%C3%A3o.jpg?s=612x612&w=0&k=20&c=ftqBNGuC4rLCT_H98j-xt3WXty8iYMklCYwQ4cn8kWE=" />
 
-                    {showAuthInputs && ( // renderizar os inputs de login e senha apenas se showAuthInputs for true
-                        <>
-                            <Row>
-                                <Col>
-                                    <Label>Login</Label>
-                                    <InputText value={user.login} name="login" onChange={handleInputChange} className="p-inputtext-sm form-control" />
-                                </Col>
-                            </Row>
+                    <Card.Body className="mt-3">
 
-                            <Row>
-                                <Col>
-                                    <Label>Senha</Label>
-                                    <InputText type="password" value={user.password || ''} name="password" onChange={handleInputChange} className="p-inputtext-sm form-control" />
-                                </Col>
-                            </Row>
-                        </>
-                    )}
-                    {renderPasswordInputs()}
-                    <Row>
-                        <Col className="col-md-12 mt-4">
-                            <Button className="col-md-12" onClick={autenticar} label="Entrar" size="sm"></Button>
-                        </Col>
-                    </Row>
+                        {showAuthInputs && (
+                            <>
+                                <Row className="p-1">
+                                    <Col>
+                                        <Form.Label>Login</Form.Label>
+                                        <Form.Control value={user.login} name="login" onChange={handleInputChange} size="sm" required />
+                                    </Col>
+                                </Row>
 
+                                <Row className=" p-1">
+                                    <Col>
+                                        <Form.Label>Senha</Form.Label>
+                                        <Form.Control type="password" value={user.password || ''} name="password" onChange={handleInputChange} size="sm" required />
+                                    </Col>
+                                </Row>
+                            </>
+                        )}
 
+                        {renderPasswordInputs()}
+                        <Row className="p-1 mt-3">
+                            <Col>
+                                <Button className="col-md-12 p-1" type="submit" size="sm" onClick={autenticar}>Entrar</Button>
+                            </Col>
+                        </Row>
+
+                    </Card.Body>
                 </Card>
             </div>
-
 
             <Toast ref={toast} />
         </>

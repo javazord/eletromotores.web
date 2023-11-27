@@ -1,8 +1,6 @@
-import { AuthContext } from "../main/authProvider";
 import { MotorService } from "../app/service/motor/motorService";
 import React, { useState, useEffect, useMemo } from 'react';
 import { Carousel } from 'primereact/carousel';
-import { useContext } from "react";
 import { Image } from 'primereact/image';
 import { Row } from "reactstrap";
 import { Card } from 'primereact/card';
@@ -10,7 +8,6 @@ import { Card } from 'primereact/card';
 const Home = () => {
 
     const [lastMotors, setLastMotors] = useState([]);
-    const { authUser } = useContext(AuthContext);
     const motorService = useMemo(() => new MotorService(), []);
 
     const responsiveOptions = [
@@ -61,9 +58,6 @@ const Home = () => {
 
         <>
             <Row>
-                <div className="welcome-section">
-                    <h2 className="h2-custom">Bem vindo {authUser.login}!</h2>
-                </div>
                 <p>Últimos Registros</p>
                 <div >
                     {lastMotors.length > 0 ? (

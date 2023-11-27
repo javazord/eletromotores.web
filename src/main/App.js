@@ -1,15 +1,16 @@
 
-import React from 'react';
-import Rotas from './routes';
-import Body from './body';
-import AuthProvider from './authProvider'
-import '../primereact/theme.css';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import 'primereact/resources/themes/bootstrap4-light-blue/theme.css';
 import 'primereact/resources/primereact.min.css';
 import 'primeicons/primeicons.css';
-
-import 'toastr/build/toastr.css'
-import 'toastr/build/toastr.min.css'
+import 'toastr/build/toastr.css';
+import 'toastr/build/toastr.min.css';
+import React from 'react';
+import Rotas from './routes';
+import Content from './content';
+import AuthProvider from './authProvider'
 import SidebarWrapper from '../components/sidebar/sidebar';
+
 
 
 
@@ -20,14 +21,14 @@ class App extends React.Component {
         {(context) => (
           context.authenticated ? (
             <SidebarWrapper>
-              <Body>
+              <Content>
                 <Rotas />
-              </Body>
+              </Content>
             </SidebarWrapper>
           ) : (
-            <Body>
+            <Content>
               <Rotas />
-            </Body>
+            </Content>
           )
         )}
       </AuthProvider>
