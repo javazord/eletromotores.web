@@ -121,6 +121,13 @@ const UserRegister = () => {
                 />
               </Col>
             </Row>
+            <Row>
+              <Col className="d-flex justify-content-start mt-2">
+                <Form.Text muted>
+                  A senha deve ter entre 8-10 caracteres, min um número, e um caractere especial (@, #, $, !, %, ^, & ou *)
+                </Form.Text>
+              </Col>
+            </Row>
           </Form>
         </Card.Body>
         <Card.Footer>{footer}</Card.Footer>

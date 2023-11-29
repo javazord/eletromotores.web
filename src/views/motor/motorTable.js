@@ -6,7 +6,6 @@ import { DataTable } from "primereact/datatable";
 import Render from "../../components/grid/render";
 
 const MotorTable = (props) => {
-    console.log(props)
     const button = (rowData) => {
         return <>
             <Button type="button" icon={"pi pi-eye"} className="p-button-sm p-button-text" style={{ color: 'green' }} onClick={e => props.view(rowData)} tooltip="Visualizar" />

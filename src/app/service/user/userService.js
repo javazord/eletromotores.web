@@ -34,7 +34,7 @@ export default class UserService extends ApiService{
             params += `${params ? '&' : '?'}condition=${userFilter.condition}`;
         }
         
-        return this.get(params);
+        return this.get(params, {withCredentials: true});
     }
     
 
