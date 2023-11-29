@@ -12,7 +12,7 @@ const UserTable =  (props) => {
     return (
         <div>
             <DataTable value={props.users} paginator scrollable stripedRows scrollHeight="400px" rows={10} rowsPerPageOptions={[10, 25, 50]} width="400px" height="400px">
-                <Column field="id" header="Id" align={"center"}></Column>
+                <Column field="id" header="#Id" align={"center"}></Column>
                 <Column field="login" header="Login" align={"center"}></Column>
                 <Column field={Role} header="Função" align={"center"}></Column>
                 <Column field={Condition} header="Condição" align={"center"}></Column>
