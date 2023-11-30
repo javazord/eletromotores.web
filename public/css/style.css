@@ -33,6 +33,19 @@ body {
   transition: all 0.3s;
 }
 
+/* Adicione ao seu arquivo de estilos CSS */
+.custom-offcanvas {
+  max-width: 250px; /* Ajuste conforme necessário */
+}
+
+/* Adicione ao seu arquivo de estilos CSS */
+@media (max-width: 767px) {
+  .custom-offcanvas {
+    max-width: 100%; /* Tamanho total em telas menores */
+  }
+}
+
+
 p,
 .h2-custom {
   color: white
@@ -133,7 +146,7 @@ button:focus {
   width: 100%;
 }
 
-#sidebar {
+.sidebar {
   min-width: 300px;
   max-width: 300px;
   background: #1d1919;
@@ -144,58 +157,58 @@ button:focus {
   position: relative;
 }
 
-#sidebar .h6 {
+.sidebar .h6 {
   color: #fff;
 }
 
-#sidebar.active {
+.sidebar.active {
   margin-left: -300px;
 }
 
-#sidebar.active .custom-menu {
+.sidebar.active .custom-menu {
   margin-right: -50px;
 }
 
-#sidebar.active .btn.btn-primary:before {
+.sidebar.active .btn.btn-primary:before {
   content: "\f053";
   font-family: "FontAwesome";
   right: 2px !important;
 }
 
-#sidebar.active .btn.btn-primary:after {
+.sidebar.active .btn.btn-primary:after {
   display: none;
 }
 
-#sidebar h1 {
+.sidebar h1 {
   margin-bottom: 20px;
   font-weight: 700;
   font-size: 20px;
 }
 
-#sidebar h1 .logo {
+.sidebar h1 .logo {
   color: #fff;
   display: block;
   padding: 10px 30px;
   background: #2f89fc;
 }
 
-#sidebar ul.components {
+.sidebar ul.components {
   padding: 0;
 }
 
-#sidebar ul li {
+.sidebar ul li {
   font-size: 16px;
 }
 
-#sidebar ul li>ul {
+.sidebar ul li>ul {
   margin-left: 10px;
 }
 
-#sidebar ul li>ul li {
+.sidebar ul li>ul li {
   font-size: 14px;
 }
 
-#sidebar ul li a {
+.sidebar ul li a {
   font-family: "Poppins", Arial, sans-serif;
   font-size: 1rem;
   padding: 15px 30px;
@@ -204,11 +217,11 @@ button:focus {
   border-bottom: 1px solid rgba(255, 255, 255, 0.15);
 }
 
-#sidebar ul li a span.notif {
+.sidebar ul li a span.notif {
   position: relative;
 }
 
-#sidebar ul li a span.notif small {
+.sidebar ul li a span.notif small {
   position: absolute;
   top: -3px;
   bottom: 0;
@@ -222,38 +235,38 @@ button:focus {
   font-size: 8px;
 }
 
-#sidebar ul li a:hover {
+.sidebar ul li a:hover {
   color: #fff;
   background: #2f33fc;
   border-bottom: 1px solid #2f89fc;
 }
 
-#sidebar ul li.active>a {
+.sidebar ul li.active>a {
   background: transparent;
   color: #fff;
 }
 
-#sidebar ul li.active>a:hover {
+.sidebar ul li.active>a:hover {
   background: #2f89fc;
   border-bottom: 1px solid #2f89fc;
 }
 
 @media (max-width: 991.98px) {
-  #sidebar {
+  .sidebar {
     margin-left: -300px;
   }
 
-  #sidebar.active {
+  .sidebar.active {
     margin-left: 0;
   }
 
-  #sidebar .custom-menu {
+  .sidebar .custom-menu {
     margin-right: -60px !important;
     top: 10px !important;
   }
 }
 
-#sidebar .custom-menu {
+.sidebar .custom-menu {
   display: inline-block;
   position: absolute;
   top: 20px;
@@ -265,14 +278,14 @@ button:focus {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  #sidebar .custom-menu {
+  .sidebar .custom-menu {
     -webkit-transition: none;
     -o-transition: none;
     transition: none;
   }
 }
 
-#sidebar .custom-menu .btn.btn-primary {
+.sidebar .custom-menu .btn.btn-primary {
   background: #2f89fc;
   border-color: transparent;
   position: relative;
@@ -281,8 +294,8 @@ button:focus {
   height: 30px;
 }
 
-#sidebar .custom-menu .btn.btn-primary:after,
-#sidebar .custom-menu .btn.btn-primary:before {
+.sidebar .custom-menu .btn.btn-primary:after,
+.sidebar .custom-menu .btn.btn-primary:before {
   position: absolute;
   top: 2px;
   left: 0;
@@ -292,7 +305,7 @@ button:focus {
   color: #fff;
 }
 
-#sidebar .custom-menu .btn.btn-primary:after {
+.sidebar .custom-menu .btn.btn-primary:after {
   content: "\f054";
   left: 2px;
 }
