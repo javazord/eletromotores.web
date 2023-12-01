@@ -16,7 +16,6 @@ body {
   text-align: left;
   background-color: #fff;
   background-image: url("https://wallpaper4k.com.br/wp-content/uploads/2022/10/wallpapers-azul-em-4k-48.jpg");
-  background-size: cover;
   /* ou outra propriedade para ajustar o tamanho da imagem */
 }
 
@@ -31,6 +30,12 @@ body {
   -webkit-transition: all 0.3s;
   -o-transition: all 0.3s;
   transition: all 0.3s;
+}
+
+@media (max-width: 768px) {
+  #content {
+    /* Estilos específicos para telas menores */
+  }
 }
 
 /* Adicione ao seu arquivo de estilos CSS */
@@ -252,10 +257,6 @@ button:focus {
 }
 
 @media (max-width: 991.98px) {
-  .sidebar {
-    margin-left: -300px;
-  }
-
   .sidebar.active {
     margin-left: 0;
   }
