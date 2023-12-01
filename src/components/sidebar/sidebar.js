@@ -6,7 +6,7 @@ import { Navbar, Nav, Offcanvas, Button } from 'react-bootstrap';
 
 const Sidebar = (props) => {
 
-    const [showSidebar, setShowSidebar] = useState(true);
+    const [showSidebar, setShowSidebar] = useState(false);
     const handleCloseSidebar = () => setShowSidebar(false);
     const handleShowSidebar = () => setShowSidebar(true);
 
@@ -16,21 +16,21 @@ const Sidebar = (props) => {
 
     return (
         <>
-            <Navbar collapseOnSelect expand="xl" bg="dark" variant="dark">
-                <Button className="btn btn-primary" variant='dark' onClick={handleShowSidebar}>
-                    {/* Ícone do seu botão, por exemplo, usando FontAwesome */}
-                    <span className="fa fa-bars"></span>
-                </Button>
-                <Navbar.Brand className='p-1' href="/home">Eletromotores</Navbar.Brand>
+            <div>
+                <Navbar collapseOnSelect expand="xl" bg="dark" variant="dark">
+                    <Button className="btn btn-primary" variant='dark' onClick={handleShowSidebar}>
+                        {/* Ícone do seu botão, por exemplo, usando FontAwesome */}
+                        <span className="fa fa-bars"></span>
+                    </Button>
+                    <Navbar.Brand className='p-1' href="/home">Eletromotores</Navbar.Brand>
 
-            </Navbar>
+                </Navbar>
 
-            <Offcanvas className="custom-offcanvas sidebar bg-dark text-white" show={showSidebar} onHide={handleCloseSidebar} placement="start" scroll={true} backdrop={false}>
-                <Offcanvas.Header closeButton>
-                    <Offcanvas.Title></Offcanvas.Title>
-                </Offcanvas.Header>
+                <Offcanvas className="custom-offcanvas sidebar bg-dark text-white" show={showSidebar} onHide={handleCloseSidebar} placement="start" scroll={true} backdrop='false'>
+                    <Offcanvas.Header closeButton>
+                        <Offcanvas.Title></Offcanvas.Title>
+                    </Offcanvas.Header>
 
-                <div className="wrapper d-flex align-items-stretch">
                     <Offcanvas.Body className=''>
                         <div className="img bg-wrap text-center py-4" style={{ backgroundImage: 'url(images/bg_1.jpg)' }}>
                             <div className="user-logo">
@@ -78,10 +78,11 @@ const Sidebar = (props) => {
                             </li>
                         </ul>
                     </Offcanvas.Body>
-                </div>
 
 
-            </Offcanvas>
+                </Offcanvas>
+            </div>
+
 
             {/* Page Content  */}
             {props.children}

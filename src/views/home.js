@@ -1,15 +1,18 @@
 import { MotorService } from "../app/service/motor/motorService";
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useContext } from 'react';
 import { Carousel } from 'primereact/carousel';
 import { Image } from 'primereact/image';
 import { Row } from "reactstrap";
 import { Card } from 'primereact/card';
+import { Container, Form } from 'react-bootstrap';
 import ViewMotorDialog from "../views/motor/viewMotorDialog";
+import { AuthContext } from "../main/authProvider";
 
 const Home = () => {
 
     const [lastMotors, setLastMotors] = useState([]);
     const motorService = useMemo(() => new MotorService(), []);
+    const { authUser } = useContext(AuthContext);
     const [showConfirmDialog, setShowConfirmDialog] = useState(false);
 
     const responsiveOptions = [
@@ -68,30 +71,37 @@ const Home = () => {
 
     return (
         <>
-            <Row>
-                <p>Últimos Registros</p>
-                <div >
-                    {lastMotors.length > 0 ? (
-                        <div className="carousel-container">
-                            <Card>
-                                <Carousel
-                                    value={lastMotors}
-                                    numVisible={3}
-                                    numScroll={3}
-                                    responsiveOptions={responsiveOptions}
-                                    className="custom-carousel"
-                                    circular
-                                    autoplayInterval={3000}
-                                    itemTemplate={motorsTemplate}
-                                />
-                            </Card>
-                        </div>
-                    ) : (
-                        <p>Sem Registros</p>
-                    )}
-                </div>
-            </Row>
+            <Container className="mb-5">
+                <Row>
+                    <h2 className="text-white">Bem Vindo(a) {authUser.login}</h2>
+                </Row>
+            </Container>
 
+            <Container className="mt-4">
+                <Row>
+                    <p>Últimos Registros</p>
+                    <div >
+                        {lastMotors.length > 0 ? (
+                            <div className="carousel-container">
+                                <Card>
+                                    <Carousel
+                                        value={lastMotors}
+                                        numVisible={3}
+                                        numScroll={3}
+                                        responsiveOptions={responsiveOptions}
+                                        className="custom-carousel"
+                                        circular
+                                        autoplayInterval={3000}
+                                        itemTemplate={motorsTemplate}
+                                    />
+                                </Card>
+                            </div>
+                        ) : (
+                            <p>Sem Registros</p>
+                        )}
+                    </div>
+                </Row>
+            </Container>
 
         </>
     )
