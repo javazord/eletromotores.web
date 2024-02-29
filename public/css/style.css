@@ -19,6 +19,10 @@ body {
   /* ou outra propriedade para ajustar o tamanho da imagem */
 }
 
+.asteriscos {
+  color: red;
+}
+
 #content {
   width: 100%;
   min-height: 100vh;
@@ -216,7 +220,7 @@ button:focus {
 .sidebar ul li a {
   font-family: "Poppins", Arial, sans-serif;
   font-size: 1rem;
-  padding: 15px 30px;
+  padding: 15px 15px;
   display: block;
   color: white;
   border-bottom: 1px solid rgba(255, 255, 255, 0.15);

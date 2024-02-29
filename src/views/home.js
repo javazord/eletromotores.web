@@ -13,6 +13,7 @@ const Home = () => {
     const [lastMotors, setLastMotors] = useState([]);
     const motorService = useMemo(() => new MotorService(), []);
     const { authUser } = useContext(AuthContext);
+    const [motor, setMotor] = useState({});
     const [showConfirmDialog, setShowConfirmDialog] = useState(false);
 
     const responsiveOptions = [
@@ -41,6 +42,11 @@ const Home = () => {
         motorService.getLastMotors().then((response) => setLastMotors(response.data));
     }, [motorService]);
 
+    const selectedMotor = (motor) => {
+        setMotor(motor)
+        setShowConfirmDialog(true)
+    }
+
     const motorsTemplate = (motor) => {
         return (
             <>
@@ -52,18 +58,17 @@ const Home = () => {
                             </div>
                         ) : (
                             <div className="mb-3">
-                                <p>Sem imagem</p>
+                                <Image src="/images/image.jpeg" width="100" height="100" />
                             </div>
                         )
                     }
-                    <div>
-                        <h4 className="mb-1" onClick={showConfirmDialog}>{motor.marca}</h4>
+                    <div style={{ cursor: 'pointer' }} onClick={() => selectedMotor(motor)}>
+                        <h4 className="mb-1" >{motor.marca}</h4>
                         <h6 className="mt-0 mb-3">{motor.modelo}</h6>
                     </div>
                 </div>
-                {showConfirmDialog && <ViewMotorDialog motor={motor} visible={showConfirmDialog} onHide={onHide} />}
-            </>
 
+            </>
 
         );
 
@@ -102,7 +107,7 @@ const Home = () => {
                     </div>
                 </Row>
             </Container>
-
+            {showConfirmDialog && <ViewMotorDialog motor={motor} visible={showConfirmDialog} onHide={onHide} />}
         </>
     )
 
