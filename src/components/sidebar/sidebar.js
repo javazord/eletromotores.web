@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { AuthConsumer } from '../../main/authProvider';
 import Content from '../../main/content';
 import Rotas from '../../main/routes';
-import { Navbar, Nav, Offcanvas, Button } from 'react-bootstrap';
+import { Navbar, Offcanvas, Button } from 'react-bootstrap';
 
 const Sidebar = (props) => {
 
@@ -34,7 +34,7 @@ const Sidebar = (props) => {
                     <Offcanvas.Body className=''>
                         <div className="img bg-wrap text-center py-4" style={{ backgroundImage: 'url(images/bg_1.jpg)' }}>
                             <div className="user-logo">
-                                <div className="img" style={{ backgroundImage: 'url(images/logo.jpg)' }} />
+                                <div className="img" style={{ backgroundImage: 'url(images/logo.png)' }} />
                                 <h3>{props.authUser.login}</h3>
                                 <p>{props.authUser.role}</p>
                             </div>

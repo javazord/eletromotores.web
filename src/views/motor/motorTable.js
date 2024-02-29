@@ -27,7 +27,7 @@ const MotorTable = (props) => {
                 <Column field="rotacao" header="Rotação" align={"center"}></Column>
                 <Column field="ranhuras" header="Ranhuras" align={"center"}></Column>
                 <Column field="comprimento" header="Comprimento" align={"center"}></Column>
-                <Column field="medidaExterna" header="M. Externa" align={"center"}></Column>
+                <Column field="medidaInterna" header="M. Interna" align={"center"}></Column>
                 <Column field={rowData => button(rowData)} header="Ação" align={"center"} />
             </DataTable>
         </div>

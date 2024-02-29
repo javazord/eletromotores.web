@@ -1,11 +1,11 @@
 import ValidateError from "../../app/exception/validateError";
 
 export function Tensao(props) {
-    if (props.tensao === "TRIFASICO") {
+    if (props.tensao.tipoTensao === "TRIFASICO") {
         return "Trifásico"
     }
 
-    if (props.tensao === "MONOFASICO") {
+    if (props.tensao.tipoTensao === "MONOFASICO") {
         return "Monofásico"
     }
 }
@@ -27,42 +27,41 @@ export function validate(motor) {
     if (motor.marca.length > 10) {
         msgs.marca = 'A marca pode ter no máximo 10 dígitos';
     }
+
     if (motor.modelo.length > 10) {
         msgs.modelo = 'O modelo pode ter no máximo 10 dígitos';
     }
+
     if (!isValidNumber(motor.ranhuras)) {
         msgs.ranhuras = 'Informe um número de ranhuras válido';
     }
-    if (!isValidNumber(motor.fio.peso)) {
+
+    if (!isValidNumber(motor.peso)) {
         msgs.peso = 'Informe um peso válido';
     }
+
     if (!isValidNumber(motor.comprimento)) {
-        msgs.comprimento = 'Informe um campo de comprimento válido';
-    }
-    if (!isValidNumber(motor.medidaExterna)) {
-        msgs.medidaExterna = 'Informe um campo de medida externa válido';
+        msgs.comprimento = 'Informe um comprimento válido';
     }
 
-    motor.fio.awgs.forEach((awg, index) => {
-        if (!isValidNumber(awg)) {
+    if (!isValidNumber(motor.medidaInterna)) {
+        msgs.medidaInterna = 'Informe uma medida interna válida';
+    }
+
+    motor.tensao.bobinas.forEach((bobina, index) => {
+        if (!isValidNumber(bobina.fio.awgs[0])) {
             msgs[`awg${index}`] = 'Informe um número de AWG válido';
         }
-    });
 
-    motor.fio.quantidades.forEach((quantidade, index) => {
-        if (!isValidNumber(quantidade)) {
+        if (!isValidNumber(bobina.fio.quantidades[0])) {
             msgs[`quantidade${index}`] = 'Informe uma quantidade válida';
         }
-    });
 
-    motor.fio.espiras.forEach((espiras, index) => {
-        if (!isValidNumber(espiras)) {
+        if (!isValidNumber(bobina.fio.espiras[0])) {
             msgs[`espiras${index}`] = 'Informe um número de espiras válido';
         }
-    });
 
-    motor.passo.forEach((passo, index) => {
-        if (!isValidNumber(passo)) {
+        if (!isValidNumber(bobina.passo[0])) {
             msgs[`passo${index}`] = 'Informe um passo válido';
         }
     });
@@ -73,7 +72,7 @@ export function validate(motor) {
         }
     });
 
-    if (!isValidString(motor.tensao)) {
+    if (!isValidString(motor.tensao.eTensao)) {
         msgs.tensao = 'Selecione a voltagem para informar uma tensão';
     }
 
@@ -91,3 +90,4 @@ export function validate(motor) {
         throw new ValidateError(msgs[firstKey]);
     }
 }
+

@@ -13,27 +13,56 @@ import { Dialog } from "primereact/dialog";
 const MotorSearch = () => {
     const [motores, setMotores] = useState([]);
     const [motor, setMotor] = useState({
-        rotacao: '',
+        rotacao: 0,
         modelo: '',
-        ranhuras: '',
+        ranhuras: 0,
         marca: '',
         ligacao: '',
-        potencia: '',
-        comprimento: '',
-        medidaExterna: '',
+        potencia: 0,
+        comprimento: 0,
+        medidaInterna: 0,
         empresa: '',
-        tensao: '',
-        fio: {
-            awgs: [],
-            quantidades: [],
-            espiras: [],
-            peso: '',
+        tensao: {
+            tipoTensao: '', //Trifasico ou Monofasico
+            bobinas: [
+                {
+                    tipoBobina: 'TRABALHO', //UNICO, TRABALHO, AUXILIAR
+                    fio: {
+                        awgs: [0],
+                        quantidades: [0],
+                        espiras: [0]
+                    },
+                    passo: [0]
+                },
+                {
+                    tipoBobina: 'AUXILIAR', //UNICO, TRABALHO, AUXILIAR
+                    fio: {
+                        awgs: [0],
+                        quantidades: [0],
+                        espiras: [0]
+                    },
+                    passo: [0]
+                },
+                {
+                    tipoBobina: 'UNICO', //UNICO, TRABALHO, AUXILIAR
+                    fio: {
+                        awgs: [0],
+                        quantidades: [0],
+                        espiras: [0]
+                    },
+                    passo: [0]
+                }
+            ]
         },
+        peso: 0,
         voltagens: [],
         amperagens: [],
-        passo: [],
         usuario: {},
-        imagem: {}
+        imagem: {
+            dados: null,
+            nome: null,
+            tipo: null
+        }
     });
     const [showConfirmDialog, setShowConfirmDialog] = useState(false);
     const [editConfirmDialog, setEditConfirmDialog] = useState(false);
@@ -48,7 +77,7 @@ const MotorSearch = () => {
             .search(motor)
             .then((response) => {
                 load(response.data);
-                
+
             })
             .catch((erro) => {
                 console.log(erro);
@@ -57,27 +86,56 @@ const MotorSearch = () => {
 
     const resetState = () => {
         setMotor({
-            rotacao: '',
+            rotacao: 0,
             modelo: '',
-            ranhuras: '',
+            ranhuras: 0,
             marca: '',
             ligacao: '',
-            potencia: '',
-            comprimento: '',
-            medidaExterna: '',
+            potencia: 0,
+            comprimento: 0,
+            medidaInterna: 0,
             empresa: '',
-            tensao: '',
-            fio: {
-                awgs: [],
-                quantidades: [],
-                espiras: [],
-                peso: '',
+            tensao: {
+                tipoTensao: '', //Trifasico ou Monofasico
+                bobinas: [
+                    {
+                        tipoBobina: 'TRABALHO', //UNICO, TRABALHO, AUXILIAR
+                        fio: {
+                            awgs: [0],
+                            quantidades: [0],
+                            espiras: [0]
+                        },
+                        passo: [0]
+                    },
+                    {
+                        tipoBobina: 'AUXILIAR', //UNICO, TRABALHO, AUXILIAR
+                        fio: {
+                            awgs: [0],
+                            quantidades: [0],
+                            espiras: [0]
+                        },
+                        passo: [0]
+                    },
+                    {
+                        tipoBobina: 'UNICO', //UNICO, TRABALHO, AUXILIAR
+                        fio: {
+                            awgs: [0],
+                            quantidades: [0],
+                            espiras: [0]
+                        },
+                        passo: [0]
+                    }
+                ]
             },
+            peso: 0,
             voltagens: [],
             amperagens: [],
-            passo: [],
             usuario: {},
-            imagem: {}
+            imagem: {
+                dados: null,
+                nome: null,
+                tipo: null
+            }
         });
         setShowConfirmDialog(false);
         setEditConfirmDialog(false);
@@ -161,34 +219,34 @@ const MotorSearch = () => {
             <Card>
                 <CardHeader as="h5">Pesquisar</CardHeader>
                 <Card.Body>
-                   <Row className="d-flex align-items-end">
-                    <Col>
-                        <Form.Label>Marca</Form.Label>
-                        <Form.Control name="marca" value={motor.marca} onChange={handleInputChange} type="text" className="form-control mt-1" />
-                    </Col>
-                    <Col>
-                        <Form.Label>Ranhuras</Form.Label>
-                        <Form.Control name="ranhuras" value={motor.ranhuras} onChange={handleInputChange} type="number" className="form-control mt-1" />
-                    </Col>
-                    <Col>
-                        <Form.Label>Potência</Form.Label>
-                        <Form.Control name="potencia" value={motor.potencia} onChange={handleInputChange} type="number" className="form-control mt-1" />
-                    </Col>
-                    <Col>
-                        <Form.Label>Comprimento</Form.Label>
-                        <Form.Control name="comprimento" value={motor.comprimento} onChange={handleInputChange} type="number" className="form-control mt-1" />
-                    </Col>
-                    <Col >
-                        <Form.Label>M. Externa</Form.Label>
-                        <Form.Control name="medidaExterna" value={motor.medidaExterna} onChange={handleInputChange} type="number" className="form-control mt-1" />
-                    </Col>
+                    <Row className="d-flex align-items-end">
+                        <Col>
+                            <Form.Label>Marca</Form.Label>
+                            <Form.Control name="marca" value={motor.marca} onChange={handleInputChange} type="text" className="form-control mt-1" />
+                        </Col>
+                        <Col>
+                            <Form.Label>Ranhuras</Form.Label>
+                            <Form.Control name="ranhuras" value={motor.ranhuras} onChange={handleInputChange} type="number" className="form-control mt-1" />
+                        </Col>
+                        <Col>
+                            <Form.Label>Potência</Form.Label>
+                            <Form.Control name="potencia" value={motor.potencia} onChange={handleInputChange} type="number" className="form-control mt-1" />
+                        </Col>
+                        <Col>
+                            <Form.Label>Comprimento</Form.Label>
+                            <Form.Control name="comprimento" value={motor.comprimento} onChange={handleInputChange} type="number" className="form-control mt-1" />
+                        </Col>
+                        <Col >
+                            <Form.Label>M. Externa</Form.Label>
+                            <Form.Control name="medidaInterna" value={motor.medidaInterna} onChange={handleInputChange} type="number" className="form-control mt-1" />
+                        </Col>
 
-                    <Col className="">
-                        <Button onClick={buttonSearch} className="btn btn-primary" icon="pi pi-search" size="sm" label="Buscar" loading={loading} />
-                    </Col>
-                </Row> 
+                        <Col className="">
+                            <Button onClick={buttonSearch} className="btn btn-primary" icon="pi pi-search" size="sm" label="Buscar" loading={loading} />
+                        </Col>
+                    </Row>
                 </Card.Body>
-                
+
                 <br />
 
                 <MotorTable motores={motores} view={view} edit={edit} delete={deletar} context={authUser} />
