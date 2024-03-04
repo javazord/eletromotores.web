@@ -1,22 +1,19 @@
 import React, { useState, useMemo, useCallback } from "react";
 import { Dialog } from 'primereact/dialog'
-import { Modal, Row, Col, Form } from 'react-bootstrap';
 import { Button } from 'primereact/button';
 import { useEffect } from "react";
 import { MotorService } from '../../app/service/motor/motorService';
 import { validate } from "./motorValidation";
 import useToast from "../../components/toast";
-import { Toast } from "primereact/toast";
-import Checkbox from "../../components/grid/checkbox";
 import { Image } from 'primereact/image';
 import _ from 'lodash'; // Importe o Lodash
-import Tab from 'react-bootstrap/Tab';
-import Tabs from 'react-bootstrap/Tabs';
+import MotorEditForm from "./motorEditForm";
 
 
 const EditMotorDialog = (props) => {
 
     const [motor, setMotor] = useState(_.cloneDeep(props.motor)); // Use _.cloneDeep
+    const [newMotor, setNewMotor] = useState();
     const [initialData,] = useState(_.cloneDeep(props.motor));
     const [checkboxVolts, setCheckboxVolts] = useState([
         { volts: 127, checked: initialData.voltagens.includes(127) ? true : false },
@@ -28,24 +25,24 @@ const EditMotorDialog = (props) => {
     const [loading, setLoading] = useState(false);
     const [empresas, setEmpresas] = useState([]);
     const [selectedFile, setSelectedFile] = useState(null);
-    const [newMotor, setNewMotor] = useState(motor);
     const [indexPassoAuxiliar, setIndexPassoAuxiliar] = useState(0);
     const [indexPassoTrabalho, setIndexPassoTrabalho] = useState(0);
     const [indexPassoUnico, setIndexPassoUnico] = useState(0);
-    const [newIndexPasso, setNewIndexPasso] = useState(0);
     const [indexAWGTrab, setIndexAWGTrab] = useState(0);
     const [indexAWGAux, setIndexAWGAux] = useState(0);
     const [indexAWGUnico, setIndexAWGUnico] = useState(0);
     const [indexESPTrab, setIndexESPTrab] = useState(0);
     const [indexESPAux, setIndexESPAux] = useState(0);
     const [indexESPUnico, setIndexESPUnico] = useState(0);
+    const [indexTrabalho, setIndexTrabalho] = useState(0);
+    const [indexAuxiliar, setIndexAuxiliar] = useState(0);
+    const [indexUnico, setIndexUnico] = useState(0);
     const [reset, setReset] = useState(false);
     const { showMessageSuccess, showMessageError, showMessageAlert, toast } = useToast();
     const motorService = useMemo(() => new MotorService(), []);
     const { visible, onHide } = props;
     const [imagem,] = useState();
     const [showSchema, setShowSchema] = useState(false);
-    const [key, setKey] = useState('trabalho');
 
     const validateCheckbox = useCallback(() => {
         const updatedList = [...motor.voltagens];
@@ -95,12 +92,18 @@ const EditMotorDialog = (props) => {
                 bobinas: newBobinas // Defina o novo estado das bobinas dentro de tensao
             }
         }));
-    }, [motor.voltagens]);
+    }, [motor.voltagens, motor.tensao.bobinas, reset]);
 
     useEffect(() => {
-        motorService.empresas().then(response => { setEmpresas(response.data) })
-        validateCheckbox();
-    }, [motor.voltagens, motorService, validateCheckbox])
+        // Verificar se motorService e validateCheckbox estão definidos
+        if (motorService && validateCheckbox) {
+            // Chamar motorService.empresas e depois chamar validateCheckbox
+            motorService.empresas().then(response => {
+                setEmpresas([...response.data]);
+                validateCheckbox();
+            });
+        }
+    }, [motor.voltagens, motorService, validateCheckbox]);
 
     const handleInputChange = (event) => {
         const { name, value } = event.target;
@@ -109,7 +112,7 @@ const EditMotorDialog = (props) => {
 
     const addInputsESP = (tipoBobina) => {
         const newMotor = { ...motor };
-
+        console.log(motor)
         // Encontrar o índice correto da bobina com base no tipo
         const bobinaIndex = newMotor.tensao.bobinas.findIndex(
             (bobina) => bobina.tipoBobina === tipoBobina
@@ -139,7 +142,7 @@ const EditMotorDialog = (props) => {
                 },
             }));
 
-            // Incrementar o estado de indexAWG de acordo com o tipo de bobina
+            // Incrementar o estado de indexESP de acordo com o tipo de bobina
             switch (tipoBobina) {
                 case 'AUXILIAR':
                     setIndexESPAux(indexESPAux + 1);
@@ -153,61 +156,6 @@ const EditMotorDialog = (props) => {
                 default:
                     break;
             }
-        }
-    }
-
-    const removeInputsESP = (tipoBobina) => {
-        // Verifica se o tipo de bobina é válido
-        if (tipoBobina !== 'AUXILIAR' && tipoBobina !== 'TRABALHO' && tipoBobina !== 'UNICO') {
-            return;
-        }
-
-        // Cria uma cópia do estado atual do motor
-        const updatedMotor = { ...motor };
-
-        // Encontra o índice da bobina com base no tipo
-        const bobinaIndex = updatedMotor.tensao.bobinas.findIndex((bobina) => bobina.tipoBobina === tipoBobina);
-
-        // Verifica se a bobina foi encontrada
-        if (bobinaIndex === -1) {
-            return;
-        }
-
-        // Remova o último elemento do array de passo da bobina correspondente
-        const updatedBobina = {
-            ...updatedMotor.tensao.bobinas[bobinaIndex],
-            fio: {
-                ...updatedMotor.tensao.bobinas[bobinaIndex].fio,
-                espiras: updatedMotor.tensao.bobinas[bobinaIndex].fio.espiras.slice(0, -1)
-            }
-        };
-
-        // Atualiza a matriz de bobinas
-        const updatedBobinas = [...updatedMotor.tensao.bobinas];
-        updatedBobinas[bobinaIndex] = updatedBobina;
-
-        // Atualiza o estado do motor
-        setMotor((prevMotor) => ({
-            ...prevMotor,
-            tensao: {
-                ...prevMotor.tensao,
-                bobinas: updatedBobinas,
-            },
-        }));
-
-        // Atualiza o índice do passo correspondente
-        switch (tipoBobina) {
-            case 'AUXILIAR':
-                setIndexESPAux(indexESPAux - 1);
-                break;
-            case 'TRABALHO':
-                setIndexESPTrab(indexESPTrab - 1);
-                break;
-            case 'UNICO':
-                setIndexESPUnico(indexESPUnico - 1);
-                break;
-            default:
-                break;
         }
     }
 
@@ -261,67 +209,6 @@ const EditMotorDialog = (props) => {
         }
     };
 
-    const removeInputs = (tipoBobina) => {
-        // Verifica se o tipo de bobina é válido
-        if (tipoBobina !== 'AUXILIAR' && tipoBobina !== 'TRABALHO' && tipoBobina !== 'UNICO') {
-            return;
-        }
-
-        // Cria uma cópia do estado atual do motor
-        const updatedMotor = { ...motor };
-
-        // Encontra o índice da bobina com base no tipo
-        const bobinaIndex = updatedMotor.tensao.bobinas.findIndex((bobina) => bobina.tipoBobina === tipoBobina);
-
-        // Verifica se a bobina foi encontrada
-        if (bobinaIndex === -1) {
-            return;
-        }
-
-        // Verifica se os arrays awgs e quantidades existem dentro da bobina
-        if (!updatedMotor.tensao.bobinas[bobinaIndex].fio || !updatedMotor.tensao.bobinas[bobinaIndex].fio.awgs || !updatedMotor.tensao.bobinas[bobinaIndex].fio.quantidades) {
-            return;
-        }
-
-        // Remova o último elemento dos arrays de awgs e quantidades da bobina correspondente
-        const updatedBobina = {
-            ...updatedMotor.tensao.bobinas[bobinaIndex],
-            fio: {
-                ...updatedMotor.tensao.bobinas[bobinaIndex].fio,
-                awgs: updatedMotor.tensao.bobinas[bobinaIndex].fio.awgs.slice(0, -1),
-                quantidades: updatedMotor.tensao.bobinas[bobinaIndex].fio.quantidades.slice(0, -1)
-            }
-        };
-
-        // Atualiza a matriz de bobinas
-        const updatedBobinas = [...updatedMotor.tensao.bobinas];
-        updatedBobinas[bobinaIndex] = updatedBobina;
-
-        // Atualiza o estado do motor
-        setMotor((prevMotor) => ({
-            ...prevMotor,
-            tensao: {
-                ...prevMotor.tensao,
-                bobinas: updatedBobinas,
-            },
-        }));
-
-        // Atualiza o índice do passo correspondente
-        switch (tipoBobina) {
-            case 'AUXILIAR':
-                setIndexAWGAux(indexAWGAux - 1);
-                break;
-            case 'TRABALHO':
-                setIndexAWGTrab(indexAWGTrab - 1);
-                break;
-            case 'UNICO':
-                setIndexAWGUnico(indexAWGUnico - 1);
-                break;
-            default:
-                break;
-        }
-    };
-
     const addInputsPasso = (tipoBobina) => {
         const newMotor = { ...motor };
 
@@ -352,25 +239,20 @@ const EditMotorDialog = (props) => {
 
             if (tipoBobina === 'AUXILIAR') {
                 setIndexPassoAuxiliar(indexPassoAuxiliar + 1)
-                setNewIndexPasso(indexPassoAuxiliar)
             }
             if (tipoBobina === 'TRABALHO') {
                 setIndexPassoTrabalho(indexPassoTrabalho + 1)
-                setNewIndexPasso(indexPassoTrabalho)
             }
             if (tipoBobina === 'UNICO') {
                 setIndexPassoUnico(indexPassoUnico + 1)
-                setNewIndexPasso(indexPassoUnico)
             }
         }
 
     };
 
-    const removeInputsPasso = (tipoBobina) => {
+    const removeInputs = (tipoBobina, propriedades) => {
         // Verifica se o tipo de bobina é válido
-        if (tipoBobina !== 'AUXILIAR' && tipoBobina !== 'TRABALHO' && tipoBobina !== 'UNICO') {
-            return;
-        }
+        if (!['AUXILIAR', 'TRABALHO', 'UNICO'].includes(tipoBobina)) return;
 
         // Cria uma cópia do estado atual do motor
         const updatedMotor = { ...motor };
@@ -379,15 +261,31 @@ const EditMotorDialog = (props) => {
         const bobinaIndex = updatedMotor.tensao.bobinas.findIndex((bobina) => bobina.tipoBobina === tipoBobina);
 
         // Verifica se a bobina foi encontrada
-        if (bobinaIndex === -1) {
-            return;
-        }
+        if (bobinaIndex === -1) return;
 
-        // Remova o último elemento do array de passo da bobina correspondente
+        // Remove o último elemento dos arrays correspondentes dentro da bobina
         const updatedBobina = {
             ...updatedMotor.tensao.bobinas[bobinaIndex],
-            passo: updatedMotor.tensao.bobinas[bobinaIndex].passo.slice(0, -1),
+            fio: {
+                ...updatedMotor.tensao.bobinas[bobinaIndex].fio,
+            },
         };
+
+        if (typeof propriedades === 'string') {
+            // Se for uma única string, transforma em array com um único elemento
+            propriedades = [propriedades];
+        }
+
+        propriedades.forEach((propriedade) => {
+            if (updatedBobina.fio[propriedade]) {
+                updatedBobina.fio[propriedade] = updatedBobina.fio[propriedade].slice(0, -1);
+            }
+        });
+
+        // Remove o último elemento do array "passo" se existir
+        if (propriedades.includes('passo')) {
+            updatedBobina.passo = updatedBobina.passo.slice(0, -1);
+        }
 
         // Atualiza a matriz de bobinas
         const updatedBobinas = [...updatedMotor.tensao.bobinas];
@@ -402,95 +300,68 @@ const EditMotorDialog = (props) => {
             },
         }));
 
-        // Atualiza o índice do passo correspondente
-        if (tipoBobina === 'AUXILIAR') {
-            setIndexPassoAuxiliar(indexPassoAuxiliar - 1);
-        } else if (tipoBobina === 'TRABALHO') {
-            setIndexPassoTrabalho(indexPassoTrabalho - 1);
-        } else if (tipoBobina === 'UNICO') {
-            setIndexPassoUnico(indexPassoUnico - 1);
+        // Atualiza o índice correspondente
+        switch (tipoBobina) {
+            case 'AUXILIAR':
+                setIndexAuxiliar((prevIndex) => prevIndex - 1);
+                break;
+            case 'TRABALHO':
+                setIndexTrabalho((prevIndex) => prevIndex - 1);
+                break;
+            case 'UNICO':
+                setIndexUnico((prevIndex) => prevIndex - 1);
+                break;
+            default:
+                break;
         }
+    };
+
+    // --- leitura de valores ---
+    const handleChange = (e, index, tipoBobina, propriedade) => {
+        setMotor(prevMotor => {
+            const newBobinas = prevMotor.tensao.bobinas.map(bobina => {
+                if (bobina.tipoBobina === tipoBobina) {
+                    const newValue = e.target.value;
+                    if (propriedade === 'passo') {
+                        const newPasso = [...bobina.passo];
+                        newPasso[index] = newValue;
+                        return { ...bobina, passo: newPasso };
+                    } else if (propriedade === 'awg' || propriedade === 'quantidade' || propriedade === 'espiras') {
+                        const newFio = { ...bobina.fio };
+                        if (propriedade === 'awg') newFio.awgs[index] = newValue;
+                        else if (propriedade === 'quantidade') newFio.quantidades[index] = newValue;
+                        else if (propriedade === 'espiras') newFio.espiras[index] = newValue;
+                        return { ...bobina, fio: newFio };
+                    }
+                }
+                return bobina;
+            });
+
+            return {
+                ...prevMotor,
+                tensao: {
+                    ...prevMotor.tensao,
+                    bobinas: newBobinas
+                }
+            };
+        });
     };
 
     const handleChangePasso = (e, index, tipoBobina) => {
-        const newMotor = { ...motor };
-
-        // Encontrar o índice correto da bobina com base no tipo
-        const bobinaIndex = newMotor.tensao.bobinas.findIndex(
-            (bobina) => bobina.tipoBobina === tipoBobina
-        );
-
-        // Atualizar Passo
-        if (tipoBobina === 'TRABALHO') {
-            newMotor.tensao.bobinas[bobinaIndex].passo[index] = e.target.value !== '' ? Number(e.target.value) : 0;
-        }
-        if (tipoBobina === 'AUXILIAR') {
-            newMotor.tensao.bobinas[bobinaIndex].passo[index] = e.target.value !== '' ? Number(e.target.value) : 0;
-        }
-        if (tipoBobina === 'UNICO') {
-            newMotor.tensao.bobinas[bobinaIndex].passo[index] = e.target.value !== '' ? Number(e.target.value) : 0;
-        }
-
-        // Atualizar o estado
-        setMotor(newMotor);
-    }
-
-    //pega o valor do input
-    const handleChangeAWG = (e, index, tipoBobina) => {
-        const newMotor = { ...motor };
-
-        // Encontrar o índice correto da bobina com base no tipo
-        const bobinaIndex = newMotor.tensao.bobinas.findIndex(
-            (bobina) => bobina.tipoBobina === tipoBobina
-        );
-
-        // Atualizar AWG
-        if (tipoBobina === 'TRABALHO') {
-            newMotor.tensao.bobinas[bobinaIndex].fio.awgs[index] = e.target.value !== '' ? Number(e.target.value) : 0;
-        }
-        if (tipoBobina === 'AUXILIAR') {
-            newMotor.tensao.bobinas[bobinaIndex].fio.awgs[index] = e.target.value !== '' ? Number(e.target.value) : 0;
-        }
-        if (tipoBobina === 'UNICO') {
-            newMotor.tensao.bobinas[bobinaIndex].fio.awgs[index] = e.target.value !== '' ? Number(e.target.value) : 0;
-        }
-
-        // Atualizar o estado
-        setMotor(newMotor);
+        handleChange(e, index, tipoBobina, 'passo');
     };
 
-    //pega o valor do input
+    const handleChangeAWG = (e, index, tipoBobina) => {
+        handleChange(e, index, tipoBobina, 'awg');
+    };
+
     const handleChangeQuantidade = (e, index, tipoBobina) => {
-        const newMotor = { ...motor };
-
-        // Encontrar o índice correto da bobina com base no tipo
-        const bobinaIndex = newMotor.tensao.bobinas.findIndex(
-            (bobina) => bobina.tipoBobina === tipoBobina
-        );
-
-        // Atualizar a quantidade
-        newMotor.tensao.bobinas[bobinaIndex].fio.quantidades[index] =
-            e.target.value !== '' ? Number(e.target.value) : 0;
-
-        // Atualizar o estado
-        setMotor(newMotor);
+        handleChange(e, index, tipoBobina, 'quantidade');
     };
 
     const handleChangeEspiras = (e, index, tipoBobina) => {
-        const newMotor = { ...motor };
-
-        // Encontrar o índice correto da bobina com base no tipo
-        const bobinaIndex = newMotor.tensao.bobinas.findIndex(
-            (bobina) => bobina.tipoBobina === tipoBobina
-        );
-
-        // Atualizar a espiras
-        newMotor.tensao.bobinas[bobinaIndex].fio.espiras[index] =
-            e.target.value !== '' ? Number(e.target.value) : 0;
-
-        // Atualizar o estado
-        setMotor(newMotor);
-    }
+        handleChange(e, index, tipoBobina, 'espiras');
+    };
 
     const handleCheckboxChange = (index, checked) => {
         const newCheckboxVolts = [...checkboxVolts];
@@ -525,10 +396,6 @@ const EditMotorDialog = (props) => {
             onHide();
         }, 1500);
     }
-
-    const onTemplateClear = () => {
-        setSelectedFile(null)
-    };
 
     const handleFileChange = (event) => {
         const file = event.target.files[0];
@@ -595,380 +462,27 @@ const EditMotorDialog = (props) => {
     )
 
     return (
-
-        <><Modal
-            show={visible}
-            onHide={onHide}
-            centered
-            size="xl"
-        >
-            <Modal.Header closeButton>
-                <Modal.Title>Editar Motor</Modal.Title>
-            </Modal.Header>
-            <Modal.Body><Row>
-                <Col>
-                    <Form.Label>Marca<span className="asteriscos">*</span> </Form.Label>
-                    <Form.Control name="marca" value={motor.marca} onChange={handleInputChange} type="text" size="sm" />
-                </Col>
-                <Col>
-                    <Form.Label>Modelo</Form.Label>
-                    <Form.Control name="modelo" value={motor.modelo} onChange={handleInputChange} type="text" size="sm" />
-                </Col>
-                <Col>
-                    <Form.Label>Ranhuras<span className="asteriscos">*</span></Form.Label>
-                    <Form.Control name="ranhuras" value={motor.ranhuras} onChange={handleInputChange} type="number" min={0} size="sm" />
-                </Col>
-                <Col>
-                    <Form.Label>Rotação</Form.Label>
-                    <Form.Control name="rotacao" value={motor.rotacao} onChange={handleInputChange} type="number" min={0} size="sm" />
-                </Col>
-                <Col>
-                    <Form.Label>Peso<span className="asteriscos">*</span></Form.Label>
-                    <Form.Control name="peso" value={motor.peso} onChange={handleInputChange} type="number" min={0} size="sm" />
-                </Col>
-                <Col>
-                    <Form.Label>Potência</Form.Label>
-                    <Form.Control name="potencia" value={motor.potencia} onChange={handleInputChange} type="number" min={0} size="sm" />
-                </Col>
-            </Row>
-
-                <Row>
-                    <Col className="col-md-2">
-                        <Form.Label>Comprimento<span className="asteriscos">*</span></Form.Label>
-                        <Form.Control name="comprimento" value={motor.comprimento} onChange={handleInputChange} type="number" min={0} size="sm" />
-                    </Col>
-                    <Col className="col-md-2">
-                        <Form.Label>M. Externa<span className="asteriscos">*</span></Form.Label>
-                        <Form.Control name="medidaInterna" value={motor.medidaInterna} onChange={handleInputChange} type="number" min={0} size="sm" />
-                    </Col>
-                    <Col className="col-md-6">
-                        <Form.Label>Ligação<span className="asteriscos">*</span></Form.Label>
-                        <Form.Control name="ligacao" value={motor.ligacao} onChange={handleInputChange} type="text" min={0} size="sm" />
-                    </Col>
-                    <Col className="col-md-2">
-                        <Form.Label>Empresa<span className="asteriscos">*</span></Form.Label>
-                        <select name="empresa" value={motor.empresa} onChange={handleInputChange} className="form-select form-select-sm">
-                            <option value="">Selecione uma empresa</option>
-                            {empresas.map((empresa) => (
-                                <option key={empresa.valor} value={empresa.valor}>{empresa.descricao}</option>
-                            ))}
-                        </select>
-                    </Col>
-
-                </Row>
-
-                <Row>
-                    {checkboxVolts.map((checkbox, index) => (
-                        <div className="col-md-2" key={index}>
-                            <Form.Label>Voltagem<span className="asteriscos">*</span></Form.Label>
-                            <Checkbox
-                                label={`${checkbox.volts}v`} checked={checkbox.checked}
-                                onChange={(e) => handleCheckboxChange(index, e.target.checked)} />
-                            {motor.voltagens.includes(checkbox.volts) && (
-                                <><Form.Label>Amperagem</Form.Label>
-                                    <Form.Control
-                                        size="sm"
-                                        type="number"
-                                        value={motor.amperagens[motor.voltagens.indexOf(checkbox.volts)]}
-                                        min={0}
-                                        onChange={(e) => {
-                                            const updatedMotor = { ...motor };
-                                            const value = e.target.value !== '' ? Number(e.target.value) : '';
-                                            updatedMotor.amperagens[newMotor.voltagens.indexOf(checkbox.volts)] = value;
-                                            setNewMotor(updatedMotor);
-                                        }} />
-
-                                </>
-                            )}
-                        </div>
-                    ))}
-                    <Col className="col-md-2">
-                        <Form.Label>Tensão<span className="asteriscos">*</span></Form.Label>
-                        <Form.Control name="tipoTensao" value={motor.tensao.tipoTensao} disabled min={0} size="sm" />
-                    </Col>
-
-                </Row>
-
-                {motor.tensao.tipoTensao === 'MONOFASICO' &&
-
-                    <Tabs defaultActiveKey="profile"
-                        id="uncontrolled-tab-example"
-                        activeKey={key}
-                        onSelect={(k) => setKey(k)}
-                        className="mb-3 mt-2">
-
-                        <Tab eventKey="trabalho" title="TRABALHO">
-                            <Row>
-                                {motor.tensao.bobinas.filter((bobina) => bobina.tipoBobina === 'TRABALHO').map((bobina, bobinaIndex) => (
-                                    <React.Fragment key={bobinaIndex}>
-                                        {bobina.fio.awgs.map((valorAWG, index) => (
-                                            <Col className="col-md-2" key={index}>
-                                                <Form.Label>Awg<span className="asteriscos">*</span></Form.Label>
-                                                <Form.Control
-                                                    type="number"
-                                                    value={valorAWG}
-                                                    onChange={(e) => handleChangeAWG(e, index, 'TRABALHO')}
-                                                    min={0}
-                                                    size="sm" />
-                                            </Col>
-                                        ))}
-                                    </React.Fragment>
-
-                                ))}
-
-                                <Col className="col-md-2 mt-2 d-flex align-items-end">
-                                    <Button icon="pi pi-plus" rounded raised severity="info" tooltip="Adicionar AWG/Quantidade" size="sm" onClick={(e) => addInputs('TRABALHO')} />
-                                </Col>
-                            </Row>
-                            <Row>
-                                {motor.tensao.bobinas.filter((bobina) => bobina.tipoBobina === 'TRABALHO').map((bobina, bobinaIndex) => (
-                                    <React.Fragment key={bobinaIndex}>
-                                        {bobina.fio.quantidades.map((valorQTD, index) => (
-                                            <Col className="col-md-2" key={index}>
-                                                <Form.Label>Quantidade<span className="asteriscos">*</span></Form.Label>
-                                                <Form.Control type="number" value={valorQTD} id={`qtdTrab${index + 1}`} onChange={(e) => handleChangeQuantidade(e, index, 'TRABALHO')} min={0} size="sm" />
-                                            </Col>
-                                        ))}
-                                    </React.Fragment>
-
-                                ))}
-
-                                <Col className="col-md-2 mt-2 d-flex align-items-end">
-                                    <Button icon="pi pi-minus" rounded raised severity="danger" tooltip="Remover AWG/Quantidade" size="sm" onClick={() => removeInputs('TRABALHO')} />
-                                </Col>
-                            </Row>
-                            <Row>
-                                {motor.tensao.bobinas.filter((bobina) => bobina.tipoBobina === 'TRABALHO').map((bobina, bobinaIndex) => (
-                                    <React.Fragment key={bobinaIndex}>
-                                        {bobina.fio.espiras.map((valorESP, index) => (
-                                            <Col className="col-md-2" key={index}>
-                                                <Form.Label>Espiras<span className="asteriscos">*</span></Form.Label>
-                                                <Form.Control type="number" value={valorESP} id={`espTrab${index + 1}`} onChange={(e) => handleChangeEspiras(e, index, 'TRABALHO')} min={0} size="sm" />
-                                            </Col>
-                                        ))}
-                                    </React.Fragment>
-
-                                ))}
-                                <Col className="col-2 mt-2 d-flex align-items-end">
-                                    <Button className="me-1" icon="pi pi-plus" rounded raised severity="info" tooltip="Adicionar Espiras" onClick={() => addInputsESP('TRABALHO')} size="small" />
-                                    <Button className="ms-1" icon="pi pi-minus" rounded raised severity="danger" tooltip="Remover Espiras" onClick={() => removeInputsESP('TRABALHO')} size="small" />
-                                </Col>
-                            </Row>
-                            <Row>
-                                {motor.tensao.bobinas.filter((bobina) => bobina.tipoBobina === 'TRABALHO')
-                                    .map((bobina, bobinaIndex) => (
-                                        <React.Fragment key={bobinaIndex}>
-                                            {bobina.passo.map((valorPasso, index) => (
-                                                <Col className="col-md-1" key={index}>
-                                                    <Form.Label>Passo<span className="asteriscos">*</span></Form.Label>
-                                                    <Form.Control
-                                                        type="number"
-                                                        value={valorPasso}
-                                                        id={`passoTrab${index + 1}`}
-                                                        onChange={(e) => handleChangePasso(e, index, 'TRABALHO')}
-                                                        min={0}
-                                                        size="sm"
-                                                    />
-                                                </Col>
-                                            ))}
-                                        </React.Fragment>
-                                    ))}
-                                <Col className="col-2 mt-2 d-flex align-items-end">
-                                    <Button className="me-1" icon="pi pi-plus" rounded raised severity="info" tooltip="Adicionar Passo" onClick={() => addInputsPasso('TRABALHO')} size="sm" />
-                                    <Button className="ms-1" icon="pi pi-minus" rounded raised severity="danger" tooltip="Remover Passo" onClick={() => removeInputsPasso('TRABALHO')} size="sm" />
-                                </Col>
-                            </Row>
-
-                        </Tab>
-
-                        <Tab eventKey="auxiliar" title="AUXILIAR">
-                            <Row>
-                                {motor.tensao.bobinas.filter((bobina) => bobina.tipoBobina === 'AUXILIAR').map((bobina, bobinaIndex) => (
-                                    <React.Fragment key={bobinaIndex}>
-                                        {bobina.fio.awgs.map((valorAWG, index) => (
-                                            <Col className="col-md-2" key={index}>
-                                                <Form.Label>Awg<span className="asteriscos">*</span></Form.Label>
-                                                <Form.Control
-                                                    type="number"
-                                                    value={valorAWG}
-                                                    onChange={(e) => handleChangeAWG(e, index, 'AUXILIAR')}
-                                                    min={0}
-                                                    size="sm" />
-                                            </Col>
-                                        ))}
-                                    </React.Fragment>
-
-                                ))}
-
-                                <Col className="col-md-2 mt-2 d-flex align-items-end">
-                                    <Button icon="pi pi-plus" rounded raised severity="info" tooltip="Adicionar AWG/Quantidade" size="sm" onClick={() => addInputs('AUXILIAR')} />
-                                </Col>
-                            </Row>
-                            <Row>
-                                {motor.tensao.bobinas.filter((bobina) => bobina.tipoBobina === 'AUXILIAR').map((bobina, bobinaIndex) => (
-                                    <React.Fragment key={bobinaIndex}>
-                                        {bobina.fio.quantidades.map((valorQTD, index) => (
-                                            <Col className="col-md-2" key={index}>
-                                                <Form.Label>Quantidade<span className="asteriscos">*</span></Form.Label>
-                                                <Form.Control type="number" value={valorQTD} id={`qtdTrab${index + 1}`} onChange={(e) => handleChangeQuantidade(e, index, 'AUXILIAR')} min={0} size="sm" />
-                                            </Col>
-                                        ))}
-                                    </React.Fragment>
-
-                                ))}
-
-                                <Col className="col-md-2 mt-2 d-flex align-items-end">
-                                    <Button icon="pi pi-minus" rounded raised severity="danger" tooltip="Remover AWG/Quantidade" size="sm" onClick={() => removeInputs('AUXILIAR')} />
-                                </Col>
-                            </Row>
-                            <Row>
-                                {motor.tensao.bobinas.filter((bobina) => bobina.tipoBobina === 'AUXILIAR').map((bobina, bobinaIndex) => (
-                                    <React.Fragment key={bobinaIndex}>
-                                        {bobina.fio.espiras.map((valorESP, index) => (
-                                            <Col className="col-md-2" key={index}>
-                                                <Form.Label>Espiras<span className="asteriscos">*</span></Form.Label>
-                                                <Form.Control type="number" value={valorESP} id={`espTrab${index + 1}`} onChange={(e) => handleChangeEspiras(e, index, 'AUXILIAR')} min={0} size="sm" />
-                                            </Col>
-                                        ))}
-                                    </React.Fragment>
-
-                                ))}
-                                <Col className="col-2 mt-2 d-flex align-items-end">
-                                    <Button className="me-1" icon="pi pi-plus" rounded raised severity="info" tooltip="Adicionar Espiras" onClick={() => addInputsESP('AUXILIAR')} size="small" />
-                                    <Button className="ms-1" icon="pi pi-minus" rounded raised severity="danger" tooltip="Remover Espiras" onClick={() => removeInputsESP('AUXILIAR')} size="small" />
-                                </Col>
-
-                            </Row>
-                            <Row>
-                                {motor.tensao.bobinas.filter((bobina) => bobina.tipoBobina === 'AUXILIAR').map((bobina, bobinaIndex) => (
-                                    <React.Fragment key={bobinaIndex}>
-                                        {bobina.passo.map((valorPasso, index) => (
-                                            <Col className="col-md-1" key={index}>
-                                                <Form.Label>Passo<span className="asteriscos">*</span></Form.Label>
-                                                <Form.Control
-                                                    type="number"
-                                                    value={valorPasso} // Acessar o primeiro elemento do array passo
-                                                    id={`passoAuxi${index + 1}`}
-                                                    onChange={(e) => handleChangePasso(e, index, 'AUXILIAR')}
-                                                    min={0}
-                                                    size="sm"
-                                                />
-                                            </Col>
-                                        ))}
-                                    </React.Fragment>
-                                ))}
-
-                                <Col className="col-2 mt-2 d-flex align-items-end">
-                                    <Button className="me-1" icon="pi pi-plus" rounded raised severity="info" tooltip="Adicionar Passo" onClick={() => addInputsPasso('AUXILIAR')} size="sm" />
-                                    <Button className="ms-1" icon="pi pi-minus" rounded raised severity="danger" tooltip="Remover Passo" onClick={() => removeInputsPasso('AUXILIAR')} size="sm" />
-                                </Col>
-                            </Row>
-                        </Tab>
-
-                    </Tabs>
-
-                }
-
-                {motor.tensao.tipoTensao === 'TRIFASICO' &&
-                    <>
-                        <Row>
-                            {motor.tensao.bobinas.filter((bobina) => bobina.tipoBobina === 'UNICO').map((bobina, bobinaIndex) => (
-                                <React.Fragment key={bobinaIndex}>
-                                    {bobina.fio.awgs.map((valorAWG, index) => (
-                                        <Col className="col-md-2" key={index}>
-                                            <Form.Label>Awg<span className="asteriscos">*</span></Form.Label>
-                                            <Form.Control
-                                                type="number"
-                                                value={valorAWG}
-                                                onChange={(e) => handleChangeAWG(e, index, 'UNICO')}
-                                                min={0}
-                                                size="sm" />
-                                        </Col>
-                                    ))}
-                                </React.Fragment>
-
-                            ))}
-
-                            <Col className="col-md-2 mt-2 d-flex align-items-end">
-                                <Button icon="pi pi-plus" rounded raised severity="info" tooltip="Adicionar AWG/Quantidade" size="sm" onClick={() => addInputs('UNICO')} />
-                            </Col>
-                        </Row>
-                        <Row>
-                            {motor.tensao.bobinas.filter((bobina) => bobina.tipoBobina === 'UNICO').map((bobina, bobinaIndex) => (
-                                <React.Fragment key={bobinaIndex}>
-                                    {bobina.fio.quantidades.map((valorQTD, index) => (
-                                        <Col className="col-md-2" key={index}>
-                                            <Form.Label>Quantidade<span className="asteriscos">*</span></Form.Label>
-                                            <Form.Control type="number" value={valorQTD} id={`qtdUnico${index + 1}`} onChange={(e) => handleChangeQuantidade(e, index, 'UNICO')} min={0} size="sm" />
-                                        </Col>
-                                    ))}
-                                </React.Fragment>
-
-                            ))}
-
-                            <Col className="col-md-2 mt-2 d-flex align-items-end">
-                                <Button icon="pi pi-minus" rounded raised severity="danger" tooltip="Remover AWG/Quantidade" size="sm" onClick={() => removeInputs('UNICO')} />
-                            </Col>
-                        </Row>
-                        <Row>
-                            {motor.tensao.bobinas.filter((bobina) => bobina.tipoBobina === 'UNICO').map((bobina, bobinaIndex) => (
-                                <React.Fragment key={bobinaIndex}>
-                                    {bobina.fio.espiras.map((valorESP, index) => (
-                                        <Col className="col-md-2" key={index}>
-                                            <Form.Label>Espiras<span className="asteriscos">*</span></Form.Label>
-                                            <Form.Control type="number" value={valorESP} id={`espTrab${index + 1}`} onChange={(e) => handleChangeEspiras(e, index, 'UNICO')} min={0} size="sm" />
-                                        </Col>
-                                    ))}
-                                </React.Fragment>
-
-                            ))}
-                            <Col className="col-2 mt-2 d-flex align-items-end">
-                                <Button className="me-1" icon="pi pi-plus" rounded raised severity="info" tooltip="Adicionar Espiras" onClick={() => addInputsESP('UNICO')} size="small" />
-                                <Button className="ms-1" icon="pi pi-minus" rounded raised severity="danger" tooltip="Remover Espiras" onClick={() => removeInputsESP('UNICO')} size="small" />
-                            </Col>
-                        </Row>
-                        <Row>
-                            {motor.tensao.bobinas.filter((bobina) => bobina.tipoBobina === 'UNICO').map((bobina, bobinaIndex) => (
-                                <React.Fragment key={bobinaIndex}>
-                                    {bobina.passo.map((valorPasso, index) => (
-                                        <Col className="col-md-1" key={index}>
-                                            <Form.Label>Passo<span className="asteriscos">*</span></Form.Label>
-                                            <Form.Control
-                                                type="number"
-                                                value={valorPasso} // Acessar o primeiro elemento do array passo
-                                                id={`passoUnico${index + 1}`}
-                                                onChange={(e) => handleChangePasso(e, index, 'UNICO')}
-                                                min={0}
-                                                size="sm"
-                                            />
-                                        </Col>
-                                    ))}
-                                </React.Fragment>
-                            ))}
-                            <Col className="col-2 mt-2 d-flex align-items-end">
-                                <Button className="me-1" icon="pi pi-plus" rounded raised severity="info" tooltip="Adicionar Passo" onClick={() => addInputsPasso('UNICO')} size="sm" />
-                                <Button className="ms-1" icon="pi pi-minus" rounded raised severity="danger" tooltip="Remover Passo" onClick={() => removeInputsPasso('UNICO')} size="sm" />
-                            </Col>
-                        </Row></>
-                }
-
-                <Row>
-                    <Col className="col-md-6 mt-2">
-                        <Form.Label>Esquema</Form.Label>
-                        <Form.Control type={"file"} name="file" id="fileInput" accept={".jpg, .png"} onChange={handleFileChange} size="sm" />
-                    </Col>
-                </Row>
-
-                <Col className="justify-content-start mt-2">
-                    <small>
-                        Itens marcados com <label><span className="asteriscos">*</span></label> são obrigatórios
-                    </small>
-                </Col>
-            </Modal.Body>
-
-            <Modal.Footer>{footer}</Modal.Footer>
-            <Toast ref={toast} />
-        </Modal>
+        <>
+            <MotorEditForm
+                visible={visible}
+                onHide={onHide}
+                motor={motor}
+                checkboxVolts={checkboxVolts}
+                addInputs={addInputs}
+                addInputsESP={addInputsESP}
+                addInputsPasso={addInputsPasso}
+                removeInputs={removeInputs}
+                handleInputChange={handleInputChange}
+                handleCheckboxChange={handleCheckboxChange}
+                handleChangeAWG={handleChangeAWG}
+                handleChangeQuantidade={handleChangeQuantidade}
+                handleChangeEspiras={handleChangeEspiras}
+                handleChangePasso={handleChangePasso}
+                handleFileChange={handleFileChange}
+                empresas={empresas}
+                footer={footer}
+                toast={toast}
+            />
 
             <Dialog header="Esquema" visible={showSchema} style={{ width: '55vw' }} onHide={() => setShowSchema(false)}>
                 {typeof motor.imagem.dados ? (
