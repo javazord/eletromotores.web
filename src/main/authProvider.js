@@ -6,7 +6,7 @@ export const AuthContext = React.createContext();
 export const AuthConsumer = AuthContext.Consumer;
 const AProvider = AuthContext.Provider;
 
-export default class AuthProvider extends React.Component{
+export default class AuthProvider extends React.Component {
 
     state = {
         authUser: null,
@@ -14,38 +14,18 @@ export default class AuthProvider extends React.Component{
         isLoading: true
     }
 
-    beginSession = (tokenDTO) => {
-        
-        const token = tokenDTO.token
-        const claims = jwt.decode(token)
-        const usuario = {
-            id: claims.id,
-            login: claims.login,
-            role: claims.role
-        }
-        
-        AuthService.loginto(usuario, tokenDTO)
-        this.setState({authenticated: true, authUser: usuario})
-    }
-
-    endSession = () => {
-        AuthService.removeUserAutenticated();
-        this.setState({authenticated: false, authUser: null})
-    }
-
-    async componentDidMount(){
+    async componentDidMount() {
         const authenticated = AuthService.autenticationUser()
-        
-        if(authenticated){
+        if (authenticated) {
             const usuario = await AuthService.refreshSession()
-            
+
             this.setState({
                 authenticated: true,
                 authUser: usuario,
                 isLoading: false
             })
         } else {
-            this.setState( previousState => {
+            this.setState(previousState => {
                 return {
                     ...previousState,
                     isLoading: false
@@ -54,9 +34,28 @@ export default class AuthProvider extends React.Component{
         }
     }
 
-    render(){
+    beginSession = (tokenDTO) => {
 
-        if(this.state.isLoading){
+        const token = tokenDTO.token
+        const claims = jwt.decode(token)
+        const usuario = {
+            id: claims.id,
+            login: claims.login,
+            role: claims.role
+        }
+
+        AuthService.loginto(usuario, tokenDTO)
+        this.setState({ authenticated: true, authUser: usuario })
+    }
+
+    endSession = () => {
+        AuthService.removeUserAutenticated();
+        this.setState({ authenticated: false, authUser: null })
+    }
+
+    render() {
+
+        if (this.state.isLoading) {
             return null;
         }
 
@@ -67,7 +66,7 @@ export default class AuthProvider extends React.Component{
             endSession: this.endSession
         }
 
-        return(
+        return (
             <AProvider value={context}>
                 {this.props.children(context)}
             </AProvider>

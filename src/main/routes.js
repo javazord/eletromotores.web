@@ -17,6 +17,7 @@ const RotaAutenticada = ({ children, autenticationUser, authUserRole, role, redi
 }
 
 const Rotas = (props) => {
+    
     return (
         <BrowserRouter>
             <Routes>

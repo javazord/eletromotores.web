@@ -5,7 +5,8 @@ import { AuthContext } from '../main/authProvider';
 import useToast from "../components/toast";
 import { Toast } from "primereact/toast";
 import { loginValidate, Validate } from "./user/userAttributes";
-import { Card, Form, Row, Col, Button } from 'react-bootstrap';
+import { Card, Form, Row, Col, Button, InputGroup } from 'react-bootstrap';
+import { FaEye, FaEyeSlash } from 'react-icons/fa';
 
 const Login = (props) => {
     const authContext = useContext(AuthContext);
@@ -21,6 +22,9 @@ const Login = (props) => {
     })
     const [showPasswordInputs, setShowPasswordInputs] = useState(false);
     const [showAuthInputs, setShowAuthInputs] = useState(true);
+    const [showPassword, setShowPassword] = useState(false);
+
+    const handleKeyPress = (event) => { if (event.key === 'Enter') { autenticar(event); } };
 
     const renderPasswordInputs = () => {
         if (showPasswordInputs) {
@@ -29,22 +33,33 @@ const Login = (props) => {
                     <Row>
                         <Col>
                             <Form.Label>Nova Senha</Form.Label>
-                            <Form.Control type="password" value={user.password || ''} name="password" onChange={handleInputChange} size="sm" />
+                            <div className="password-input-container">
+                                <Form.Control type={showPassword ? 'text' : 'password'} value={user.password || ''} name="password" onChange={handleInputChange} onKeyPress={handleKeyPress} size="sm" />
+                                <div className="password-icon" onClick={toggleShowPassword}>
+                                    {showPassword ? <FaEyeSlash /> : <FaEye />}
+                                </div>
+                            </div>
                         </Col>
                     </Row>
 
                     <Row>
                         <Col>
                             <Form.Label>Confirme a nova senha</Form.Label>
+                            <div className="password-input-container">
                             <Form.Control
-                                type="password"
+                                type={showPassword ? 'text' : 'password'}
                                 value={user.repeatPassword || ''}
                                 name="repeatPassword"
                                 onChange={handleInputChange}
+                                onKeyPress={handleKeyPress}
                                 size="sm"
                             />
-                        </Col>
-                    </Row>
+                            <div className="password-icon" onClick={toggleShowPassword}>
+                                {showPassword ? <FaEyeSlash /> : <FaEye />}
+                            </div>
+                        </div>
+                    </Col>
+                </Row >
                     <Row>
                         <Col className="d-flex justify-content-start mt-2">
                             <Form.Text muted>
@@ -57,101 +72,110 @@ const Login = (props) => {
         }
     };
 
-    const handleInputChange = (event) => {
-        setUser({ ...user, [event.target.name]: event.target.value })
+const handleInputChange = (event) => {
+    setUser({ ...user, [event.target.name]: event.target.value })
+}
+
+const toggleShowPassword = () => {
+    setShowPassword(!showPassword);
+};
+
+const autenticar = () => {
+
+    if (showAuthInputs) {
+        try {
+            loginValidate(user);
+
+            props.service.authenticate({
+                login: user.login,
+                password: user.password
+            }).then(response => {
+                if (response.data.result) {
+                    setShowAuthInputs(false);
+                    setShowPasswordInputs(true);
+                    setUser(response.data.user);
+                } else {
+                    authContext.beginSession(response.data);
+                    navigate('/home');
+                }
+            }).catch(erro => {
+                showMessageError(erro.response.data);
+            });
+
+        } catch (error) {
+            const msgs = error.mensagens;
+            showMessageError(msgs);
+            return false;
+        }
     }
 
-    const autenticar = () => {
-
-        if (showAuthInputs) {
-            try {
-                loginValidate(user);
-
-                props.service.authenticate({
-                    login: user.login,
-                    password: user.password
-                }).then(response => {
-                    if (response.data.result) {
-                        setShowAuthInputs(false);
-                        setShowPasswordInputs(true);
-                        setUser(response.data.user);
-                    } else {
-                        authContext.beginSession(response.data);
-                        navigate('/home');
-                    }
+    if (showPasswordInputs) {
+        try {
+            Validate(user);
+            props.service.update(user)
+                .then(response => {
+                    showMessageSuccess('Senha atualizada com sucesso')
+                    setShowPasswordInputs(false)
+                    setShowAuthInputs(true)
+                    setUser({ login: '', password: '' })
                 }).catch(erro => {
-                    showMessageError(erro.response.data);
-                });
-
-            } catch (error) {
-                const msgs = error.mensagens;
-                showMessageError(msgs);
-                return false;
-            }
+                    console.log(erro)
+                })
+        } catch (error) {
+            const msgs = error.mensagens;
+            showMessageError(msgs);
+            return false;
         }
-
-        if (showPasswordInputs) {
-            try {
-                Validate(user);
-                props.service.update(user)
-                    .then(response => {
-                        showMessageSuccess('Senha atualizada com sucesso')
-                        setShowPasswordInputs(false)
-                        setShowAuthInputs(true)
-                        setUser({ login: '', password: '' })
-                    }).catch(erro => {
-                        console.log(erro)
-                    })
-            } catch (error) {
-                const msgs = error.mensagens;
-                showMessageError(msgs);
-                return false;
-            }
-        }
-
     }
 
-    return (
-        <>
-            <div className="d-flex justify-content-center align-items-center " style={{ height: '85vh' }} >
-                <Card style={{ width: '450px' }} border="0">
-                    <Card.Img variant="top" alt="Card" src="https://media.istockphoto.com/id/520566511/pt/foto/de-motor-el%C3%A9ctrico-necessita-de-manuten%C3%A7%C3%A3o.jpg?s=612x612&w=0&k=20&c=ftqBNGuC4rLCT_H98j-xt3WXty8iYMklCYwQ4cn8kWE=" />
+}
 
-                    <Card.Body className="mt-3">
+return (
+    <>
+        <div className="d-flex justify-content-center align-items-center " style={{ height: '85vh' }} >
+            <Card style={{ width: '450px' }} border="0">
+                <Card.Img variant="top" alt="Card" src="https://media.istockphoto.com/id/520566511/pt/foto/de-motor-el%C3%A9ctrico-necessita-de-manuten%C3%A7%C3%A3o.jpg?s=612x612&w=0&k=20&c=ftqBNGuC4rLCT_H98j-xt3WXty8iYMklCYwQ4cn8kWE=" />
 
-                        {showAuthInputs && (
-                            <>
-                                <Row className="p-1">
-                                    <Col>
-                                        <Form.Label>Login</Form.Label>
-                                        <Form.Control value={user.login} name="login" onChange={handleInputChange} size="sm" required />
-                                    </Col>
-                                </Row>
+                <Card.Body className="mt-3">
 
-                                <Row className=" p-1">
-                                    <Col>
-                                        <Form.Label>Senha</Form.Label>
-                                        <Form.Control type="password" value={user.password || ''} name="password" onChange={handleInputChange} size="sm" required />
-                                    </Col>
-                                </Row>
-                            </>
-                        )}
+                    {showAuthInputs && (
+                        <>
+                            <Row className="p-1">
+                                <Col>
+                                    <Form.Label>Login</Form.Label>
+                                    <Form.Control value={user.login} name="login" onChange={handleInputChange} size="sm" required />
+                                </Col>
+                            </Row>
 
-                        {renderPasswordInputs()}
-                        <Row className="p-1 mt-3">
-                            <Col>
-                                <Button className="col-md-12 p-1" type="submit" size="sm" onClick={autenticar}>Entrar</Button>
-                            </Col>
-                        </Row>
+                            <Row className=" p-1">
+                                <Col>
+                                    <Form.Label>Senha</Form.Label>
+                                    <div className="password-input-container">
+                                        <Form.Control type={showPassword ? 'text' : 'password'} value={user.password || ''} name="password" onChange={handleInputChange} onKeyPress={handleKeyPress} size="sm" required />
+                                        <div className="password-icon" onClick={toggleShowPassword}>
+                                            {showPassword ? <FaEyeSlash /> : <FaEye />}
+                                        </div>
+                                    </div>
+                                </Col>
+                            </Row>
+                        </>
+                    )}
 
-                    </Card.Body>
-                </Card>
-            </div>
+                    {renderPasswordInputs()}
+                    <Row className="p-1 mt-3">
+                        <Col>
+                            <Button className="col-md-12 p-1" type="submit" size="sm" onClick={autenticar}>Entrar</Button>
+                        </Col>
+                    </Row>
 
-            <Toast ref={toast} />
-        </>
+                </Card.Body>
+            </Card>
+        </div >
 
-    )
+        <Toast ref={toast} />
+    </>
+
+)
 }
 
 function myParams(Component) {

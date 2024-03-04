@@ -4,7 +4,7 @@ import { Carousel } from 'primereact/carousel';
 import { Image } from 'primereact/image';
 import { Row } from "reactstrap";
 import { Card } from 'primereact/card';
-import { Container, Form } from 'react-bootstrap';
+import { Container } from 'react-bootstrap';
 import ViewMotorDialog from "../views/motor/viewMotorDialog";
 import { AuthContext } from "../main/authProvider";
 

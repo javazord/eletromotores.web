@@ -3,7 +3,7 @@ import { AuthContext } from "../../main/authProvider";
 import { validate } from "./motorValidation";
 import { MotorService } from "../../app/service/motor/motorService";
 import useToast from "../../components/toast";
-import MotorForm from "./motorForm";
+import MotorRegisterForm from "./motorRegisterForm";
 
 const initialState = {
     rotacao: 0,
@@ -75,13 +75,15 @@ const MotorRegister = () => {
     const [indexPassoAuxiliar, setIndexPassoAuxiliar] = useState(0);
     const [indexPassoTrabalho, setIndexPassoTrabalho] = useState(0);
     const [indexPassoUnico, setIndexPassoUnico] = useState(0);
-    const [newIndexPasso, setNewIndexPasso] = useState(0);
     const [indexAWGTrab, setIndexAWGTrab] = useState(0);
     const [indexAWGAux, setIndexAWGAux] = useState(0);
     const [indexAWGUnico, setIndexAWGUnico] = useState(0);
     const [indexESPTrab, setIndexESPTrab] = useState(0);
     const [indexESPAux, setIndexESPAux] = useState(0);
     const [indexESPUnico, setIndexESPUnico] = useState(0);
+    const [indexTrabalho, setIndexTrabalho] = useState(0);
+    const [indexAuxiliar, setIndexAuxiliar] = useState(0);
+    const [indexUnico, setIndexUnico] = useState(0);
     const { showMessageSuccess, showMessageAlert, showMessageError, toast } = useToast();
     const { authUser } = useContext(AuthContext);
     const [selectedFile, setSelectedFile] = useState(null);
@@ -175,7 +177,7 @@ const MotorRegister = () => {
                 },
             }));
 
-            // Incrementar o estado de indexAWG de acordo com o tipo de bobina
+            // Incrementar o estado de indexESP de acordo com o tipo de bobina
             switch (tipoBobina) {
                 case 'AUXILIAR':
                     setIndexESPAux(indexESPAux + 1);
@@ -189,61 +191,6 @@ const MotorRegister = () => {
                 default:
                     break;
             }
-        }
-    }
-
-    const removeInputsESP = (tipoBobina) => {
-        // Verifica se o tipo de bobina é válido
-        if (tipoBobina !== 'AUXILIAR' && tipoBobina !== 'TRABALHO' && tipoBobina !== 'UNICO') {
-            return;
-        }
-
-        // Cria uma cópia do estado atual do motor
-        const updatedMotor = { ...motor };
-
-        // Encontra o índice da bobina com base no tipo
-        const bobinaIndex = updatedMotor.tensao.bobinas.findIndex((bobina) => bobina.tipoBobina === tipoBobina);
-
-        // Verifica se a bobina foi encontrada
-        if (bobinaIndex === -1) {
-            return;
-        }
-
-        // Remova o último elemento do array de passo da bobina correspondente
-        const updatedBobina = {
-            ...updatedMotor.tensao.bobinas[bobinaIndex],
-            fio: {
-                ...updatedMotor.tensao.bobinas[bobinaIndex].fio,
-                espiras: updatedMotor.tensao.bobinas[bobinaIndex].fio.espiras.slice(0, -1)
-            }
-        };
-
-        // Atualiza a matriz de bobinas
-        const updatedBobinas = [...updatedMotor.tensao.bobinas];
-        updatedBobinas[bobinaIndex] = updatedBobina;
-
-        // Atualiza o estado do motor
-        setMotor((prevMotor) => ({
-            ...prevMotor,
-            tensao: {
-                ...prevMotor.tensao,
-                bobinas: updatedBobinas,
-            },
-        }));
-
-        // Atualiza o índice do passo correspondente
-        switch (tipoBobina) {
-            case 'AUXILIAR':
-                setIndexESPAux(indexESPAux - 1);
-                break;
-            case 'TRABALHO':
-                setIndexESPTrab(indexESPTrab - 1);
-                break;
-            case 'UNICO':
-                setIndexESPUnico(indexESPUnico - 1);
-                break;
-            default:
-                break;
         }
     }
 
@@ -297,67 +244,6 @@ const MotorRegister = () => {
         }
     };
 
-    const removeInputs = (tipoBobina) => {
-        // Verifica se o tipo de bobina é válido
-        if (tipoBobina !== 'AUXILIAR' && tipoBobina !== 'TRABALHO' && tipoBobina !== 'UNICO') {
-            return;
-        }
-
-        // Cria uma cópia do estado atual do motor
-        const updatedMotor = { ...motor };
-
-        // Encontra o índice da bobina com base no tipo
-        const bobinaIndex = updatedMotor.tensao.bobinas.findIndex((bobina) => bobina.tipoBobina === tipoBobina);
-
-        // Verifica se a bobina foi encontrada
-        if (bobinaIndex === -1) {
-            return;
-        }
-
-        // Verifica se os arrays awgs e quantidades existem dentro da bobina
-        if (!updatedMotor.tensao.bobinas[bobinaIndex].fio || !updatedMotor.tensao.bobinas[bobinaIndex].fio.awgs || !updatedMotor.tensao.bobinas[bobinaIndex].fio.quantidades) {
-            return;
-        }
-
-        // Remova o último elemento dos arrays de awgs e quantidades da bobina correspondente
-        const updatedBobina = {
-            ...updatedMotor.tensao.bobinas[bobinaIndex],
-            fio: {
-                ...updatedMotor.tensao.bobinas[bobinaIndex].fio,
-                awgs: updatedMotor.tensao.bobinas[bobinaIndex].fio.awgs.slice(0, -1),
-                quantidades: updatedMotor.tensao.bobinas[bobinaIndex].fio.quantidades.slice(0, -1)
-            }
-        };
-
-        // Atualiza a matriz de bobinas
-        const updatedBobinas = [...updatedMotor.tensao.bobinas];
-        updatedBobinas[bobinaIndex] = updatedBobina;
-
-        // Atualiza o estado do motor
-        setMotor((prevMotor) => ({
-            ...prevMotor,
-            tensao: {
-                ...prevMotor.tensao,
-                bobinas: updatedBobinas,
-            },
-        }));
-
-        // Atualiza o índice do passo correspondente
-        switch (tipoBobina) {
-            case 'AUXILIAR':
-                setIndexAWGAux(indexAWGAux - 1);
-                break;
-            case 'TRABALHO':
-                setIndexAWGTrab(indexAWGTrab - 1);
-                break;
-            case 'UNICO':
-                setIndexAWGUnico(indexAWGUnico - 1);
-                break;
-            default:
-                break;
-        }
-    };
-
     const addInputsPasso = (tipoBobina) => {
         const newMotor = { ...motor };
 
@@ -388,25 +274,20 @@ const MotorRegister = () => {
 
             if (tipoBobina === 'AUXILIAR') {
                 setIndexPassoAuxiliar(indexPassoAuxiliar + 1)
-                setNewIndexPasso(indexPassoAuxiliar)
             }
             if (tipoBobina === 'TRABALHO') {
                 setIndexPassoTrabalho(indexPassoTrabalho + 1)
-                setNewIndexPasso(indexPassoTrabalho)
             }
             if (tipoBobina === 'UNICO') {
                 setIndexPassoUnico(indexPassoUnico + 1)
-                setNewIndexPasso(indexPassoUnico)
             }
         }
 
     };
 
-    const removeInputsPasso = (tipoBobina) => {
+    const removeInputs = (tipoBobina, propriedades) => {
         // Verifica se o tipo de bobina é válido
-        if (tipoBobina !== 'AUXILIAR' && tipoBobina !== 'TRABALHO' && tipoBobina !== 'UNICO') {
-            return;
-        }
+        if (!['AUXILIAR', 'TRABALHO', 'UNICO'].includes(tipoBobina)) return;
 
         // Cria uma cópia do estado atual do motor
         const updatedMotor = { ...motor };
@@ -415,15 +296,31 @@ const MotorRegister = () => {
         const bobinaIndex = updatedMotor.tensao.bobinas.findIndex((bobina) => bobina.tipoBobina === tipoBobina);
 
         // Verifica se a bobina foi encontrada
-        if (bobinaIndex === -1) {
-            return;
-        }
+        if (bobinaIndex === -1) return;
 
-        // Remova o último elemento do array de passo da bobina correspondente
+        // Remove o último elemento dos arrays correspondentes dentro da bobina
         const updatedBobina = {
             ...updatedMotor.tensao.bobinas[bobinaIndex],
-            passo: updatedMotor.tensao.bobinas[bobinaIndex].passo.slice(0, -1),
+            fio: {
+                ...updatedMotor.tensao.bobinas[bobinaIndex].fio,
+            },
         };
+
+        if (typeof propriedades === 'string') {
+            // Se for uma única string, transforma em array com um único elemento
+            propriedades = [propriedades];
+        }
+
+        propriedades.forEach((propriedade) => {
+            if (updatedBobina.fio[propriedade]) {
+                updatedBobina.fio[propriedade] = updatedBobina.fio[propriedade].slice(0, -1);
+            }
+        });
+
+        // Remove o último elemento do array "passo" se existir
+        if (propriedades.includes('passo')) {
+            updatedBobina.passo = updatedBobina.passo.slice(0, -1);
+        }
 
         // Atualiza a matriz de bobinas
         const updatedBobinas = [...updatedMotor.tensao.bobinas];
@@ -438,95 +335,68 @@ const MotorRegister = () => {
             },
         }));
 
-        // Atualiza o índice do passo correspondente
-        if (tipoBobina === 'AUXILIAR') {
-            setIndexPassoAuxiliar(indexPassoAuxiliar - 1);
-        } else if (tipoBobina === 'TRABALHO') {
-            setIndexPassoTrabalho(indexPassoTrabalho - 1);
-        } else if (tipoBobina === 'UNICO') {
-            setIndexPassoUnico(indexPassoUnico - 1);
+        // Atualiza o índice correspondente
+        switch (tipoBobina) {
+            case 'AUXILIAR':
+                setIndexAuxiliar((prevIndex) => prevIndex - 1);
+                break;
+            case 'TRABALHO':
+                setIndexTrabalho((prevIndex) => prevIndex - 1);
+                break;
+            case 'UNICO':
+                setIndexUnico((prevIndex) => prevIndex - 1);
+                break;
+            default:
+                break;
         }
+    };
+
+    // --- leitura de valores ---
+    const handleChange = (e, index, tipoBobina, propriedade) => {
+        setMotor(prevMotor => {
+            const newBobinas = prevMotor.tensao.bobinas.map(bobina => {
+                if (bobina.tipoBobina === tipoBobina) {
+                    const newValue = e.target.value;
+                    if (propriedade === 'passo') {
+                        const newPasso = [...bobina.passo];
+                        newPasso[index] = newValue;
+                        return { ...bobina, passo: newPasso };
+                    } else if (propriedade === 'awg' || propriedade === 'quantidade' || propriedade === 'espiras') {
+                        const newFio = { ...bobina.fio };
+                        if (propriedade === 'awg') newFio.awgs[index] = newValue;
+                        else if (propriedade === 'quantidade') newFio.quantidades[index] = newValue;
+                        else if (propriedade === 'espiras') newFio.espiras[index] = newValue;
+                        return { ...bobina, fio: newFio };
+                    }
+                }
+                return bobina;
+            });
+
+            return {
+                ...prevMotor,
+                tensao: {
+                    ...prevMotor.tensao,
+                    bobinas: newBobinas
+                }
+            };
+        });
     };
 
     const handleChangePasso = (e, index, tipoBobina) => {
-        const newMotor = { ...motor };
-
-        // Encontrar o índice correto da bobina com base no tipo
-        const bobinaIndex = newMotor.tensao.bobinas.findIndex(
-            (bobina) => bobina.tipoBobina === tipoBobina
-        );
-
-        // Atualizar Passo
-        if (tipoBobina === 'TRABALHO') {
-            newMotor.tensao.bobinas[bobinaIndex].passo[index] = e.target.value !== '' ? Number(e.target.value) : 0;
-        }
-        if (tipoBobina === 'AUXILIAR') {
-            newMotor.tensao.bobinas[bobinaIndex].passo[index] = e.target.value !== '' ? Number(e.target.value) : 0;
-        }
-        if (tipoBobina === 'UNICO') {
-            newMotor.tensao.bobinas[bobinaIndex].passo[index] = e.target.value !== '' ? Number(e.target.value) : 0;
-        }
-
-        // Atualizar o estado
-        setMotor(newMotor);
-    }
-
-    //pega o valor do input
-    const handleChangeAWG = (e, index, tipoBobina) => {
-        const newMotor = { ...motor };
-
-        // Encontrar o índice correto da bobina com base no tipo
-        const bobinaIndex = newMotor.tensao.bobinas.findIndex(
-            (bobina) => bobina.tipoBobina === tipoBobina
-        );
-
-        // Atualizar AWG
-        if (tipoBobina === 'TRABALHO') {
-            newMotor.tensao.bobinas[bobinaIndex].fio.awgs[index] = e.target.value !== '' ? Number(e.target.value) : 0;
-        }
-        if (tipoBobina === 'AUXILIAR') {
-            newMotor.tensao.bobinas[bobinaIndex].fio.awgs[index] = e.target.value !== '' ? Number(e.target.value) : 0;
-        }
-        if (tipoBobina === 'UNICO') {
-            newMotor.tensao.bobinas[bobinaIndex].fio.awgs[index] = e.target.value !== '' ? Number(e.target.value) : 0;
-        }
-
-        // Atualizar o estado
-        setMotor(newMotor);
+        handleChange(e, index, tipoBobina, 'passo');
     };
 
-    //pega o valor do input
+    const handleChangeAWG = (e, index, tipoBobina) => {
+        handleChange(e, index, tipoBobina, 'awg');
+    };
+
     const handleChangeQuantidade = (e, index, tipoBobina) => {
-        const newMotor = { ...motor };
-
-        // Encontrar o índice correto da bobina com base no tipo
-        const bobinaIndex = newMotor.tensao.bobinas.findIndex(
-            (bobina) => bobina.tipoBobina === tipoBobina
-        );
-
-        // Atualizar a quantidade
-        newMotor.tensao.bobinas[bobinaIndex].fio.quantidades[index] =
-            e.target.value !== '' ? Number(e.target.value) : 0;
-
-        // Atualizar o estado
-        setMotor(newMotor);
+        handleChange(e, index, tipoBobina, 'quantidade');
     };
 
     const handleChangeEspiras = (e, index, tipoBobina) => {
-        const newMotor = { ...motor };
-
-        // Encontrar o índice correto da bobina com base no tipo
-        const bobinaIndex = newMotor.tensao.bobinas.findIndex(
-            (bobina) => bobina.tipoBobina === tipoBobina
-        );
-
-        // Atualizar a espiras
-        newMotor.tensao.bobinas[bobinaIndex].fio.espiras[index] =
-            e.target.value !== '' ? Number(e.target.value) : 0;
-
-        // Atualizar o estado
-        setMotor(newMotor);
-    }
+        handleChange(e, index, tipoBobina, 'espiras');
+    };
 
     const handleCheckboxChange = (index, checked) => {
         const newCheckboxVolts = [...checkboxVolts];
@@ -555,19 +425,6 @@ const MotorRegister = () => {
         setMotor(newMotor);
     };
 
-    const resetState = () => {
-        setMotor(initialState);
-        setCheckboxVolts(initialCheckboxVolts);
-        setSelectedFile(null);
-        
-    }
-
-    const load = () => {
-        setTimeout(() => {
-            setLoading(false);
-        }, 2000);
-    }
-
     const handleFileChange = (event) => {
         const file = event.target.files[0];
         const allowedTypes = ["image/jpeg", "image/png"];
@@ -577,6 +434,19 @@ const MotorRegister = () => {
             setSelectedFile(null);
             showMessageError("Tipo de arquivo inválido. Selecione uma imagem JPG ou PNG.");
         }
+    }
+
+    const resetState = () => {
+        setMotor(initialState);
+        setCheckboxVolts(initialCheckboxVolts);
+        setSelectedFile(null);
+
+    }
+
+    const load = () => {
+        setTimeout(() => {
+            setLoading(false);
+        }, 2000);
     }
 
     const parseAsIntIfString = (value) => {
@@ -680,7 +550,7 @@ const MotorRegister = () => {
     }
 
     return (
-        <MotorForm
+        <MotorRegisterForm
             motor={motor}
             checkboxVolts={checkboxVolts}
             indexPassoAuxiliar={indexPassoAuxiliar}
@@ -690,14 +560,12 @@ const MotorRegister = () => {
             addInputsESP={addInputsESP}
             addInputsPasso={addInputsPasso}
             removeInputs={removeInputs}
-            removeInputsESP={removeInputsESP}
-            removeInputsPasso={removeInputsPasso}
             handleInputChange={handleInputChange}
+            handleCheckboxChange={handleCheckboxChange}
             handleChangeAWG={handleChangeAWG}
             handleChangeQuantidade={handleChangeQuantidade}
             handleChangeEspiras={handleChangeEspiras}
             handleChangePasso={handleChangePasso}
-            handleCheckboxChange={handleCheckboxChange}
             handleFileChange={handleFileChange}
             empresas={empresas}
             create={create}
