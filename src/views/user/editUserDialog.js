@@ -8,17 +8,14 @@ import useToast from "../../components/toast";
 export default function EditUserDialog(props) {
 
     const service = new UserService();
-    const { visible, onHide } = props;
+    const { visible, onHide, user: initialUser } = props;
     const { showMessageSuccess, showMessageError, toast } = useToast();
     const [loading, setLoading] = useState(false);
+    const [user, setUser] = useState(initialUser || { login: "", role: "", condition: "" });
 
-    const [user, setUser] = useState(useEffect(() => {
-        setUser(props.user);
-    }, [props.user]));
-
-    if (!user) {
-        return null;
-    }
+    useEffect(() => {
+        setUser(initialUser|| { login: "", role: "", condition: "" });
+    }, [initialUser]);
 
     const load = () => {
         setTimeout(() => {
@@ -31,7 +28,6 @@ export default function EditUserDialog(props) {
         const usuario = {
             id: user.id,
             login: user.login,
-            password: user.password,
             role: user.role,
             condition: typeof user.condition === 'string' ? parseInt(user.condition) : user.condition
 
@@ -69,7 +65,7 @@ export default function EditUserDialog(props) {
                         <Col>
                             <Form.Group controlId="formLogin">
                                 <Form.Label>Login</Form.Label>
-                                <Form.Control type="text" value={user.login} name="login" onChange={handleOnChange} readOnly />
+                                <Form.Control type="text" value={user.login || ""} name="login" onChange={handleOnChange} readOnly />
                             </Form.Group>
                         </Col>
 

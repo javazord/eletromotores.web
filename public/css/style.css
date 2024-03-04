@@ -19,6 +19,20 @@ body {
   /* ou outra propriedade para ajustar o tamanho da imagem */
 }
 
+.password-input-container {
+  position: relative;
+}
+
+.password-icon {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  right: 10px;
+  cursor: pointer;
+}
+
+
+
 .asteriscos {
   color: red;
 }

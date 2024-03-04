@@ -98,8 +98,8 @@ export default function UserSearch() {
                                 value={condition}
                                 onChange={(e) => setCondition(e.target.value)}
                             >
-                                <option value="1">Ativado</option>
-                                <option value="0">Desativado</option>
+                                <option value={1}>Ativado</option>
+                                <option value={0}>Desativado</option>
                             </Form.Select>
                         </Col>
                         <Col>
