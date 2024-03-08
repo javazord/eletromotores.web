@@ -488,7 +488,7 @@ const MotorRegister = () => {
             ranhuras: parseInt(ranhuras),
             rotacao: parseInt(rotacao),
             ligacao,
-            potencia: parseInt(potencia),
+            potencia: parseFloat(potencia),
             comprimento: parseInt(comprimento),
             medidaInterna: parseInt(medidaInterna),
             empresa,

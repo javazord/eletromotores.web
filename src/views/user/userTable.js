@@ -3,6 +3,7 @@ import { Condition, Role } from "./userAttributes";
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 import { Button } from 'primereact/button';
+import { Container } from "react-bootstrap";
 
 const UserTable =  (props) => {
     const button = (rowData) => {
@@ -10,7 +11,7 @@ const UserTable =  (props) => {
     };
 
     return (
-        <div>
+        <Container>
             <DataTable value={props.users} paginator scrollable stripedRows scrollHeight="400px" rows={10} rowsPerPageOptions={[10, 25, 50]} width="400px" height="400px">
                 <Column field="id" header="#Id" align={"center"}></Column>
                 <Column field="login" header="Login" align={"center"}></Column>
@@ -21,7 +22,7 @@ const UserTable =  (props) => {
                 )}
 
             </DataTable>
-        </div>
+        </Container>
 
     );
 

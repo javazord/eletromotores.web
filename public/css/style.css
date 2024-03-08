@@ -23,6 +23,10 @@ body {
   position: relative;
 }
 
+.font {
+  font-family: "Poppins", Arial, sans-serif;
+}
+
 .password-icon {
   position: absolute;
   top: 50%;

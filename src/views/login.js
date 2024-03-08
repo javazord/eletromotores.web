@@ -5,7 +5,7 @@ import { AuthContext } from '../main/authProvider';
 import useToast from "../components/toast";
 import { Toast } from "primereact/toast";
 import { loginValidate, Validate } from "./user/userAttributes";
-import { Card, Form, Row, Col, Button, InputGroup } from 'react-bootstrap';
+import { Card, Form, Row, Col, Button, Container } from 'react-bootstrap';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
 
 const Login = (props) => {
@@ -34,7 +34,7 @@ const Login = (props) => {
                         <Col>
                             <Form.Label>Nova Senha</Form.Label>
                             <div className="password-input-container">
-                                <Form.Control type={showPassword ? 'text' : 'password'} value={user.password || ''} name="password" onChange={handleInputChange} onKeyPress={handleKeyPress} size="sm" />
+                                <Form.Control type={showPassword ? 'text' : 'password'} value={user.password || ''} autoFocus name="password" onChange={handleInputChange} onKeyPress={handleKeyPress} size="sm" />
                                 <div className="password-icon" onClick={toggleShowPassword}>
                                     {showPassword ? <FaEyeSlash /> : <FaEye />}
                                 </div>
@@ -132,8 +132,8 @@ const autenticar = () => {
 
 return (
     <>
-        <div className="d-flex justify-content-center align-items-center " style={{ height: '85vh' }} >
-            <Card style={{ width: '450px' }} border="0">
+        <Container className="d-flex justify-content-center align-items-center" style={{ height: '85vh' }} >
+            <Card style={{ width: '100%', maxWidth: '450px' }} border="0">
                 <Card.Img variant="top" alt="Card" src="https://media.istockphoto.com/id/520566511/pt/foto/de-motor-el%C3%A9ctrico-necessita-de-manuten%C3%A7%C3%A3o.jpg?s=612x612&w=0&k=20&c=ftqBNGuC4rLCT_H98j-xt3WXty8iYMklCYwQ4cn8kWE=" />
 
                 <Card.Body className="mt-3">
@@ -143,7 +143,7 @@ return (
                             <Row className="p-1">
                                 <Col>
                                     <Form.Label>Login</Form.Label>
-                                    <Form.Control value={user.login} name="login" onChange={handleInputChange} size="sm" required />
+                                    <Form.Control value={user.login} name="login" autoFocus onChange={handleInputChange} size="sm" required />
                                 </Col>
                             </Row>
 
@@ -170,7 +170,7 @@ return (
 
                 </Card.Body>
             </Card>
-        </div >
+        </Container >
 
         <Toast ref={toast} />
     </>

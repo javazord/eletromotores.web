@@ -8,7 +8,7 @@ const Sidebar = (props) => {
 
     const [showSidebar, setShowSidebar] = useState(false);
     const handleCloseSidebar = () => setShowSidebar(false);
-    const handleShowSidebar = () => setShowSidebar(true);
+    const handleShowSidebar = () => setShowSidebar((s) => !s);
 
     const handleLogout = () => {
         props.deslogar();
@@ -17,26 +17,25 @@ const Sidebar = (props) => {
     return (
         <>
             <div>
-                <Navbar collapseOnSelect expand="xl" bg="dark" variant="dark">
+                <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark">
                     <Button className="btn btn-primary" variant='dark' onClick={handleShowSidebar}>
                         {/* Ícone do seu botão, por exemplo, usando FontAwesome */}
                         <span className="fa fa-bars"></span>
                     </Button>
                     <Navbar.Brand className='p-1' href="/home">Eletromotores</Navbar.Brand>
-
                 </Navbar>
 
-                <Offcanvas className="custom-offcanvas sidebar bg-dark text-white" show={showSidebar} onHide={handleCloseSidebar} placement="start" scroll={true} backdrop='false'>
+                <Offcanvas className="custom-offcanvas sidebar bg-dark text-white" show={showSidebar} onHide={handleCloseSidebar} placement="start" scroll={true} >
                     <Offcanvas.Header closeButton>
-                        <Offcanvas.Title></Offcanvas.Title>
+                        <Offcanvas.Title className='font'>Eletromotores</Offcanvas.Title>
                     </Offcanvas.Header>
 
                     <Offcanvas.Body className=''>
                         <div className="img bg-wrap text-center py-4" style={{ backgroundImage: 'url(images/bg_1.jpg)' }}>
                             <div className="user-logo">
                                 <div className="img" style={{ backgroundImage: 'url(images/logo.png)' }} />
-                                <h3>{props.authUser.login}</h3>
-                                <p>{props.authUser.role}</p>
+                                <h3 className='font'>{props.authUser.login}</h3>
+                                <p className='font'>{props.authUser.role}</p>
                             </div>
                         </div>
                         <ul className="list-unstyled components mb-5">
