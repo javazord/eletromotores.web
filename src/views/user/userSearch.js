@@ -6,7 +6,7 @@ import EditUserDialog from "./editUserDialog";
 import UserService from "../../app/service/user/userService";
 import useToast from "../../components/toast";
 import { Toast } from "primereact/toast";
-import { Card, Form, Row, Col } from 'react-bootstrap';
+import { Card, Form, Row, Col, Container } from 'react-bootstrap';
 
 
 export default function UserSearch() {
@@ -76,42 +76,44 @@ export default function UserSearch() {
 
     return (
         <>
+            <Container>
+                <Card>
+                    <Card.Header as="h5">Pesquisar</Card.Header>
+                    <Card.Body>
+                        <Row className="d-flex align-items-end">
+                            <Col>
+                                <Form.Label>Login</Form.Label>
+                                <Form.Control
+                                    name="login"
+                                    value={login}
+                                    onChange={(e) => setLogin(e.target.value)}
+                                    type="text"
+                                    placeholder="Informe o login"
+                                />
+                            </Col>
+                            <Col>
+                                <Form.Label>Condição</Form.Label>
+                                <Form.Select
+                                    name="condition"
+                                    value={condition}
+                                    onChange={(e) => setCondition(e.target.value)}
+                                >
+                                    <option value={1}>Ativado</option>
+                                    <option value={0}>Desativado</option>
+                                </Form.Select>
+                            </Col>
+                            <Col>
+                                <Button onClick={buttonSearch} className="btn btn-primary" icon="pi pi-search" label="Buscar" size="sm" loading={loading} />
+                                <Toast ref={toast} />
+                            </Col>
+                        </Row>
+                        <br />
+                        <UserTable users={users} view={view} edit={edit} context={authUser} />
+                        <EditUserDialog user={user} visible={editConfirmDialog} onHide={onHide} />
+                    </Card.Body>
+                </Card>
+            </Container>
 
-            <Card>
-                <Card.Header as="h5">Pesquisar</Card.Header>
-                <Card.Body>
-                    <Row className="d-flex align-items-end">
-                        <Col>
-                            <Form.Label>Login</Form.Label>
-                            <Form.Control
-                                name="login"
-                                value={login}
-                                onChange={(e) => setLogin(e.target.value)}
-                                type="text"
-                                placeholder="Informe o login"
-                            />
-                        </Col>
-                        <Col>
-                            <Form.Label>Condição</Form.Label>
-                            <Form.Select
-                                name="condition"
-                                value={condition}
-                                onChange={(e) => setCondition(e.target.value)}
-                            >
-                                <option value={1}>Ativado</option>
-                                <option value={0}>Desativado</option>
-                            </Form.Select>
-                        </Col>
-                        <Col>
-                            <Button onClick={buttonSearch} className="btn btn-primary" icon="pi pi-search" label="Buscar" size="sm" loading={loading} />
-                            <Toast ref={toast} />
-                        </Col>
-                    </Row>
-                    <br />
-                    <UserTable users={users} view={view} edit={edit} context={authUser} />
-                    <EditUserDialog user={user} visible={editConfirmDialog} onHide={onHide} />
-                </Card.Body>
-            </Card>
 
         </>
     )

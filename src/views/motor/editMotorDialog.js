@@ -8,6 +8,7 @@ import useToast from "../../components/toast";
 import { Image } from 'primereact/image';
 import _ from 'lodash'; // Importe o Lodash
 import MotorEditForm from "./motorEditForm";
+import { Container } from "react-bootstrap";
 
 
 const EditMotorDialog = (props) => {
@@ -463,26 +464,29 @@ const EditMotorDialog = (props) => {
 
     return (
         <>
-            <MotorEditForm
-                visible={visible}
-                onHide={onHide}
-                motor={motor}
-                checkboxVolts={checkboxVolts}
-                addInputs={addInputs}
-                addInputsESP={addInputsESP}
-                addInputsPasso={addInputsPasso}
-                removeInputs={removeInputs}
-                handleInputChange={handleInputChange}
-                handleCheckboxChange={handleCheckboxChange}
-                handleChangeAWG={handleChangeAWG}
-                handleChangeQuantidade={handleChangeQuantidade}
-                handleChangeEspiras={handleChangeEspiras}
-                handleChangePasso={handleChangePasso}
-                handleFileChange={handleFileChange}
-                empresas={empresas}
-                footer={footer}
-                toast={toast}
-            />
+            <Container>
+                <MotorEditForm
+                    visible={visible}
+                    onHide={onHide}
+                    motor={motor}
+                    checkboxVolts={checkboxVolts}
+                    addInputs={addInputs}
+                    addInputsESP={addInputsESP}
+                    addInputsPasso={addInputsPasso}
+                    removeInputs={removeInputs}
+                    handleInputChange={handleInputChange}
+                    handleCheckboxChange={handleCheckboxChange}
+                    handleChangeAWG={handleChangeAWG}
+                    handleChangeQuantidade={handleChangeQuantidade}
+                    handleChangeEspiras={handleChangeEspiras}
+                    handleChangePasso={handleChangePasso}
+                    handleFileChange={handleFileChange}
+                    empresas={empresas}
+                    footer={footer}
+                    toast={toast}
+                />
+            </Container>
+
 
             <Dialog header="Esquema" visible={showSchema} style={{ width: '55vw' }} onHide={() => setShowSchema(false)}>
                 {typeof motor.imagem.dados ? (

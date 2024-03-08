@@ -2,9 +2,8 @@ import { MotorService } from "../app/service/motor/motorService";
 import React, { useState, useEffect, useMemo, useContext } from 'react';
 import { Carousel } from 'primereact/carousel';
 import { Image } from 'primereact/image';
-import { Row } from "reactstrap";
+import { Container, Row } from 'react-bootstrap';
 import { Card } from 'primereact/card';
-import { Container } from 'react-bootstrap';
 import ViewMotorDialog from "../views/motor/viewMotorDialog";
 import { AuthContext } from "../main/authProvider";
 
@@ -78,13 +77,10 @@ const Home = () => {
         <>
             <Container className="mb-5">
                 <Row>
-                    <h2 className="text-white">Bem Vindo(a) {authUser.login}</h2>
+                    <h2 className="font text-white">Bem Vindo(a) {authUser.login}</h2>
                 </Row>
-            </Container>
-
-            <Container className="mt-4">
                 <Row>
-                    <p>Últimos Registros</p>
+                    <p className="font">Últimos Registros</p>
                     <div >
                         {lastMotors.length > 0 ? (
                             <div className="carousel-container">

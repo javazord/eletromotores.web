@@ -5,7 +5,7 @@ import ViewMotorDialog from "./viewMotorDialog";
 import { Button } from 'primereact/button';
 import EditMotorDialog from "./editMotorDialog";
 import { AuthContext } from "../../main/authProvider";
-import { Card, Form, Row, Col, CardHeader } from 'react-bootstrap';
+import { Card, Form, Row, Col, CardHeader, Container } from 'react-bootstrap';
 import useToast from '../../components/toast';
 import { Toast } from "primereact/toast";
 import { Dialog } from "primereact/dialog";
@@ -216,42 +216,45 @@ const MotorSearch = () => {
 
     return (
         <>
-            <Card>
-                <CardHeader as="h5">Pesquisar</CardHeader>
-                <Card.Body>
-                    <Row className="d-flex align-items-end">
-                        <Col>
-                            <Form.Label>Marca</Form.Label>
-                            <Form.Control name="marca" value={motor.marca} onChange={handleInputChange} type="text" className="form-control mt-1" />
-                        </Col>
-                        <Col>
-                            <Form.Label>Ranhuras</Form.Label>
-                            <Form.Control name="ranhuras" value={motor.ranhuras} onChange={handleInputChange} type="number" className="form-control mt-1" />
-                        </Col>
-                        <Col>
-                            <Form.Label>Potência</Form.Label>
-                            <Form.Control name="potencia" value={motor.potencia} onChange={handleInputChange} type="number" className="form-control mt-1" />
-                        </Col>
-                        <Col>
-                            <Form.Label>Comprimento</Form.Label>
-                            <Form.Control name="comprimento" value={motor.comprimento} onChange={handleInputChange} type="number" className="form-control mt-1" />
-                        </Col>
-                        <Col >
-                            <Form.Label>M. Externa</Form.Label>
-                            <Form.Control name="medidaInterna" value={motor.medidaInterna} onChange={handleInputChange} type="number" className="form-control mt-1" />
-                        </Col>
+            <Container>
+                <Card>
+                    <CardHeader as="h5">Pesquisar</CardHeader>
+                    <Card.Body>
+                        <Row className="d-flex align-items-end">
+                            <Col>
+                                <Form.Label>Marca</Form.Label>
+                                <Form.Control name="marca" value={motor.marca} onChange={handleInputChange} type="text" className="form-control mt-1" />
+                            </Col>
+                            <Col>
+                                <Form.Label>Ranhuras</Form.Label>
+                                <Form.Control name="ranhuras" value={motor.ranhuras} onChange={handleInputChange} type="number" className="form-control mt-1" min={0}/>
+                            </Col>
+                            <Col>
+                                <Form.Label>Potência</Form.Label>
+                                <Form.Control name="potencia" value={motor.potencia} onChange={handleInputChange} type="number" className="form-control mt-1" min={0}/>
+                            </Col>
+                            <Col>
+                                <Form.Label>Comprimento</Form.Label>
+                                <Form.Control name="comprimento" value={motor.comprimento} onChange={handleInputChange} type="number" className="form-control mt-1" min={0}/>
+                            </Col>
+                            <Col >
+                                <Form.Label>M. Externa</Form.Label>
+                                <Form.Control name="medidaInterna" value={motor.medidaInterna} onChange={handleInputChange} type="number" className="form-control mt-1" min={0}/>
+                            </Col>
 
-                        <Col className="">
-                            <Button onClick={buttonSearch} className="btn btn-primary" icon="pi pi-search" size="sm" label="Buscar" loading={loading} />
-                        </Col>
-                    </Row>
-                </Card.Body>
+                            <Col className="">
+                                <Button onClick={buttonSearch} className="btn btn-primary" icon="pi pi-search" size="sm" label="Buscar" loading={loading} />
+                            </Col>
+                        </Row>
+                    </Card.Body>
 
-                <br />
+                    <br />
 
-                <MotorTable motores={motores} view={view} edit={edit} delete={deletar} context={authUser} />
+                    <MotorTable motores={motores} view={view} edit={edit} delete={deletar} context={authUser} />
 
-            </Card>
+                </Card>
+            </Container>
+
 
             <Dialog header={`Deletar Motor ${motor.marca}`} visible={deleteConfirmDialog} style={{ width: '50vw' }} onHide={onHide} footer={footerContent}>
                 <p className="m-0">

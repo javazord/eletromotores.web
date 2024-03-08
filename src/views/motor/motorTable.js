@@ -4,6 +4,7 @@ import { Button } from "primereact/button";
 import { Column } from "primereact/column";
 import { DataTable } from "primereact/datatable";
 import Render from "../../components/grid/render";
+import { Container } from "react-bootstrap";
 
 const MotorTable = (props) => {
     const button = (rowData) => {
@@ -17,7 +18,7 @@ const MotorTable = (props) => {
     };
 
     return (
-        <div >
+        <Container>
             <DataTable value={props.motores} paginator scrollable stripedRows scrollHeight="400px" rows={10} rowsPerPageOptions={[10, 25, 50]} width="400px" height="400px">
                 <Column field="id" header="#Id" align={"center"}></Column>
                 <Column field="marca" header="Marca" align={"center"}></Column>
@@ -30,7 +31,7 @@ const MotorTable = (props) => {
                 <Column field="medidaInterna" header="M. Interna" align={"center"}></Column>
                 <Column field={rowData => button(rowData)} header="Ação" align={"center"} />
             </DataTable>
-        </div>
+        </Container>
 
     );
 
