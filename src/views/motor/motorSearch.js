@@ -178,6 +178,7 @@ const MotorSearch = () => {
     };
 
     const edit = (motor) => {
+        console.log(motor)
         setMotor(motor);
         setEditConfirmDialog(true);
     };

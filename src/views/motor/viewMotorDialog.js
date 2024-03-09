@@ -75,7 +75,7 @@ const ViewMotorDialog = (props) => {
                             </Col>
                             <Col className="col-md-2">
                                 <Form.Label>Empresa<span className="asteriscos">*</span></Form.Label>
-                                <Form.Control name="empresa" value={motor.empresa || ''} type="text" size="sm" disabled />
+                                <Form.Control name="empresa" value={motor.empresa || ''} type="text" size="sm" readOnly />
                             </Col>
 
                         </Row>
@@ -91,7 +91,14 @@ const ViewMotorDialog = (props) => {
                                 <Form.Label>Tensão<span className="asteriscos">*</span></Form.Label>
                                 <Form.Control name="tipoTensao" value={motor.tensao.tipoTensao} readOnly min={0} size="sm" />
                             </Col>
-
+                        </Row>
+                        <Row>
+                            {motor.amperagens.map((amp, index) => (
+                                <Col className="col-md-2" key={index}>
+                                    <Form.Label>Amperagem</Form.Label>
+                                    <Form.Control type="number" value={amp} id={`amp${index + 1}`} size="sm" readOnly />
+                                </Col>
+                            ))}
                         </Row>
 
                         {motor.tensao.tipoTensao === 'MONOFASICO' &&

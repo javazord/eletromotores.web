@@ -312,13 +312,14 @@ const MotorRegister = () => {
         }
 
         propriedades.forEach((propriedade) => {
-            if (updatedBobina.fio[propriedade]) {
+            if (updatedBobina.fio[propriedade] && updatedBobina.fio[propriedade].length > 1) {
+                console.log(updatedBobina.fio[propriedade].length)
                 updatedBobina.fio[propriedade] = updatedBobina.fio[propriedade].slice(0, -1);
             }
         });
 
         // Remove o último elemento do array "passo" se existir
-        if (propriedades.includes('passo')) {
+        if (propriedades.includes('passo') && updatedBobina.passo.length > 1) {
             updatedBobina.passo = updatedBobina.passo.slice(0, -1);
         }
 

@@ -56,43 +56,14 @@ const EditMotorDialog = (props) => {
 
         const hasMonofasicVoltage = updatedList.length === 2 && updatedList.includes(127) && updatedList.includes(220);
 
-        let newBobinas = [];
-
-        if (reset) {
-            newBobinas = [];
-        } else {
-            newBobinas = motor.tensao.bobinas;
-            setReset(true);
-        }
-
-        if (hasAllTrifasicVoltages && newBobinas.length === 0) {
-            newBobinas = [{
-                tipoBobina: 'UNICO',
-                fio: { awgs: [0], quantidades: [0], espiras: [0] },
-                passo: [0]
-            }];
-        } else if (hasMonofasicVoltage && newBobinas.length === 0) {
-            newBobinas = [{
-                tipoBobina: 'AUXILIAR',
-                fio: { awgs: [0], quantidades: [0], espiras: [0] },
-                passo: [0]
-            },
-            {
-                tipoBobina: 'TRABALHO',
-                fio: { awgs: [0], quantidades: [0], espiras: [0] },
-                passo: [0]
-            }
-            ];
-        }
-
         setMotor((prevMotor) => ({
             ...prevMotor,
             tensao: {
                 ...prevMotor.tensao,
-                tipoTensao: hasAllTrifasicVoltages ? 'TRIFASICO' : hasMonofasicVoltage ? 'MONOFASICO' : '',
-                bobinas: newBobinas // Defina o novo estado das bobinas dentro de tensao
+                tipoTensao: hasAllTrifasicVoltages ? 'TRIFASICO' : hasMonofasicVoltage ? 'MONOFASICO' : ''
             }
         }));
+        
     }, [motor.voltagens, motor.tensao.bobinas, reset]);
 
     useEffect(() => {
@@ -113,7 +84,6 @@ const EditMotorDialog = (props) => {
 
     const addInputsESP = (tipoBobina) => {
         const newMotor = { ...motor };
-        console.log(motor)
         // Encontrar o índice correto da bobina com base no tipo
         const bobinaIndex = newMotor.tensao.bobinas.findIndex(
             (bobina) => bobina.tipoBobina === tipoBobina
@@ -278,13 +248,13 @@ const EditMotorDialog = (props) => {
         }
 
         propriedades.forEach((propriedade) => {
-            if (updatedBobina.fio[propriedade]) {
+            if (updatedBobina.fio[propriedade] && updatedBobina.fio[propriedade].length > 1) {
                 updatedBobina.fio[propriedade] = updatedBobina.fio[propriedade].slice(0, -1);
             }
         });
 
         // Remove o último elemento do array "passo" se existir
-        if (propriedades.includes('passo')) {
+        if (propriedades.includes('passo') && updatedBobina.passo.length > 1) {
             updatedBobina.passo = updatedBobina.passo.slice(0, -1);
         }
 

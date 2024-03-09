@@ -30,7 +30,6 @@ const MotorEditForm = (props) => {
     } = props;
     const [newMotor, setNewMotor] = useState(motor);
     const [key, setKey] = useState('trabalho');
-
     useEffect(() => {
         setNewMotor(motor);
     }, [motor]);
@@ -140,7 +139,7 @@ const MotorEditForm = (props) => {
                         <Tab eventKey="trabalho" title="TRABALHO">
                             <Row>
                                 {motor.tensao.bobinas.filter((bobina) => bobina.tipoBobina === 'TRABALHO').map((bobina, bobinaIndex) => (
-                                    <React.Fragment key={bobinaIndex}>
+                                    <React.Fragment key={bobina[bobinaIndex].id}>
                                         {bobina.fio.awgs.map((valorAWG, index) => (
                                             <Col className="col-md-2" key={index}>
                                                 <Form.Label>Awg<span className="asteriscos">*</span></Form.Label>
@@ -162,7 +161,7 @@ const MotorEditForm = (props) => {
                             </Row>
                             <Row>
                                 {motor.tensao.bobinas.filter((bobina) => bobina.tipoBobina === 'TRABALHO').map((bobina, bobinaIndex) => (
-                                    <React.Fragment key={bobinaIndex}>
+                                    <React.Fragment key={bobina[bobinaIndex].id}>
                                         {bobina.fio.quantidades.map((valorQTD, index) => (
                                             <Col className="col-md-2" key={index}>
                                                 <Form.Label>Quantidade<span className="asteriscos">*</span></Form.Label>
@@ -174,7 +173,7 @@ const MotorEditForm = (props) => {
                                 ))}
 
                                 <Col className="col-md-2 mt-2 d-flex align-items-end">
-                                    <Button icon="pi pi-minus" rounded raised severity="danger" tooltip="Remover AWG/Quantidade" size="sm" onClick={() => removeInputs('TRABALHO')} />
+                                    <Button icon="pi pi-minus" rounded raised severity="danger" tooltip="Remover AWG/Quantidade" size="sm" onClick={() => removeInputs('TRABALHO', ['awgs', 'quantidades'])} />
                                 </Col>
                             </Row>
                             <Row>
@@ -347,7 +346,7 @@ const MotorEditForm = (props) => {
                             ))}
 
                             <Col className="col-md-2 mt-2 d-flex align-items-end">
-                                <Button icon="pi pi-minus" rounded raised severity="danger" tooltip="Remover AWG/Quantidade" size="sm" onClick={() => removeInputs('UNICO')} />
+                                <Button icon="pi pi-minus" rounded raised severity="danger" tooltip="Remover AWG/Quantidade" size="sm" onClick={() => removeInputs('UNICO', ['awgs', 'quantidades'])} />
                             </Col>
                         </Row>
                         <Row>
