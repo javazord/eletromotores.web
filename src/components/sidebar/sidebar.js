@@ -16,71 +16,69 @@ const Sidebar = (props) => {
 
     return (
         <>
-            <div>
-                <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark">
-                    <Button className="btn btn-primary" variant='dark' onClick={handleShowSidebar}>
-                        {/* Ícone do seu botão, por exemplo, usando FontAwesome */}
-                        <span className="fa fa-bars"></span>
-                    </Button>
-                    <Navbar.Brand className='p-1' href="/home">Eletromotores</Navbar.Brand>
-                </Navbar>
+            <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark">
+                <Button className="btn btn-primary" variant='dark' onClick={handleShowSidebar}>
+                    {/* Ícone do seu botão, por exemplo, usando FontAwesome */}
+                    <span className="fa fa-bars"></span>
+                </Button>
+                <Navbar.Brand className='p-1' href="/home">Eletromotores</Navbar.Brand>
+            </Navbar>
 
-                <Offcanvas className="custom-offcanvas sidebar bg-dark text-white" show={showSidebar} onHide={handleCloseSidebar} placement="start" scroll={true} >
-                    <Offcanvas.Header closeButton>
-                        <Offcanvas.Title className='font'>Eletromotores</Offcanvas.Title>
-                    </Offcanvas.Header>
+            <Offcanvas className="custom-offcanvas sidebar bg-dark text-white" show={showSidebar} onHide={handleCloseSidebar} placement="start" scroll={true} >
+                <Offcanvas.Header closeButton>
+                    <Offcanvas.Title className='font'>Eletromotores</Offcanvas.Title>
+                </Offcanvas.Header>
 
-                    <Offcanvas.Body className=''>
-                        <div className="img bg-wrap text-center py-4" style={{ backgroundImage: 'url(images/bg_1.jpg)' }}>
-                            <div className="user-logo">
-                                <div className="img" style={{ backgroundImage: 'url(images/logo.png)' }} />
-                                <h3 className='font'>{props.authUser.login}</h3>
-                                <p className='font'>{props.authUser.role}</p>
-                            </div>
+                <Offcanvas.Body className=''>
+                    <div className="img bg-wrap text-center py-4" style={{ backgroundImage: 'url(images/bg_1.jpg)' }}>
+                        <div className="user-logo">
+                            <div className="img" style={{ backgroundImage: 'url(images/logo.png)' }} />
+                            <h3 className='font'>{props.authUser.login}</h3>
+                            <p className='font'>{props.authUser.role}</p>
                         </div>
-                        <ul className="list-unstyled components mb-5">
-                            <li className="active">
-                                <a href="/home"><span className="fa fa-home mr-3" /> Home</a>
-                            </li>
-                            <li>
-                                <a href="#userSubmenu" data-toggle="collapse" aria-expanded="false" className="dropdown-toggle">
-                                    <span className='fa fa-users mr-3' />Colaboradores
-                                </a>
-                                <ul className="collapse list-unstyled" id="userSubmenu">
-                                    {props.authUser.role === "Administrador" && (
-                                        <li>
-                                            <a href="/cadastro-colaboradores"><span className='fa fa-pencil-square-o mr-3' />Registrar</a>
-                                        </li>
-                                    )}
+                    </div>
+                    <ul className="list-unstyled components mb-5">
+                        <li className="active">
+                            <a href="/home"><span className="fa fa-home mr-3" /> Home</a>
+                        </li>
+                        <li>
+                            <a href="#userSubmenu" data-toggle="collapse" aria-expanded="false" className="dropdown-toggle">
+                                <span className='fa fa-users mr-3' />Colaboradores
+                            </a>
+                            <ul className="collapse list-unstyled" id="userSubmenu">
+                                {props.authUser.role === "Administrador" && (
                                     <li>
-                                        <a href="/buscar-colaboradores"><span className='fa fa-search mr-3' />Pesquisar</a>
+                                        <a href="/cadastro-colaboradores"><span className='fa fa-pencil-square-o mr-3' />Registrar</a>
                                     </li>
-                                </ul>
-                            </li>
-                            <li>
-                                <a href="#motorSubmenu" data-toggle="collapse" aria-expanded="false" className="dropdown-toggle">
-                                    <span className='fa fa-bolt mr-3' />Motores
-                                </a>
-                                <ul className="collapse list-unstyled" id="motorSubmenu">
-                                    {props.authUser.role === "Administrador" && (
-                                        <li>
-                                            <a href="/cadastro-motores"><span className='fa fa-pencil-square-o mr-3' />Registrar</a>
-                                        </li>
-                                    )}
+                                )}
+                                <li>
+                                    <a href="/buscar-colaboradores"><span className='fa fa-search mr-3' />Pesquisar</a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li>
+                            <a href="#motorSubmenu" data-toggle="collapse" aria-expanded="false" className="dropdown-toggle">
+                                <span className='fa fa-bolt mr-3' />Motores
+                            </a>
+                            <ul className="collapse list-unstyled" id="motorSubmenu">
+                                {props.authUser.role === "Administrador" && (
                                     <li>
-                                        <a href="/buscar-motores"><span className='fa fa-search mr-3' />Pesquisar</a>
+                                        <a href="/cadastro-motores"><span className='fa fa-pencil-square-o mr-3' />Registrar</a>
                                     </li>
-                                </ul>
-                            </li>
-                            <li>
-                                <a href="/" onClick={handleLogout}><span className="fa fa-sign-out mr-3" />Sair</a>
-                            </li>
-                        </ul>
-                    </Offcanvas.Body>
+                                )}
+                                <li>
+                                    <a href="/buscar-motores"><span className='fa fa-search mr-3' />Pesquisar</a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li>
+                            <a href="/" onClick={handleLogout}><span className="fa fa-sign-out mr-3" />Sair</a>
+                        </li>
+                    </ul>
+                </Offcanvas.Body>
 
 
-                </Offcanvas>
-            </div>
+            </Offcanvas>
 
 
             {/* Page Content  */}
