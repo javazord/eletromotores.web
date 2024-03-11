@@ -27,7 +27,7 @@ const ViewMotorDialog = (props) => {
                     show={visible}
                     onHide={onHide}
                     centered
-                    size="xl"
+                    size="lg"
                 >
                     <Modal.Header closeButton>
                         <Modal.Title>Registrado em {moment(motor.registro).format('DD/MM/YYYY')}</Modal.Title>
