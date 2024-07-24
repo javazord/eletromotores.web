@@ -118,10 +118,6 @@ Form.Label span {
   padding: 0.5rem 1rem;
 }
 
-body {
-  min-width: 992px !important;
-}
-
 .container {
   min-width: 992px !important;
 }

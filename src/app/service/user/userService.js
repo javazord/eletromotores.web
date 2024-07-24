@@ -42,5 +42,9 @@ export default class UserService extends ApiService{
         let params = `?login=${user.login}`
         return this.getLogin('/update-password', params)
     }
+
+    refreshToken(token){
+        return this.post('/resfresh-token', token)
+    }
     
 }

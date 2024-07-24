@@ -7,14 +7,14 @@ const httpClient = axios.create({
     withCredentials: true
 })
 
-class ApiService {
+export default class ApiService {
 
     constructor(apiUrl) {
         this.apiUrl = apiUrl;
 
     }
 
-    static tokenRegister(token){
+    static tokenRegister(token) {
         if (token) {
             httpClient.defaults.headers.common['Authorization'] = `Bearer ${token.token}`
         }
@@ -46,4 +46,3 @@ class ApiService {
     }
 
 }
-export default ApiService

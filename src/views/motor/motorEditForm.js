@@ -39,7 +39,7 @@ const MotorEditForm = (props) => {
             show={visible}
             onHide={onHide}
             centered
-            size="xl"
+            size="lg"
         >
             <Modal.Header closeButton>
                 <Modal.Title>Editar Motor</Modal.Title>

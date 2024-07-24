@@ -27,7 +27,7 @@ const ViewMotorDialog = (props) => {
                     show={visible}
                     onHide={onHide}
                     centered
-                    size="xl"
+                    size="lg"
                 >
                     <Modal.Header closeButton>
                         <Modal.Title>Registrado em {moment(motor.registro).format('DD/MM/YYYY')}</Modal.Title>
@@ -296,7 +296,7 @@ const ViewMotorDialog = (props) => {
                                     {motor.tensao.bobinas.filter((bobina) => bobina.tipoBobina === 'UNICO').map((bobina, bobinaIndex) => (
                                         <React.Fragment key={bobinaIndex}>
                                             {bobina.passo.map((valorPasso, index) => (
-                                                <Col className="col-md-1" key={index}>
+                                                <Col className="col-md-2" key={index}>
                                                     <Form.Label>Passo<span className="asteriscos">*</span></Form.Label>
                                                     <Form.Control
                                                         type="number"

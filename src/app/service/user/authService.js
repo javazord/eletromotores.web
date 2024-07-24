@@ -1,3 +1,4 @@
+import AuthProvider from "../../../main/authProvider";
 import ApiService from "../../apiservice";
 import LocalStorageService from "../../localStorage";
 import jwt from 'jsonwebtoken';
@@ -21,7 +22,6 @@ export default class AuthService {
         
         return !isTokenInvalido;
     }
-    
 
     static removeUserAutenticated(){
         LocalStorageService.removeItem(USUARIO_LOGADO)
@@ -43,5 +43,6 @@ export default class AuthService {
         AuthService.loginto(usuario, token)
         return usuario;
     }
+    
     
 }

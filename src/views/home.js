@@ -75,7 +75,7 @@ const Home = () => {
 
     return (
         <>
-            <Container className="mb-5">
+            <Container>
                 <Row>
                     <h2 className="font text-white">Bem Vindo(a) {authUser.login}</h2>
                 </Row>
